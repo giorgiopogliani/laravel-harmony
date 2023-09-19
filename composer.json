@@ -1,0 +1,87 @@
+{
+    "name": "performing/harmony",
+    "description": "Headless inertia components",
+    "keywords": [
+        "Performing",
+        "laravel",
+        "harmony"
+    ],
+    "homepage": "https://github.com/performing/harmony",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Giorgio Pogliani",
+            "email": "giorgiopogliani94@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/contracts": "^10.0",
+        "inertiajs/inertia-laravel": "^0.6.9",
+        "spatie/laravel-package-tools": "^1.14.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^7.8",
+        "nunomaduro/larastan": "^2.0.1",
+        "orchestra/testbench": "^8.8",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-arch": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Performing\\Harmony\\": "src/",
+            "Performing\\Harmony\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Performing\\Harmony\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "clear": "@php vendor/bin/testbench package:purge-harmony --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": [
+            "@composer run prepare",
+            "@php vendor/bin/testbench workbench:build --ansi"
+        ],
+        "start": [
+            "@composer run build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "inertia": {
+            "harmony": "resources/pages"
+        },
+        "laravel": {
+            "providers": [
+                "Performing\\Harmony\\HarmonyServiceProvider"
+            ],
+            "aliases": {
+                "Harmony": "Performing\\Harmony\\Facades\\Harmony"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
