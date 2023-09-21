@@ -33,8 +33,8 @@ class ActionComponent extends Component
 
     public function __call($name, $arguments)
     {
-        if (str_starts_with($name, 'as')) {
-            $this->method = Str::replace('As', '', $name);
+        if (str_starts_with($name, 'as') && strlen($name) > 2) {
+            $this->method = Str::replace('as', '', strtolower($name));
 
             return $this;
         }
@@ -46,10 +46,10 @@ class ActionComponent extends Component
 
     public function toArray()
     {
-        return array_merge($this->data, [
+        return array_filter(array_merge($this->data, [
             'title' => $this->title,
             'href' => $this->href,
             'method' => $this->method,
-        ]);
+        ]));
     }
 }

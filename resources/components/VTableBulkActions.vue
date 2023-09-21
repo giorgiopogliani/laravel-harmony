@@ -27,16 +27,16 @@ function submit() {
 <template>
   <div
     v-if="selectedRows.length > 0"
-    class="bg-gray-50 p-2 flex items-center gap-4"
+    class="bg-gray-50 p-2 flex items-center w-full gap-4"
   >
-    <select v-model="action" class="form-input max-w-xs">
+    <select v-model="action" class="form-input w-full max-w-xs">
       <option value="0">Seleziona...</option>
       <option v-for="action in actions" :value="action.href">
         {{ action.title }}
       </option>
     </select>
     <VButton class="btn btn-yellow" @click="submit"> Submit </VButton>
-    <span class="text-sm text-gray-600">
+    <span class="text-sm whitespace-nowrap text-gray-600">
       ({{ selectedRows.length }} selected)
     </span>
   </div>

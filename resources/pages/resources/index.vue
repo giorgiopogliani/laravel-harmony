@@ -28,7 +28,7 @@ const {
 <template>
   <div class="w-full pb-8">
     <div class="sm:flex sm:items-center mt-4">
-      <VTableFilters :filters="filters" :query="query" />
+      <VTableFilters v-if="filters.length > 0" :filters="filters" :query="query" />
     </div>
     <div class="mt-8 flow-root">
       <VTableBulkActions
