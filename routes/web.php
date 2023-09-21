@@ -19,6 +19,4 @@ Route::middleware('web')->group(function () {
             Route::put("$uri/batch/{action}", [$resource, 'batchAction'])->name("$uri.batchAction");
         });
     });
-
-    require __DIR__ . '/auth.php';
 });

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Filter } from "@/types";
-import { useFilters } from "@/composables/useFilters";
+import { Filter } from "~/types";
+import { useFilters } from "~/composables/useFilters";
 
 import {
   PopoverArrow,

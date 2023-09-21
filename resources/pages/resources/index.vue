@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { toRefs } from "vue";
-import { Table, AnyRow } from "@/types";
+import { Table, AnyRow } from "~/types";
 import { get } from "lodash";
-import { useDatatable } from "@/composables/useDatatable";
-import { useSelection } from "@/composables/useSelection";
+import { useDatatable } from "~/composables/useDatatable";
+import { useSelection } from "~/composables/useSelection";
 
 const props = defineProps<{
   title: string;

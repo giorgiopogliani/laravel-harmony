@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useSorter } from "@/composables/useSorter";
+import { useSorter } from "~/composables/useSorter";
 
 defineProps<{
   sort: string | null;

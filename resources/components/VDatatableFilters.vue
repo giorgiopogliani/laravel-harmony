@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType, computed } from "vue";
-import { Filter } from "@/types";
+import { Filter } from "~/types";
 
 import {
   PopoverArrow,

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AnyRow, Pagination } from "@/types";
+import { AnyRow, Pagination } from "~/types";
 
 defineProps<{ pagination: Pagination<AnyRow>; query: any }>();
 </script>

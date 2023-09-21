@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import RenderComponents from "@/components/RenderComponents.vue";
+import RenderComponents from "~/components/RenderComponents.vue";
 
 defineProps<{
     title: string;

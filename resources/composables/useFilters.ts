@@ -1,4 +1,4 @@
-import { Filter } from "@/types";
+import { Filter } from "~/types";
 import { computed } from "vue";
 
 export function useFilters(props: { filters: Filter[]; query: any }) {

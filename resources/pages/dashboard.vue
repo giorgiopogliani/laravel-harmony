@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RenderComponents from "@/components/RenderComponents.vue";
+import RenderComponents from "~/components/RenderComponents.vue";
 import { Head } from "@inertiajs/vue3";
 import { defineAsyncComponent } from "vue";
 

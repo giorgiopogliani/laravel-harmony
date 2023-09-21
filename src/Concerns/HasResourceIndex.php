@@ -18,7 +18,7 @@ trait HasResourceIndex
 
         return Page::make('Posts')
             ->actions(
-                ActionComponent::make()->title('Create')->route('posts.create'),
+                // ActionComponent::make()->title('Create')->route('products.create'),
             )
             ->table(
                 TableComponent::make()

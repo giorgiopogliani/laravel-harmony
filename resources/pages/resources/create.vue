@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import HInput from "@/components/HInput.vue";
-import VButton from "@/components/VButton.vue";
+import HInput from "~/components/HInput.vue";
+import VButton from "~/components/VButton.vue";
 import { useForm } from "@inertiajs/vue3";
 
 let props = defineProps<{ form: any, errors: any }>();
