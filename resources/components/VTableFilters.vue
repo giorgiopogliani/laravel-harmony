@@ -22,7 +22,7 @@ const { activeFilters, addFilter, isStandalone } = useFilters({
         <div>
           <div v-for="filter in filters" :key="filter.key">
             <button @click="addFilter(filter)" type="button" class="px-3 py-1 hover:bg-gray-100 flex w-full">
-              {{ filter?.name }}
+              {{ filter?.label }}
             </button>
           </div>
         </div>

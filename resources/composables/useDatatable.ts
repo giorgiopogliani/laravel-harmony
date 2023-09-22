@@ -1,10 +1,4 @@
-import {
-    AnyRow,
-    Column,
-    ColumnOptions,
-    ColumnVisibility,
-    Table,
-} from "../types";
+import { AnyRow, Column, ColumnOptions, ColumnVisibility, Table } from "~/types";
 import { router } from "@inertiajs/vue3";
 import { watch, computed, reactive, Ref, watchEffect, ref } from "vue";
 
@@ -73,9 +67,7 @@ export function useDatatable<Type extends AnyRow>(table: Ref<Table<Type>>) {
     );
 
     function update() {
-        let o = Object.fromEntries(
-            Object.entries(query.value).filter(([_, v]) => v != null)
-        );
+        let o = Object.fromEntries(Object.entries(query.value).filter(([_, v]) => v != null));
 
         router.visit(config.endpoint, {
             only: config.reload,
