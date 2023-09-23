@@ -16,6 +16,56 @@ You can publish the config file with:
 php artisan vendor:publish --tag="harmony-config"
 ```
 
+Install npm dependencies: 
+
+```bash
+npm install tailwindcss @headlessui/vue @popperjs/core @vueuse/core @zag-js/checkbox @zag-js/combobox @zag-js/popover @zag-js/toast @zag-js/vue
+```
+
+Update your vite configuraiton as follows: 
+```js
+import { defineConfig } from 'vite';
+import path from 'node:path';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+import Components from "unplugin-vue-components/vite";
+
+export default defineConfig({
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js'),
+            '~': path.resolve(__dirname, 'vendor/performing/laravel-harmony/resources'),
+        }
+    },
+    plugins: [
+        Components({
+            dirs: [
+                // Add other paths before if you want to
+                // ovverride components with same name
+                'vendor/performing/laravel-harmony/resources/components',
+            ],
+            extensions: ["vue"],
+        }),
+        // ...
+    ]
+})
+```
+
+Update your tsconfig
+```json
+{
+    "compilerOptions": {
+        // ...
+        "paths": {
+            "~/*": ["./vendor/performing/laravel-harmony/resources/*"]
+        }
+    },
+    "include": [
+        "vendor/performing/laravel-harmony/resources/**/*"
+    ]
+}
+```
+
 ## Usage
 
 ```php
