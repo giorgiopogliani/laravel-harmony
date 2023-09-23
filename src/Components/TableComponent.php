@@ -20,7 +20,7 @@ class TableComponent extends Component
 
     protected ?string $resource = null;
 
-    protected array $query = ['par_page' => 10];
+    protected array $query = ['per_page' => 10];
 
     protected string $filtersKey = 'table';
 

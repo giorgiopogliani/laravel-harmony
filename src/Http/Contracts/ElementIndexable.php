@@ -1,10 +1,10 @@
 <?php
 
-namespace Performing\Harmony;
+namespace Performing\Harmony\Http\Contracts;
 
 use Inertia\Response;
 
-interface ResourceIndexable
+interface ElementIndexable
 {
     public function index(): Response;
 }

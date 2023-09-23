@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Performing\Harmony\Tests\TestCase;
+use Tests\TestCase;
 
 /*
 |--------------------------------------------------------------------------

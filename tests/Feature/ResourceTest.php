@@ -1,42 +1,58 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia;
-
-class Post extends Model
-{
-    use HasFactory;
-}
+use Tests\App\Elements\PostElement;
+use Tests\App\Http\Controllers\PostController;
+use Tests\App\Models\Post;
+use Tests\App\Models\User;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
+    $this->user = User::first();
 
     $this->actingAs($this->user);
+
+    Route::harmoned('posts', PostController::class);
 });
 
-// Generate tests for every endpoint in the resource controller: index, show, store, update, destroy, batchAction.
-// The response is an inertia response so that according to the documentation, we can use the assertInertia method.
-
 it('can list all resources', function () {
-    $response = $this->get(route('resources.index'));
+    $this->withoutExceptionHandling();
+
+    $element = new PostElement();
+
+    $response = $this->get(route('posts.index', [
+        'table_page' => 2,
+        'table' => [
+            'per_page' => 11
+        ],
+    ]));
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
-        ->component('Resources/Index')
-        ->has('resources'));
+        ->component('resources/index')
+        ->has('table', fn (AssertableInertia $page) => $page
+            ->where('columns', $element->columns())
+            ->where('filters', $element->filters())
+            ->where('actions', $element->bulkActions())
+            ->has('rows', fn (AssertableInertia $page) => $page
+                ->has('data', 11)
+                ->where('current_page', 2)
+                ->etc())
+            ->etc()));
 });
 
 it('can show a resource', function () {
-    $resource = Post::factory()->create();
+    $post = Post::first();
 
-    $response = $this->get(route('resources.show', $resource));
+    $this->withoutExceptionHandling();
+
+    $response = $this->get(route('posts.show', $post));
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
-        ->component('Resources/Show')
-        ->has('resource', fn (AssertableInertia $page) => $page
-            ->where('id', $resource->id)
-            ->where('name', $resource->name)
-            ->where('created_at', $resource->created_at->toISOString())
-            ->where('updated_at', $resource->updated_at->toISOString())));
+        ->component('resources/show')
+        ->has('element', fn (AssertableInertia $page) => $page
+            ->where('id', $post->id)
+            ->where('title', $post->title)
+            ->where('created_at', $post->created_at)
+            ->where('updated_at', $post->updated_at)
+            ->etc()));
 });

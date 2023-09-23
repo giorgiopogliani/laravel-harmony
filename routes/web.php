@@ -5,9 +5,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 Route::middleware('web')->group(function () {
-    Route::group(['middleware' => ['auth']], function () {
-        Route::get('dashboard', fn () => Inertia::render('harmony::dashboard'))->name('dashboard');
-
+    Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::macro('harmoned', function ($uri, $resource) {
             Route::get("$uri", [$resource, 'index'])->name("$uri.index");
             Route::get("$uri/create", [$resource, 'create'])->name("$uri.create");

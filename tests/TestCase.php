@@ -1,36 +1,34 @@
 <?php
 
-namespace Performing\Harmony\Tests;
+namespace Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Inertia\Inertia;
+use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Performing\Harmony\HarmonyServiceProvider;
+use Tests\App\Models\User;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
+    protected function resolveApplicationHttpKernel($app)
     {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Performing\\Harmony\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
+        $app->singleton('Illuminate\Contracts\Http\Kernel', 'Tests\App\Http\Kernel');
     }
 
     protected function getPackageProviders($app)
     {
         return [
             HarmonyServiceProvider::class,
+            InertiaServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        Inertia::setRootView('harmony::app');
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_harmony_table.php.stub';
-        $migration->up();
-        */
+        config()->set('auth.providers.0.model', User::class);
+        config()->set('auth.providers.0.guard', 'sanctum');
+        config()->set('inertia.testing.page_paths', [ __DIR__ . '/../resources/pages' ]);
     }
 }

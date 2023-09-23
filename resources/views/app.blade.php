@@ -18,7 +18,7 @@
             ? "vendor/performing/harmony/resources/pages/{$componentName}.vue"
             : "resources/pages/{$page['component']}.vue"
         @endphp
-        @vite(['resources/app.ts', $componentPath])
+        {{-- @vite(['resources/app.ts', $componentPath]) --}}
         @inertiaHead
     </head>
     <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">

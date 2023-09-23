@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, h, defineProps, onBeforeMount, ref } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 
 export default defineComponent({
     props: ['name'],
