@@ -2,6 +2,7 @@
 
 namespace Performing\Harmony\Support;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Performing\Harmony\Concerns\Newable;
 
@@ -9,9 +10,9 @@ class Menu implements Arrayable
 {
     use Newable;
 
-    protected array $items = [];
+    protected array|Closure $items = [];
 
-    public function items(array $items)
+    public function items(array|Closure $items)
     {
         $this->items = $items;
 
@@ -20,8 +21,16 @@ class Menu implements Arrayable
 
     public function toArray()
     {
+        $items = $this->items;
+
         return [
-            'items' => array_map(fn ($item) => $item->toArray(), $this->items)
+            'items' => array_map(function ($item) {
+                if ($item instanceof Arrayable) {
+                    return $item->toArray();
+                }
+
+                return $item;
+            }, is_callable($items) ? $items() : $items)
         ];
     }
 }
