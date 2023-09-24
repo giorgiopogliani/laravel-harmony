@@ -17,6 +17,6 @@ trait ElementShow
 
         return Page::make($this->element()->handle())
             ->element($model->toArray())
-            ->render('resources/show');
+            ->render('harmony::resources/show');
     }
 }

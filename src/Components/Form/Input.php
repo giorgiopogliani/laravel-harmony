@@ -7,17 +7,17 @@ use Illuminate\Support\Str;
 
 class Input extends Component
 {
-    protected string $label;
+    public string $label;
 
-    protected string $name;
+    public string $name;
 
-    protected string $type = 'text';
+    public string $type = 'text';
 
-    protected string $help = '';
+    public string $help = '';
 
-    protected string $validation = '';
+    public string $validation = '';
 
-    protected array $options = [];
+    public array $options = [];
 
     public function __construct(string $label, ?string $name = null)
     {
