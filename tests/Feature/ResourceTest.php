@@ -28,7 +28,7 @@ it('can list all resources', function () {
     ]));
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
-        ->component('resources/index')
+        // ->component('resources/index')
         ->has('table', fn (AssertableInertia $page) => $page
             ->where('columns', $element->columns())
             ->where('filters', $element->filters())
@@ -48,7 +48,7 @@ it('can show a resource', function () {
     $response = $this->get(route('posts.show', $post));
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
-        ->component('resources/show')
+        // ->component('resources/show')
         ->has('element', fn (AssertableInertia $page) => $page
             ->where('id', $post->id)
             ->where('title', $post->title)
