@@ -5,7 +5,6 @@ namespace Performing\Harmony\Http\Concerns;
 use Inertia\Response;
 use Performing\Harmony\Components\ActionComponent;
 use Performing\Harmony\Components\Form\Input;
-use Performing\Harmony\Components\Form\Input;
 use Performing\Harmony\Components\FormComponent;
 use Performing\Harmony\Page;
 
@@ -41,7 +40,6 @@ trait ElementCreate
                             ->toArray()
                     )
                     ->action(route($this->element()->handle() . '.store'))
-            )
             ->render('harmony::resources/create');
     }
 }
