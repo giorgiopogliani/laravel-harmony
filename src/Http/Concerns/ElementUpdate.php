@@ -21,7 +21,7 @@ trait ElementUpdate
 
         $model->update($data);
 
-        flash('Updated successfully.');
+        flash(__('Updated successfully.'));
 
         return redirect()->route($this->element()->handle() . '.index');
     }
