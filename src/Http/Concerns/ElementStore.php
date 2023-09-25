@@ -16,9 +16,9 @@ trait ElementStore
 
         $data = $this->validate($request, $rules);
 
-        $customer = $this->query()->create($data);
+        $customer = $this->element()->query()->create($data);
 
-        flash()->success(__('Created successfully.'));
+        flash(__('Created successfully.'));
 
         return redirect()->route($this->element()->handle() . '.index', $customer);
     }

@@ -25,6 +25,9 @@ const { selectedRows, handleSelectAll, handleSelectRow, isSelected, isSelectedAl
 
 <template>
   <div class="w-full pb-8">
+
+    <VPageHeader class="mb-4"/>
+
     <div class="sm:flex sm:items-center mt-4">
       <VTableFilters v-if="filters.length > 0" :filters="filters" :query="query" />
     </div>

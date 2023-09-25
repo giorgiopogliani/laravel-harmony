@@ -14,6 +14,12 @@ function submit() {
 
 <template>
   <form class="flex flex-col gap-4 mt-8" @submit.prevent="submit">
+    <VPageHeader class="mb-4">
+      <VButton class="btn-primary">
+        Save
+      </VButton>
+    </VPageHeader>
+
     <VFormInput
       v-for="field in form.fields"
       v-bind="field"
@@ -21,8 +27,5 @@ function submit() {
       :error="errors[field.name]"
       :label="`${field.label} ${(field.name)} `"
     />
-    <div>
-      <VButton class="btn btn-blue"> Save </VButton>
-    </div>
   </form>
 </template>

@@ -1,28 +1,10 @@
 <script lang="ts" setup>
-import * as toast from "@zag-js/toast";
-import { normalizeProps, useActor } from "@zag-js/vue";
-import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
+import { computed } from "vue";
+import { Notification, useNotificationStore } from "~/stores/useNotificationStore";
 
-let props = defineProps<{
-  actor: any;
-  link: any;
-}>();
+defineProps<{ notification: Notification }>();
 
-const [state, send] = useActor(props.actor);
-
-const api = computed(() => toast.connect(state.value, send, normalizeProps));
-
-const timeout = ref<number | undefined>();
-
-onMounted(() => {
-  timeout.value = setTimeout(() => {
-    api.value.dismiss();
-  }, 3000);
-});
-
-onUnmounted(() => {
-  clearTimeout(timeout.value);
-});
+const store = useNotificationStore();
 </script>
 
 <template>
@@ -31,7 +13,7 @@ onUnmounted(() => {
   >
     <div class="p-4 w-full">
       <div class="flex items-start">
-        <div class="flex-shrink-0" v-if="api.type == 'success'">
+        <div class="flex-shrink-0" v-if="notification.type == 'success'">
           <svg
             class="h-6 w-6 text-green-400"
             fill="none"
@@ -47,7 +29,7 @@ onUnmounted(() => {
             />
           </svg>
         </div>
-        <div class="flex-shrink-0" v-else-if="api.type == 'error'">
+        <div class="flex-shrink-0" v-else-if="notification.type == 'error'">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -65,24 +47,16 @@ onUnmounted(() => {
         </div>
         <div class="ml-3 w-0 flex-1 pt-0.5">
           <p class="text-sm font-medium text-gray-900">
-            {{ api.title }}
+            {{ notification.title }}
           </p>
           <p class="mt-1 text-sm text-gray-500">
-            {{ api.description }}
+            {{ notification.description }}
           </p>
-          <div class="mt-3 flex space-x-7" v-if="api.render()">
-            <NuxtLink
-              :to="api.render().url"
-              class="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              {{ api.render().label }}
-            </NuxtLink>
-          </div>
         </div>
         <div class="ml-4 flex flex-shrink-0">
           <button
             type="button"
-            @click="api.dismiss()"
+            @click="store.dismiss(notification)"
             class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xl bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             <span class="sr-only">Close</span>

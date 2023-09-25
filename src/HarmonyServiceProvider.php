@@ -18,11 +18,4 @@ class HarmonyServiceProvider extends PackageServiceProvider
             ->hasCommand(HarmonyCommand::class)
             ->hasRoutes('web');
     }
-
-    public function registeringPackage()
-    {
-        $this->app->singleton(Flash::class, function ($app) {
-            return new Flash();
-        });
-    }
 }

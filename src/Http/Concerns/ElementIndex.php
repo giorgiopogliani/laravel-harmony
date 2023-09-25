@@ -11,9 +11,17 @@ trait ElementIndex
 {
     public function index(): Response
     {
-        return Page::make($this->element()->handle())
+        return Page::make(ucwords($this->element()->handle()))
+            ->breadcrumbs(
+                ActionComponent::make()
+                    ->title('Create ' . $this->element()->handle())
+                    ->route($this->element()->handle() . '.index')
+            )
             ->actions(
-                ActionComponent::make()->title('Create ' . $this->element()->handle())->route($this->element()->handle() . '.create'),
+                ActionComponent::make()
+                    ->title('Create ' . $this->element()->handle())
+                    ->route($this->element()->handle() . '.create')
+                    ->class('btn btn-primary'),
             )
             ->table(
                 TableComponent::make()

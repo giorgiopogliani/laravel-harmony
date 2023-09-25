@@ -3,7 +3,7 @@ import { AnyRow, Column } from "~/types";
 import { get } from "lodash";
 
 defineProps<{
-  value?: number | string;
+  value?: number | string | any[];
   row: AnyRow;
   column: Column;
 }>();

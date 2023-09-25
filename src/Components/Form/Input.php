@@ -15,7 +15,7 @@ class Input extends Component
 
     public string $help = '';
 
-    public string $validation = '';
+    public string|array $validation = '';
 
     public array $options = [];
 
@@ -51,7 +51,7 @@ class Input extends Component
         return $this;
     }
 
-    public function validation(string $validation)
+    public function validation(array|string $validation)
     {
         $this->validation = $validation;
 
