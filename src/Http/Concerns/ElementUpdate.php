@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Performing\Harmony\Components\Form\Input;
+use Spatie\Flash\Message;
 
 trait ElementUpdate
 {
@@ -21,7 +22,10 @@ trait ElementUpdate
 
         $model->update($data);
 
-        flash(__('Updated successfully.'));
+        flash()->flashMessage(new Message(
+            message: __('Updated successfully.'),
+            level: 'success',
+        ));
 
         return redirect()->route($this->element()->handle() . '.index');
     }

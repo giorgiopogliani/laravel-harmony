@@ -3,6 +3,7 @@
 namespace Performing\Harmony;
 
 use Performing\Harmony\Support\Menu;
+use Spatie\Flash\Flash;
 
 class Harmony
 {

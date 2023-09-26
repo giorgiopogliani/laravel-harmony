@@ -1,10 +1,10 @@
 <?php
 
-namespace Performing\Harmony\Components;
+namespace Performing\Harmony\Components\Tables;
 
 use Performing\Harmony\Components\Component;
 
-class TableComponent extends Component
+class Table extends Component
 {
     protected array $columns = [];
 
@@ -79,7 +79,7 @@ class TableComponent extends Component
         return $this;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $this->applyFilters();
         $this->applySorting();

@@ -5,6 +5,7 @@ namespace Performing\Harmony\Http\Concerns;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Performing\Harmony\Components\Form\Input;
+use Spatie\Flash\Message;
 
 trait ElementStore
 {
@@ -18,7 +19,10 @@ trait ElementStore
 
         $customer = $this->element()->query()->create($data);
 
-        flash(__('Created successfully.'));
+        flash()->flashMessage(new Message(
+            message: __('Created successfully.'),
+            level: 'success',
+        ));
 
         return redirect()->route($this->element()->handle() . '.index', $customer);
     }

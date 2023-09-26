@@ -7,5 +7,5 @@ use Request;
 
 interface ElementDeletable
 {
-    public function delete(): RedirectResponse;
+    public function destroy(): RedirectResponse;
 }

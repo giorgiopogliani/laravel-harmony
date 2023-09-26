@@ -2,13 +2,8 @@
 
 namespace Performing\Harmony\Concerns;
 
-trait Newable
+trait HasMake
 {
-    public static function new()
-    {
-        return new static();
-    }
-
     public static function make()
     {
         return new static();

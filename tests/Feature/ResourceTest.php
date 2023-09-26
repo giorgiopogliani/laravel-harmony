@@ -8,7 +8,7 @@ use Tests\App\Models\Post;
 use Tests\App\Models\User;
 
 beforeEach(function () {
-    $this->user = User::first();
+    $this->user = User::factory()->create();
 
     $this->actingAs($this->user);
 
@@ -17,6 +17,8 @@ beforeEach(function () {
 
 it('can list all resources', function () {
     $this->withoutExceptionHandling();
+
+    Post::factory()->count(23)->create();
 
     $element = new PostElement();
 
@@ -41,7 +43,7 @@ it('can list all resources', function () {
 });
 
 it('can show a resource', function () {
-    $post = Post::first();
+    $post = Post::factory()->create();
 
     $this->withoutExceptionHandling();
 
@@ -52,7 +54,68 @@ it('can show a resource', function () {
         ->has('element', fn (AssertableInertia $page) => $page
             ->where('id', $post->id)
             ->where('title', $post->title)
-            ->where('created_at', $post->created_at)
-            ->where('updated_at', $post->updated_at)
             ->etc()));
+});
+
+it('can store a resource', function () {
+    $this->withoutExceptionHandling();
+
+    $this->post(route('posts.store'), [
+        'title' => 'New Title',
+        'body' => 'New Body',
+    ])
+    ->assertRedirect()
+    ->assertSessionHas('laravel_flash_message', [
+        'message' => 'Created successfully.',
+        'level' => 'success',
+        'class' => null,
+    ]);
+
+    $post = Post::first();
+
+    expect($post->title)->toBe('New Title');
+});
+
+it('can update a resource', function () {
+    $post = Post::factory()->create();
+
+    $this->withoutExceptionHandling();
+
+    $this->put(route('posts.update', $post), [
+        'id' => $post->id,
+        'title' => 'New Title',
+        'body' => 'New Body',
+    ])
+    ->assertRedirect()
+    ->assertSessionHas('laravel_flash_message', [
+        'message' => 'Updated successfully.',
+        'level' => 'success',
+        'class' => null,
+    ]);
+
+    $post = Post::where('id', $post->id)->first();
+
+    expect($post->title)->toBe('New Title');
+});
+
+it('can delete a resource', function () {
+    $post = Post::factory()->create();
+
+    $this->withoutExceptionHandling();
+
+    $this->delete(route('posts.destroy', $post), [
+        'id' => $post->id,
+        'title' => 'New Title',
+        'body' => 'New Body',
+    ])
+    ->assertRedirect()
+    ->assertSessionHas('laravel_flash_message', [
+        'message' => 'Deleted successfully.',
+        'level' => 'success',
+        'class' => null,
+    ]);
+
+    $post = Post::where('id', $post->id)->first();
+
+    expect($post)->toBeNull();
 });

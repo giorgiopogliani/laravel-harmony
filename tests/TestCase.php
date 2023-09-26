@@ -7,9 +7,31 @@ use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Performing\Harmony\HarmonyServiceProvider;
 use Tests\App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Schema;
 
 class TestCase extends Orchestra
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Factory::guessFactoryNamesUsing(
+            fn (string $modelName) => 'Database\\Factories\\' . class_basename($modelName) . 'Factory'
+        );
+
+        $this->loadLaravelMigrations();
+
+        Schema::create('posts', function ($table) {
+            $table->id();
+            $table->string('title');
+            $table->string('body');
+            $table->timestamps();
+        });
+
+        $this->artisan('migrate');
+    }
+
     protected function resolveApplicationHttpKernel($app)
     {
         $app->singleton('Illuminate\Contracts\Http\Kernel', 'Tests\App\Http\Kernel');

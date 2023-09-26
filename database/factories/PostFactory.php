@@ -1,9 +1,9 @@
 <?php
 
-namespace Performing\Harmony\Database\Factories;
+namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Performing\Harmony\Tests\Models\Post;
+use Tests\App\Models\Post;
 
 class PostFactory extends Factory
 {
@@ -12,7 +12,10 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-
+            'title' => $this->faker->name,
+            'body' => $this->faker->name,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\App\Elements;
 
 use Illuminate\Database\Eloquent\Builder;
+use Performing\Harmony\Components\Form\Input;
 use Performing\Harmony\Data;
 use Performing\Harmony\Element;
 use Tests\App\Data\PostData;
@@ -23,7 +24,8 @@ class PostElement extends Element
     public function fields(): array
     {
         return [
-
+            Input::make('title'),
+            Input::make('body'),
         ];
     }
 

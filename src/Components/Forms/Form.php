@@ -1,8 +1,10 @@
 <?php
 
-namespace Performing\Harmony\Components;
+namespace Performing\Harmony\Components\Forms;
 
-class FormComponent extends Component
+use Performing\Harmony\Components\Component;
+
+class Form extends Component
 {
     protected array $fields = [];
 

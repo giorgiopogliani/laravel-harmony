@@ -9,7 +9,6 @@ use Sushi\Sushi;
 class User extends AuthUser
 {
     use HasFactory;
-    use Sushi;
 
     /**
      * The attributes that are mass assignable.
@@ -40,16 +39,4 @@ class User extends AuthUser
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function getRows()
-    {
-        return [
-            [
-                'id' => '1',
-                'name' => 'John Doe',
-                'email' => 'john@example.com',
-                'password' => bcrypt('password'),
-            ]
-        ];
-    }
 }

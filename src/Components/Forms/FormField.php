@@ -5,7 +5,7 @@ namespace Performing\Harmony\Components\Form;
 use Performing\Harmony\Components\Component;
 use Illuminate\Support\Str;
 
-class Input extends Component
+class FormField extends Component
 {
     public string $label;
 

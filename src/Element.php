@@ -9,10 +9,16 @@ abstract class Element
     abstract public function handle(): string;
 
     /** @return ActionComponent[] */
-    abstract public function bulkActions(): array;
+    public function bulkActions(): array
+    {
+        return [];
+    }
 
     /** @return TableFilter */
-    abstract public function filters(): array;
+    public function filters(): array
+    {
+        return [];
+    }
 
     /** @return TableColumn[] */
     abstract public function columns(): array;

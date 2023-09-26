@@ -2,27 +2,16 @@
 
 namespace Performing\Harmony\Components;
 
-use Performing\Harmony\Concerns\Newable;
 use Illuminate\Support\Str;
+use Performing\Harmony\Concerns\HasTitle;
 
 class ActionComponent extends Component
 {
-    use Newable;
+    use HasTitle;
 
     protected ?string $href = null;
 
-    protected string $title = '';
-
     protected ?string $method = null;
-
-    protected array $data = [];
-
-    public function title(string $title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
 
     public function route(...$args)
     {
@@ -44,12 +33,11 @@ class ActionComponent extends Component
         return $this;
     }
 
-    public function toArray()
+    public function getProps(): array
     {
-        return array_filter(array_merge($this->data, [
-            'title' => $this->title,
+        return [
             'href' => $this->href,
             'method' => $this->method,
-        ]));
+        ];
     }
 }
