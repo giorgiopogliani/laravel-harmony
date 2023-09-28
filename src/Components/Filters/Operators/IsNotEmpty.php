@@ -1,6 +1,6 @@
 <?php
 
-namespace Performing\Harmony\Components\Operators;
+namespace Performing\Harmony\Components\Filters\Operators;
 
 class IsNotEmpty extends Operator
 {

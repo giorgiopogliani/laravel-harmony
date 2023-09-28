@@ -38,7 +38,7 @@ class Form extends Component
         return $this;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'fields' => $this->fields,

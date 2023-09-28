@@ -2,7 +2,7 @@
 
 namespace Performing\Harmony;
 
-use Performing\Harmony\Support\Menu;
+use Performing\Harmony\Components\Menu\Navigation;
 use Spatie\Flash\Flash;
 
 class Harmony
@@ -11,10 +11,10 @@ class Harmony
 
     public function __construct()
     {
-        $this->menu = new Support\Menu();
+        $this->menu = Navigation::make('');
     }
 
-    public function menu(): Menu
+    public function menu(): Navigation
     {
         return $this->menu;
     }

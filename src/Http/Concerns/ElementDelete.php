@@ -11,7 +11,7 @@ trait ElementDelete
     {
         $id = request()->route('model');
 
-        $this->element()->query()->delete($id);
+        $this->element()->query()->find($id)->delete($id);
 
         flash()->flashMessage(new Message(
             message: __('Deleted successfully.'),

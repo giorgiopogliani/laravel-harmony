@@ -1,8 +1,7 @@
 <?php
 
-namespace Performing\Harmony\Support;
+namespace Performing\Harmony\Components\Menu;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasTitle;
 
@@ -27,7 +26,7 @@ class MenuItem extends Component
     public function getProps(): array
     {
         return [
-            'link' => route($this->data['route']) ?? '',
+            'href' => route($this->data['route']) ?? '',
         ];
     }
 }

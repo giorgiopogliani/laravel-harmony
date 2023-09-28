@@ -7,22 +7,12 @@ use Illuminate\Support\Traits\Macroable;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Components\Tables\Table;
 use Performing\Harmony\Components\Forms\Form;
+use Performing\Harmony\Concerns\HasTitle;
 
 class Page extends Component
 {
+    use HasTitle;
     use Macroable;
-
-    protected $data = [];
-
-    public static function make(string $title)
-    {
-        return new static($title);
-    }
-
-    public function __construct(string $title)
-    {
-        $this->data['title'] = $title;
-    }
 
     public function breadcrumbs(...$breadcrumbs)
     {
@@ -57,11 +47,6 @@ class Page extends Component
         $this->data[$name] = $arguments[0];
 
         return $this;
-    }
-
-    public function toArray()
-    {
-        return $this->data;
     }
 
     public function render($component)

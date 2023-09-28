@@ -1,6 +1,6 @@
 <?php
 
-namespace Performing\Harmony\Support;
+namespace Performing\Harmony\Components\Menu;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Performing\Harmony\Components\Component;
@@ -11,9 +11,4 @@ class Menu extends Component
 {
     use HasTitle;
     use HasChildren;
-
-    public function getProps(): array
-    {
-        return [];
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Performing\Harmony\Support;
+namespace Performing\Harmony\Components\Menu;
 
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasChildren;

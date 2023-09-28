@@ -3,8 +3,8 @@
 namespace Performing\Harmony\Http\Concerns;
 
 use Inertia\Response;
-use Performing\Harmony\Components\ActionComponent;
-use Performing\Harmony\Components\TableComponent;
+use Performing\Harmony\Components\Link;
+use Performing\Harmony\Components\Tables\Table;
 use Performing\Harmony\Page;
 
 trait ElementIndex
@@ -13,18 +13,16 @@ trait ElementIndex
     {
         return Page::make(ucwords($this->element()->handle()))
             ->breadcrumbs(
-                ActionComponent::make()
-                    ->title('Create ' . $this->element()->handle())
+                Link::make('Create ' . $this->element()->handle())
                     ->route($this->element()->handle() . '.index')
             )
             ->actions(
-                ActionComponent::make()
-                    ->title('Create ' . $this->element()->handle())
+                Link::make('Create ' . $this->element()->handle())
                     ->route($this->element()->handle() . '.create')
                     ->class('btn btn-primary'),
             )
             ->table(
-                TableComponent::make()
+                Table::make()
                     ->rows($this->element()->query())
                     ->filters($this->element()->filters())
                     ->columns($this->element()->columns())

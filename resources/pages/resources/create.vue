@@ -20,12 +20,16 @@ function submit() {
       </VButton>
     </VPageHeader>
 
-    <VFormInput
-      v-for="field in form.fields"
-      v-bind="field"
-      v-model="_form[field.name]"
-      :error="$page.props.errors[field.name]"
-      :label="`${field.label} ${field.name} `"
-    />
+    <VCard>
+      <div class="flex flex-col gap-8">
+        <VFormInput
+          v-for="field in form.fields"
+          v-bind="field"
+          v-model="_form[field.name]"
+          :error="$page.props.errors[field.name]"
+          :label="field.label"
+        />
+      </div>
+    </VCard>
   </form>
 </template>

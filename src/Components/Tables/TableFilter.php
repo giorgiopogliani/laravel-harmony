@@ -1,6 +1,6 @@
 <?php
 
-namespace Performing\Harmony\Components\Table;
+namespace Performing\Harmony\Components\Tables;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;

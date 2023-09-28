@@ -1,6 +1,6 @@
 <?php
 
-namespace Performing\Harmony\Components\Form;
+namespace Performing\Harmony\Components\Forms;
 
 use Performing\Harmony\Components\Component;
 use Illuminate\Support\Str;
@@ -15,7 +15,7 @@ class FormField extends Component
 
     public string $help = '';
 
-    public string|array $validation = '';
+    public string|array $rules = '';
 
     public array $options = [];
 
@@ -51,9 +51,9 @@ class FormField extends Component
         return $this;
     }
 
-    public function validation(array|string $validation)
+    public function rules(array|string $rules)
     {
-        $this->validation = $validation;
+        $this->rules = $rules;
 
         return $this;
     }
@@ -71,7 +71,7 @@ class FormField extends Component
             'placeholder' => $this->label,
             'label' => ucfirst($this->label),
             'help' => $this->help,
-            'validation' => $this->validation,
+            'rules' => $this->rules,
             'options' => $this->options,
         ];
     }

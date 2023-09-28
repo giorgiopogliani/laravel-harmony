@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Performing\Harmony\Components\Form\Input;
+use Performing\Harmony\Components\Forms\FormField;
 use Spatie\Flash\Message;
 
 trait ElementUpdate
@@ -15,7 +16,7 @@ trait ElementUpdate
         $model = $this->element()->query()->findOrFail($model);
 
         $rules = collect($this->element()->fields())
-            ->mapWithKeys(fn (Input $field) => [ $field->name => $field->validation ])
+            ->mapWithKeys(fn (FormField $field) => [ $field->name => $field->rules ])
             ->toArray();
 
         $data = $request->validate($rules);

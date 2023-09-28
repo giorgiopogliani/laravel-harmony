@@ -5,7 +5,7 @@ namespace Performing\Harmony\Components;
 use Illuminate\Support\Str;
 use Performing\Harmony\Concerns\HasTitle;
 
-class ActionComponent extends Component
+class Link extends Component
 {
     use HasTitle;
 
@@ -22,7 +22,7 @@ class ActionComponent extends Component
 
     public function __call($name, $arguments)
     {
-        if (str_starts_with($name, 'as') && strlen($name) > 2) {
+        if (in_array($name, ['asDelete', 'asPost', 'asPut', 'asPatch'])) {
             $this->method = Str::replace('as', '', strtolower($name));
 
             return $this;

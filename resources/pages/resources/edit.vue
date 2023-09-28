@@ -15,17 +15,22 @@ function submit() {
 <template>
   <form class="flex flex-col gap-4 mt-8" @submit.prevent="submit">
     <VPageHeader class="mb-4">
-      <VButton class="btn-primary">
+      <VButton type="submit" class="btn-primary">
         Save
       </VButton>
+
     </VPageHeader>
 
-    <VFormInput
-      v-for="field in form.fields"
-      v-bind="field"
-      v-model="_form[field.name]"
-      :error="errors[field.name]"
-      :label="`${field.label} ${(field.name)} `"
-    />
+    <VCard>
+      <div class="flex flex-col gap-8">
+        <VFormInput
+          v-for="field in form.fields"
+          v-bind="field"
+          v-model="_form[field.name]"
+          :error="errors[field.name]"
+          :label="field.label"
+        />
+      </div>
+    </VCard>
   </form>
 </template>

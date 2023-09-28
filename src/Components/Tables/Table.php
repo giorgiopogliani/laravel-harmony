@@ -114,7 +114,7 @@ class Table extends Component
 
     public function applyFilter($filter)
     {
-        $params = request()->input($this->filtersKey . '.' . $filter->name()) ;
+        $params = request()->input($this->filtersKey . '.' . $filter->getKey()) ;
 
         $value = is_array($params)
             ? $params['value'] ?? null
@@ -128,11 +128,11 @@ class Table extends Component
             $filter->withOperator($operator);
         }
 
-        if ($filter->hasStandaloneOperator()) {
-            $filter->apply($this->rows);
-        } elseif (! empty($value)) {
-            $filter->withValue($value)->apply($this->rows);
-        }
+        // $filter->apply($this->rows);
+        // if ($filter->hasStandaloneOperator()) {
+        // } elseif (! empty($value)) {
+        //     $filter->withValue($value)->apply($this->rows);
+        // }
     }
 
     protected function applyPaginate()
@@ -180,8 +180,8 @@ class Table extends Component
     protected function getQuery(): array
     {
         return collect($this->filters)
-            ->mapWithKeys(fn ($filter) => [
-                $filter->name() => request()->input("$this->filtersKey." . $filter->name()),
+            ->mapWithKeys(fn (TableFilter $filter) => [
+                $filter->getKey() => request()->input("$this->filtersKey." . $filter->getKey()),
             ])
             ->merge([
                 'search' => request()->input("$this->filtersKey.search"),
