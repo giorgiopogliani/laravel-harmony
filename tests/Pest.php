@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
+use Tests\App\Models\User;
 use Tests\TestCase;
 
 /*
@@ -13,6 +16,11 @@ use Tests\TestCase;
 | need to change it using the "uses()" function to bind a different classes or traits.
 |
 */
+
+beforeAll(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
 uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 uses(TestCase::class)->in('Arch');
@@ -44,7 +52,11 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function to_array($array)
 {
-    // ..
+    if (!is_array($array)) {
+        return $array;
+    }
+
+    return $array instanceof Arrayable ? $array->toArray() : array_map('to_array', $array);
 }

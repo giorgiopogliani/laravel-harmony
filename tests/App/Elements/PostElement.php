@@ -3,10 +3,9 @@
 namespace Tests\App\Elements;
 
 use Illuminate\Database\Eloquent\Builder;
-use Performing\Harmony\Components\Form\Input;
-use Performing\Harmony\Data;
+use Performing\Harmony\Components\Forms\FormField;
+use Performing\Harmony\Components\Tables\TableFilter;
 use Performing\Harmony\Element;
-use Tests\App\Data\PostData;
 use Tests\App\Models\Post;
 
 class PostElement extends Element
@@ -21,32 +20,25 @@ class PostElement extends Element
         return 'posts';
     }
 
-    public function fields(): array
-    {
-        return [
-            Input::make('title'),
-            Input::make('body'),
-        ];
-    }
-
     public function filters(): array
     {
         return [
+            TableFilter::make('Title')->key('title')->callback(function ($query, $value) {
+                $query->where('title', 'like', '%' . $value . '%');
+            }),
+        ];
+    }
 
+    public function fields(): array
+    {
+        return [
+            FormField::make('title'),
+            FormField::make('body'),
         ];
     }
 
     public function columns(): array
     {
-        return [
-
-        ];
-    }
-
-    public function bulkActions(): array
-    {
-        return [
-
-        ];
+        return [];
     }
 }

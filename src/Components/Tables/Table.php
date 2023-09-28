@@ -2,18 +2,29 @@
 
 namespace Performing\Harmony\Components\Tables;
 
+use Illuminate\Database\Eloquent\Builder;
 use Performing\Harmony\Components\Component;
+use Performing\Harmony\Components\Table\TableColumn;
+use Performing\Harmony\Concerns\HasMake;
+use Performing\Harmony\Criterias\Criteria;
 
 class Table extends Component
 {
+    use HasMake;
+
+    /** @var TableColumn[] */
     protected array $columns = [];
 
+    /** @var TableFilter[] */
     protected array $filters = [];
 
+    /** @var TableAction[] */
     protected array $actions = [];
 
+    /** @var TableSorters[] */
     protected array $sorters = [];
 
+    /** @var Builder */
     protected $rows = null;
 
     protected bool $selectable = false;
@@ -22,12 +33,7 @@ class Table extends Component
 
     protected array $query = ['per_page' => 10];
 
-    protected string $filtersKey = 'table';
-
-    public static function make()
-    {
-        return new static();
-    }
+    protected string $filtersKey = 'filters';
 
     public function columns(array $columns)
     {
@@ -99,40 +105,20 @@ class Table extends Component
 
     protected function applyFilters()
     {
-        // collect($this->rows->getModel()->getFilters())->each(function ($filter) {
-        //     $this->applyFilter($filter);
-        // });
-
-        // $style = new GithubFiltersStyle($this->filters);
-        // $style->apply($this->rows);
-
-
-        collect($this->filters)->each(function ($filter) {
+        foreach ($this->filters as $filter) {
             $this->applyFilter($filter);
-        });
+        }
     }
 
-    public function applyFilter($filter)
+    public function applyFilter(TableFilter $filter)
     {
-        $params = request()->input($this->filtersKey . '.' . $filter->getKey()) ;
+        $criteria = Criteria::from($filter);
 
-        $value = is_array($params)
-            ? $params['value'] ?? null
-            : $params;
-
-        $operator = is_array($params)
-            ? $params['operator'] ?? null
-            : null;
-
-        if ($operator) {
-            $filter->withOperator($operator);
+        if (!$criteria) {
+            return;
         }
 
-        // $filter->apply($this->rows);
-        // if ($filter->hasStandaloneOperator()) {
-        // } elseif (! empty($value)) {
-        //     $filter->withValue($value)->apply($this->rows);
-        // }
+        $criteria->apply($this->rows);
     }
 
     protected function applyPaginate()
@@ -156,7 +142,7 @@ class Table extends Component
             foreach ($this->columns as $column) {
                 if ($column->format instanceof \Closure) {
                     $closure = \Closure::bind($column->format, $item);
-                    $data[$column->get('key')] = $closure($item, $column);
+                    $data[$column->getKey()] = $closure($item, $column);
                 }
             }
 

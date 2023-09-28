@@ -3,10 +3,27 @@
 namespace Performing\Harmony\Components;
 
 use Illuminate\Contracts\Support\Arrayable;
+use ReflectionClass;
 
 abstract class Component implements Arrayable
 {
     protected array $data = [];
+
+    public function __construct()
+    {
+        $this->boot();
+    }
+
+    public function boot()
+    {
+        $reflect = new ReflectionClass($this);
+
+        foreach ($reflect->getTraits() as $trait) {
+            if ($trait->hasMethod('boot' . $trait->getShortName())) {
+                $this->{'boot' . $trait->getShortName()}();
+            }
+        }
+    }
 
     public function getProps(): array
     {

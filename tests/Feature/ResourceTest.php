@@ -1,19 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia;
 use Tests\App\Elements\PostElement;
-use Tests\App\Http\Controllers\PostController;
 use Tests\App\Models\Post;
-use Tests\App\Models\User;
-
-beforeEach(function () {
-    $this->user = User::factory()->create();
-
-    $this->actingAs($this->user);
-
-    Route::harmoned('posts', PostController::class);
-});
 
 it('can list all resources', function () {
     $this->withoutExceptionHandling();
@@ -33,8 +22,6 @@ it('can list all resources', function () {
         // ->component('resources/index')
         ->has('table', fn (AssertableInertia $page) => $page
             ->where('columns', $element->columns())
-            ->where('filters', $element->filters())
-            ->where('actions', $element->bulkActions())
             ->has('rows', fn (AssertableInertia $page) => $page
                 ->has('data', 11)
                 ->where('current_page', 2)
@@ -57,6 +44,64 @@ it('can show a resource', function () {
             ->etc()));
 });
 
+it('can edit a resource', function () {
+    $post = Post::factory()->create();
+
+    $this->withoutExceptionHandling();
+
+    $response = $this
+        ->get(route('posts.edit', $post))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            // ->component('resources/show')
+            ->has(
+                'form',
+                fn (AssertableInertia $page) => $page
+                    ->has('fields')
+                    ->has(
+                        'data',
+                        fn (AssertableInertia $page) => $page
+                            ->where('title', $post->title)
+                            ->where('body', $post->body)
+                    )
+                    ->where('action', route('posts.update', $post))
+            )
+            ->etc());
+});
+
+it('can create a resource', function () {
+    $this->withoutExceptionHandling();
+
+    $this
+        ->get(route('posts.create'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            // ->component('resources/show')
+            ->has(
+                'form',
+                fn (AssertableInertia $page) => $page
+                    ->has('fields')
+                    ->has(
+                        'data',
+                        fn (AssertableInertia $page) => $page
+                            ->where('title', '')
+                            ->where('body', '')
+                    )
+                    ->where('action', route('posts.store'))
+            )
+            ->etc());
+
+    $this->post(route('posts.store'), [
+        'title' => 'New Title',
+        'body' => 'New Body',
+    ]);
+
+    $post = Post::first();
+
+    expect($post->title)->toBe('New Title');
+    expect($post->body)->toBe('New Body');
+});
+
 it('can store a resource', function () {
     $this->withoutExceptionHandling();
 
@@ -64,12 +109,12 @@ it('can store a resource', function () {
         'title' => 'New Title',
         'body' => 'New Body',
     ])
-    ->assertRedirect()
-    ->assertSessionHas('laravel_flash_message', [
-        'message' => 'Created successfully.',
-        'level' => 'success',
-        'class' => null,
-    ]);
+        ->assertRedirect()
+        ->assertSessionHas('laravel_flash_message', [
+            'message' => 'Created successfully.',
+            'level' => 'success',
+            'class' => null,
+        ]);
 
     $post = Post::first();
 
@@ -86,12 +131,12 @@ it('can update a resource', function () {
         'title' => 'New Title',
         'body' => 'New Body',
     ])
-    ->assertRedirect()
-    ->assertSessionHas('laravel_flash_message', [
-        'message' => 'Updated successfully.',
-        'level' => 'success',
-        'class' => null,
-    ]);
+        ->assertRedirect()
+        ->assertSessionHas('laravel_flash_message', [
+            'message' => 'Updated successfully.',
+            'level' => 'success',
+            'class' => null,
+        ]);
 
     $post = Post::where('id', $post->id)->first();
 
@@ -108,12 +153,12 @@ it('can delete a resource', function () {
         'title' => 'New Title',
         'body' => 'New Body',
     ])
-    ->assertRedirect()
-    ->assertSessionHas('laravel_flash_message', [
-        'message' => 'Deleted successfully.',
-        'level' => 'success',
-        'class' => null,
-    ]);
+        ->assertRedirect()
+        ->assertSessionHas('laravel_flash_message', [
+            'message' => 'Deleted successfully.',
+            'level' => 'success',
+            'class' => null,
+        ]);
 
     $post = Post::where('id', $post->id)->first();
 

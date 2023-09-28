@@ -2,17 +2,17 @@
 
 namespace Performing\Harmony\Factories;
 
-use Performing\Harmony\Components\Operators\Contains;
-use Performing\Harmony\Components\Operators\EndsWith;
-use Performing\Harmony\Components\Operators\IsEmpty;
-use Performing\Harmony\Components\Operators\IsEqual;
-use Performing\Harmony\Components\Operators\IsGreaterThan;
-use Performing\Harmony\Components\Operators\IsLessThan;
-use Performing\Harmony\Components\Operators\IsNotEmpty;
-use Performing\Harmony\Components\Operators\IsNotEqual;
-use Performing\Harmony\Components\Operators\IsOneOfAny;
-use Performing\Harmony\Components\Operators\NotContains;
-use Performing\Harmony\Components\Operators\StartsWith;
+use Performing\Harmony\Components\Filters\Operators\Contains;
+use Performing\Harmony\Components\Filters\Operators\EndsWith;
+use Performing\Harmony\Components\Filters\Operators\IsEmpty;
+use Performing\Harmony\Components\Filters\Operators\IsEqual;
+use Performing\Harmony\Components\Filters\Operators\IsGreaterThan;
+use Performing\Harmony\Components\Filters\Operators\IsLessThan;
+use Performing\Harmony\Components\Filters\Operators\IsNotEmpty;
+use Performing\Harmony\Components\Filters\Operators\IsNotEqual;
+use Performing\Harmony\Components\Filters\Operators\IsOneOfAny;
+use Performing\Harmony\Components\Filters\Operators\NotContains;
+use Performing\Harmony\Components\Filters\Operators\StartsWith;
 
 class OperatorFactory
 {

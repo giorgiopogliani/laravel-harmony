@@ -20,13 +20,20 @@ class TableFilter extends Component
 
     protected array $operators = [];
 
-    protected ?Closure $callback = null;
+    protected ?string $key;
 
-    public function callback($callback)
+    protected ?Closure $callback;
+
+    public function callback(Closure $callback): self
     {
         $this->callback = $callback;
 
         return $this;
+    }
+
+    public function getCallback()
+    {
+        return $this->callback;
     }
 
     public function options($options)
@@ -57,22 +64,14 @@ class TableFilter extends Component
 
     public function key(string $key): self
     {
-        $this->data['key'] = $key;
+        $this->key = $key;
 
         return $this;
     }
 
+    #[Prop('key')]
     public function getKey(): string
     {
         return $this->get('key') ?? str($this->getTitle())->slug('_')->toString();
-    }
-
-    public function apply(Builder $query): void
-    {
-        if ($this->callback) {
-            call_user_func(\Closure::bind($this->callback, $this), $query);
-        } else {
-            $query->where($this->getKey(), $this->getSqlOperator(), $this->getSqlValue());
-        }
     }
 }

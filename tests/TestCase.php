@@ -8,7 +8,9 @@ use Orchestra\Testbench\TestCase as Orchestra;
 use Performing\Harmony\HarmonyServiceProvider;
 use Tests\App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Tests\App\Http\Controllers\PostController;
 
 class TestCase extends Orchestra
 {
@@ -30,6 +32,8 @@ class TestCase extends Orchestra
         });
 
         $this->artisan('migrate');
+
+        Route::harmoned('posts', PostController::class);
     }
 
     protected function resolveApplicationHttpKernel($app)
@@ -51,6 +55,6 @@ class TestCase extends Orchestra
 
         config()->set('auth.providers.0.model', User::class);
         config()->set('auth.providers.0.guard', 'sanctum');
-        config()->set('inertia.testing.page_paths', [ __DIR__ . '/../resources/pages' ]);
+        config()->set('inertia.testing.page_paths', [__DIR__ . '/../resources/pages']);
     }
 }
