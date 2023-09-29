@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+  <div class="whitespace-nowrap px-3 py-2 text-sm text-gray-800">
     <slot></slot>
   </div>
 </template>

@@ -4,7 +4,7 @@ namespace Performing\Harmony\Components\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Components\Table\TableColumn;
+use Performing\Harmony\Components\Tables\TableColumn;
 use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Criterias\Criteria;
 

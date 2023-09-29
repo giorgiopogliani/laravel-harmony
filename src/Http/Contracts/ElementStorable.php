@@ -3,9 +3,9 @@
 namespace Performing\Harmony\Http\Contracts;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Performing\Harmony\Http\Requests\StoreRequest;
 
 interface ElementStorable
 {
-    public function store(Request $request): RedirectResponse;
+    public function store(StoreRequest $request): RedirectResponse;
 }

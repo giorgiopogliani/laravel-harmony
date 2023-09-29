@@ -28,5 +28,10 @@ abstract class ElementController extends Controller implements
     use Concerns\ElementUpdate;
     use Concerns\ElementDelete;
 
+    public function __construct()
+    {
+        app()->singleton('element', fn () => $this->element());
+    }
+
     abstract protected function element(): Element;
 }

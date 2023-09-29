@@ -22,7 +22,7 @@ class TableFilter extends Component
 
     protected ?string $key;
 
-    protected ?Closure $callback;
+    protected ?Closure $callback = null;
 
     public function callback(Closure $callback): self
     {

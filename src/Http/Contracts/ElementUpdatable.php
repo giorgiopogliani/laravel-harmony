@@ -2,11 +2,10 @@
 
 namespace Performing\Harmony\Http\Contracts;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Performing\Harmony\Http\Requests\UpdateRequest;
 
 interface ElementUpdatable
 {
-    public function update(Request $request, string $model): RedirectResponse;
+    public function update(UpdateRequest $request, string $model): RedirectResponse;
 }

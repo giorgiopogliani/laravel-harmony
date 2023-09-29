@@ -76,6 +76,11 @@ const { selectedRows, handleSelectAll, handleSelectRow, isSelected, isSelectedAl
                   </component>
                 </td>
               </tr>
+              <tr v-if="datatable.rows.length == 0">
+                <td :colspan="datatable.columns.length + (table.selectable ? 1 : 0)" class="text-center py-4">
+                  No records found.
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

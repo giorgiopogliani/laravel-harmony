@@ -2,8 +2,6 @@
 import { Filter } from "~/types";
 import { useFilters } from "~/composables/useFilters";
 
-import VIcon from "./VIcon.vue";
-
 const props = defineProps<{
   filters: Filter[];
   query: any;
@@ -22,29 +20,29 @@ const { activeFilters, addFilter, isStandalone } = useFilters({
         <div>
           <div v-for="filter in filters" :key="filter.key">
             <button @click="addFilter(filter)" type="button" class="px-3 py-1 hover:bg-gray-100 flex w-full">
-              {{ filter?.label }}
+              {{ filter?.title }}
             </button>
           </div>
         </div>
       </VPopover>
-      <div class="w-full" v-for="filter in activeFilters" :key="filter.name">
+      <div class="w-full" v-for="filter in activeFilters" :key="filter.key">
         <span class="block mb-1 text-sm">
-          {{ filter.label }}
+          {{ filter.title }}
         </span>
         <div class="flex items-center gap-1">
-          <select class="form-input w-full max-w-[12rem]" v-model="query[filter.name].operator">
+          <select class="form-input w-full max-w-[12rem]" v-model="query[filter.key].operator">
             <option value="0">Seleziona...</option>
             <option :value="value.key" v-for="value in filter.operators">
               {{ value.label }}
             </option>
           </select>
           <input
-            v-if="!filter.operators.find((o) => o.key == query[filter.name].operator)?.standalone"
+            v-if="!filter.operators.find((o) => o.key == query[filter.key].operator)?.standalone"
             class="form-input w-full max-w-[12rem]"
-            v-model="query[filter.name].value"
+            v-model="query[filter.key].value"
             v-bind="filter.props"
           />
-          <button class="btn btn-white" @click="delete query[filter.name]">&times;</button>
+          <button class="btn btn-white" @click="delete query[filter.key]">&times;</button>
         </div>
       </div>
     </div>

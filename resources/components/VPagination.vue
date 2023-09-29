@@ -17,11 +17,11 @@ defineProps<{ pagination: Pagination<AnyRow>; query: any }>();
     <ul class="flex gap-4 w-full justify-end">
       <li v-for="link in pagination.links">
         <template v-if="link.url">
-          <Link :href="link.url" class="btn btn-white" v-html="link.label" preserve-scroll>
-          </Link>
+          <VButton :href="link.url" class="btn btn-neutral" v-html="link.label" preserve-scroll>
+          </VButton>
         </template>
         <template v-else>
-          <span class="btn btn-white" v-html="link.label"> </span>
+          <span class="btn btn-neutral" v-html="link.label"> </span>
         </template>
       </li>
     </ul>

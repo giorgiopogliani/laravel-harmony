@@ -7,7 +7,7 @@ const props = defineProps<{
   label?: string;
   icon?: string;
 }>();
-const [state, send] = useMachine(popover.machine({ id: `${Math.random()}` }));
+const [state, send] = useMachine(popover.machine({ id: `${Math.random()}`, positioning: { placement: 'bottom-start' } }));
 const api = computed(() => popover.connect(state.value, send, normalizeProps));
 </script>
 

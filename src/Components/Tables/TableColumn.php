@@ -5,11 +5,13 @@ namespace Performing\Harmony\Components\Tables;
 use Closure;
 use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
+use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasType;
 
 class TableColumn extends Component
 {
     use HasType;
+    use HasKey;
 
     public ?Closure $format = null;
 

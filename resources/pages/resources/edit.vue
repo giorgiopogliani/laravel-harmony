@@ -1,34 +1,38 @@
 <script lang="ts" setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm } from "laravel-precognition-vue-inertia";
 
-let props = defineProps<{ form: any, errors: any }>();
+let props = defineProps<{ form: any; errors: any }>();
 
-const _form = useForm({
+const _form = useForm("put", props.form.action, {
   ...props.form.data,
 });
 
-function submit() {
-    _form.put(props.form.action);
-}
+const submit = () => {
+  _form.submit({
+    preserveScroll: true,
+    onSuccess: () => _form.reset(),
+  });
+};
 </script>
 
 <template>
   <form class="flex flex-col gap-4 mt-8" @submit.prevent="submit">
     <VPageHeader class="mb-4">
-      <VButton type="submit" class="btn-primary">
+      <VButton :disabled="_form.processing" type="submit" class="btn-primary">
         Save
       </VButton>
-
     </VPageHeader>
 
     <VCard>
       <div class="flex flex-col gap-8">
         <VFormInput
           v-for="field in form.fields"
+          :class="{ 'border border-red-600': _form.invalid(field.name) }"
           v-bind="field"
           v-model="_form[field.name]"
-          :error="errors[field.name]"
+          :error="_form.errors[field.name]"
           :label="field.label"
+          @change="_form.validate(field.name)"
         />
       </div>
     </VCard>

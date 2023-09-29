@@ -4,13 +4,13 @@ import { computed } from "vue";
 export function useFilters(props: { filters: Filter[]; query: any }) {
   const activeFilters = computed<Filter[]>(() => {
     return (
-      props.filters.filter((f) => Object.keys(props.query).includes(f.name)) ??
+      props.filters.filter((f) => Object.keys(props.query).includes(f.key)) ??
       []
     );
   });
 
   function addFilter(filter: any) {
-    props.query[filter.name] = {
+    props.query[filter.key] = {
       value: filter.value ?? "",
       operator: Object.keys(filter.operators)[0] ?? "",
     };

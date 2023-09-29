@@ -4,14 +4,13 @@ namespace Performing\Harmony\Http\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Performing\Harmony\Components\Form\Input;
 use Performing\Harmony\Components\Forms\FormField;
+use Performing\Harmony\Http\Requests\UpdateRequest;
 use Spatie\Flash\Message;
 
 trait ElementUpdate
 {
-    public function update(Request $request, string $model): RedirectResponse
+    public function update(UpdateRequest $request, string $model): RedirectResponse
     {
         $model = $this->element()->query()->findOrFail($model);
 
