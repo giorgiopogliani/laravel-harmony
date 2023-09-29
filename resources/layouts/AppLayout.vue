@@ -18,7 +18,7 @@ onClickOutside(drawer, (event) => sidebarStore.close());
 
     <the-notifications />
 
-    <v-app-bar class="flex items-center justify-between h-[64px] overflow-hidden">
+    <v-app-bar class="flex items-center justify-between h-[64px]">
       <v-list>
         <v-list-item>
           <v-button @click="sidebarStore.toggle()">
