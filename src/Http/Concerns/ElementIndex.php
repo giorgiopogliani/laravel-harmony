@@ -2,6 +2,7 @@
 
 namespace Performing\Harmony\Http\Concerns;
 
+use Illuminate\Support\Str;
 use Inertia\Response;
 use Performing\Harmony\Components\Link;
 use Performing\Harmony\Components\Tables\Table;
@@ -13,11 +14,11 @@ trait ElementIndex
     {
         return Page::make(ucwords($this->element()->handle()))
             ->breadcrumbs(
-                Link::make('Create ' . $this->element()->handle())
+                Link::make('All ' . $this->element()->handle())
                     ->route($this->element()->handle() . '.index')
             )
             ->actions(
-                Link::make('Create ' . $this->element()->handle())
+                Link::make('Create ' . Str::singular($this->element()->handle()))
                     ->route($this->element()->handle() . '.create')
                     ->class('btn btn-primary'),
             )

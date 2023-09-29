@@ -66,7 +66,7 @@ onClickOutside(drawer, (event) => sidebarStore.close());
     <div class="flex h-screen w-full overflow-hidden transition-all">
       <v-app-drawer
         class="hidden md:flex transition-all z-20 h-screen flex-col overflow-x-hidden gap-4 pt-8"
-        :class="{ 'translate-x-0 w-64 p-2': sidebarStore.open, '-translate-x-full w-0': !sidebarStore.open }"
+        :class="{ 'translate-x-0 w-56 p-2': sidebarStore.open, '-translate-x-full w-0': !sidebarStore.open }"
       >
         <v-list class="flex flex-col w-full justify-start items-start gap-2" v-for="menu in $page.props.menu.children">
           <v-list-item>
@@ -81,7 +81,7 @@ onClickOutside(drawer, (event) => sidebarStore.close());
       </v-app-drawer>
 
       <v-app-drawer
-        class="flex md:hidden w-64 transition-transform p-2 z-20 fixed h-screen flex-col gap-4 pt-8"
+        class="flex md:hidden w-56 transition-transform p-2 z-20 fixed h-screen flex-col gap-4 pt-8"
         :class="{ 'translate-x-0': sidebarStore.open, '-translate-x-full': !sidebarStore.open }"
       >
         <v-list class="flex flex-col w-full justify-start items-start gap-2" v-for="menu in $page.props.menu.children">
@@ -102,7 +102,6 @@ onClickOutside(drawer, (event) => sidebarStore.close());
             {{ item.title }}
           </v-breadcrumbs-item>
         </v-breadcrumbs>
-
         <div class="p-4">
           <slot></slot>
         </div>

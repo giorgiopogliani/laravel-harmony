@@ -2,6 +2,7 @@
 
 namespace Performing\Harmony\Http\Concerns;
 
+use Illuminate\Support\Str;
 use Inertia\Response;
 use Performing\Harmony\Components\Link;
 use Performing\Harmony\Components\Forms\Form;
@@ -12,13 +13,13 @@ trait ElementCreate
 {
     public function create(): Response
     {
-        return Page::make(__('Create') . ' ' . $this->element()->handle())
-            ->breadcrumbs([
-                Link::make(ucwords($this->element()->handle()))
+        return Page::make(__('Create') . ' ' . Str::singular($this->element()->handle()))
+            ->breadcrumbs(
+                Link::make('All ' . $this->element()->handle())
                     ->route($this->element()->handle() . '.index'),
                 Link::make('Create')
                     ->route($this->element()->handle() . '.create'),
-            ])
+            )
             ->form(
                 Form::make()
                     ->fields($this->element()->fields())

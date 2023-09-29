@@ -16,7 +16,7 @@ const submit = () => {
 </script>
 
 <template>
-  <form class="flex flex-col gap-4 mt-8" @submit.prevent="submit">
+  <form class="flex flex-col gap-4" @submit.prevent="submit">
     <VPageHeader>
       <VButton :disabled="_form.processing" type="submit" class="btn-primary">
         Save

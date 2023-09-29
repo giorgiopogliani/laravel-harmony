@@ -1,7 +1,12 @@
+import { useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 
 export const useSidebarStore = defineStore("sidebar", {
-  state: () => ({ autoClose: true, open: false }),
+  state: () => {
+    return {
+        open: useStorage('sidebar-open', false)
+    }
+  },
   actions: {
     toggle() {
       this.open = !this.open;
