@@ -13,10 +13,7 @@ trait ElementDelete
 
         $this->element()->query()->find($id)->delete($id);
 
-        flash()->flashMessage(new Message(
-            message: __('Deleted successfully.'),
-            level: 'success',
-        ));
+        flash(__('Deleted successfully.'))->success();
 
         return redirect()->route($this->element()->handle() . '.index');
     }

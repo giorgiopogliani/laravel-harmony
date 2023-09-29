@@ -22,10 +22,7 @@ trait ElementUpdate
 
         $model->update($data);
 
-        flash()->flashMessage(new Message(
-            message: __('Updated successfully.'),
-            level: 'success',
-        ));
+        flash(__('Updated successfully.'))->success();
 
         return redirect()->route($this->element()->handle() . '.index');
     }

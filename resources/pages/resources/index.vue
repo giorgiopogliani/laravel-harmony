@@ -61,7 +61,7 @@ const { selectedRows, handleSelectAll, handleSelectRow, isSelected, isSelectedAl
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-              <tr v-for="row in datatable.rows">
+              <tr v-for="row in datatable.rows" :key="row.id">
                 <td v-if="table.selectable" class="text-center w-8">
                   <input
                     type="checkbox"
@@ -70,7 +70,7 @@ const { selectedRows, handleSelectAll, handleSelectRow, isSelected, isSelectedAl
                     @click="handleSelectRow($event, row.id)"
                   />
                 </td>
-                <td v-for="col in datatable.columns">
+                <td v-for="col in datatable.columns" :key="`${row.id + col.key}`">
                   <component :is="tableStore.resolve(col.type)" :value="get(row, col.key)" :row="row" :column="col">
                     {{ get(row, col.key) }}
                   </component>

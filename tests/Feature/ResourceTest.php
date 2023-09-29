@@ -7,14 +7,14 @@ use Tests\App\Models\Post;
 it('can list all resources', function () {
     $this->withoutExceptionHandling();
 
-    Post::factory()->count(23)->create();
+    Post::factory()->count(100)->create();
 
     $element = new PostElement();
 
     $response = $this->get(route('posts.index', [
-        'table_page' => 2,
-        'table' => [
-            'per_page' => 11
+        'filters_page' => 2,
+        'filters' => [
+            'per_page' => 40
         ],
     ]));
 
@@ -23,7 +23,7 @@ it('can list all resources', function () {
         ->has('table', fn (AssertableInertia $page) => $page
             ->where('columns', $element->columns())
             ->has('rows', fn (AssertableInertia $page) => $page
-                ->has('data', 11)
+                ->has('data', 40)
                 ->where('current_page', 2)
                 ->etc())
             ->etc()));

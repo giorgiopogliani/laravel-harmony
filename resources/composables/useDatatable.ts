@@ -5,8 +5,8 @@ import { watch, computed, reactive, Ref, watchEffect, ref } from "vue";
 export function useDatatable<Type extends AnyRow>(table: Ref<Table<Type>>) {
     let config = {
         endpoint: table.value.endpoint,
-        reload: [table.value.key],
-        filtersKey: table.value.key,
+        reload: ['table'],
+        filtersKey: 'filters',
     };
 
     if (!config.filtersKey) {

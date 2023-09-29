@@ -19,10 +19,7 @@ trait ElementStore
 
         $customer = $this->element()->query()->create($data);
 
-        flash()->flashMessage(new Message(
-            message: __('Created successfully.'),
-            level: 'success',
-        ));
+        flash(__('Created successfully.'))->success();
 
         return redirect()->route($this->element()->handle() . '.index', $customer);
     }
