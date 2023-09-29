@@ -1,5 +1,16 @@
-<script lang="ts" setup>
-withDefaults(defineProps<{ active: () => boolean; icon: string }>(), { active: () => false });
+<script lang="ts">
+export default {
+  props: {
+    icon: {
+      type: String,
+      default: null,
+    },
+    active: {
+      type: Function,
+      default: () => false
+    },
+  }
+}
 </script>
 
 <template>

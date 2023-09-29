@@ -13,9 +13,12 @@ onClickOutside(drawer, (event) => sidebarStore.close());
 
 <template>
   <v-app class="h-screen w-full bg-gray-100">
+
     <Head :title="$page.props.title" />
 
-    <v-app-bar class="flex items-center justify-between">
+    <the-notifications />
+
+    <v-app-bar class="flex items-center justify-between h-[64px] overflow-hidden">
       <v-list>
         <v-list-item>
           <v-button @click="sidebarStore.toggle()">
@@ -63,9 +66,10 @@ onClickOutside(drawer, (event) => sidebarStore.close());
       </v-list>
     </v-app-bar>
 
-    <div class="flex h-screen w-full overflow-hidden transition-all">
+    <div class="flex flex-grow w-full h-[calc(100vh-64px)] overflow-hidden transition-all">
+
       <v-app-drawer
-        class="hidden md:flex transition-all z-20 h-screen flex-col overflow-x-hidden gap-4 pt-8"
+        class="hidden md:flex transition-all z-20 h-full flex-grow-1 flex-col overflow-x-hidden gap-4 pt-8"
         :class="{ 'translate-x-0 w-56 p-2': sidebarStore.open, '-translate-x-full w-0': !sidebarStore.open }"
       >
         <v-list class="flex flex-col w-full justify-start items-start gap-2" v-for="menu in $page.props.menu.children">
@@ -81,7 +85,7 @@ onClickOutside(drawer, (event) => sidebarStore.close());
       </v-app-drawer>
 
       <v-app-drawer
-        class="flex md:hidden w-56 transition-transform p-2 z-20 fixed h-screen flex-col gap-4 pt-8"
+        class="flex md:hidden w-56 transition-transform p-2 z-20 fixed h-full flex-grow-1 flex-col gap-4 pt-8"
         :class="{ 'translate-x-0': sidebarStore.open, '-translate-x-full': !sidebarStore.open }"
       >
         <v-list class="flex flex-col w-full justify-start items-start gap-2" v-for="menu in $page.props.menu.children">
