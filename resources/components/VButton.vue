@@ -1,60 +1,35 @@
-<template>
-    <Link
-        :disabled="disabled"
-        v-if="inertia && href"
-        :href="disabled ? 'javascript:void(0)' : href"
-        v-bind="$attrs"
-        :class="['btn', disabled ? 'opacity-60 cursor-not-allowed' : '']"
-    >
-        <VIcon v-if="icon" :name="icon" class="h-4 w-4 mr-2"></VIcon>
-        <slot></slot>
-    </Link>
-    <a
-        :disabled="disabled"
-        v-else-if="href"
-        :href="disabled ? 'javascript:void(0)' : href"
-        v-bind="$attrs"
-        :class="['btn', disabled ? 'opacity-60 cursor-not-allowed' : '']"
-    >
-        <VIcon v-if="icon" :name="icon" class="h-4 w-4 mr-2"></VIcon>
-        <slot></slot>
-    </a>
-    <button
-        :disabled="disabled"
-        v-else
-        v-bind="$attrs"
-        :class="['btn', disabled ? 'opacity-60 cursor-not-allowed' : '']"
-    >
-        <VIcon v-if="icon" :name="icon" class="h-4 w-4 mr-2"></VIcon>
-        <slot></slot>
-    </button>
-</template>
+<script lang="ts" setup>
+import { router } from "@inertiajs/vue3";
 
-<script lang="ts">
-export default {
-    inheritAttrs: false,
+let props = defineProps<{
+  href?: null | string;
+  ask?: null | string;
+  method?: null | string;
+  as?: null | string;
+}>();
+
+const submit = () => {
+  if (props.ask && !confirm(props.ask)) return;
+
+  if (!props.method) {
+    throw new Error(
+      "You must provide a `method` prop when using `v-button` without an `href`."
+    );
+  }
+
+  //@ts-ignore
+  router[props.method](props.href);
 };
 </script>
 
-<script setup lang="ts">
-import VIcon from './VIcon.vue';
-
-defineProps({
-    disabled: {
-        type: Boolean,
-        default: false,
-    },
-    icon: {
-        type: String,
-        default: null,
-    },
-    href: {
-        type: String,
-        default: null,
-    },
-    inertia: {
-        type: Boolean,
-        default: false,
-    },
-});
-</script>
+<template>
+  <component :is="as" type="button" v-if="as" class="btn" @click="submit()">
+    <slot />
+  </component>
+  <Link v-else-if="href" :href="href" class="btn">
+    <slot />
+  </Link>
+  <button v-else class="btn">
+    <slot></slot>
+  </button>
+</template>

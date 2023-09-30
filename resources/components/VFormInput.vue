@@ -18,7 +18,7 @@ export default {
           class="text-gray-500 h-4 w-4"
         />
       </div>
-      <input
+      <FormKit
         type="text"
         class="form-input"
         :class="{ 'pl-8': icon }"

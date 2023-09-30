@@ -72,6 +72,6 @@ class TableFilter extends Component
     #[Prop('key')]
     public function getKey(): string
     {
-        return $this->get('key') ?? str($this->getTitle())->slug('_')->toString();
+        return $this->data['key'] ?? str($this->getTitle())->slug('_')->toString();
     }
 }

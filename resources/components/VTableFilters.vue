@@ -30,15 +30,14 @@ const { activeFilters, addFilter, isStandalone } = useFilters({
           {{ filter.title }}
         </span>
         <div class="flex items-center gap-1">
-          <select class="form-input w-full max-w-[12rem]" v-model="query[filter.key].operator">
+          <select class="form-input w-full max-w-[12rem]" v-model="query[filter.key]['operator']">
             <option value="0">Seleziona...</option>
             <option :value="value.key" v-for="value in filter.operators">
               {{ value.label }}
             </option>
           </select>
-          <input
-            v-if="!filter.operators.find((o) => o.key == query[filter.key].operator)?.standalone"
-            class="form-input w-full max-w-[12rem]"
+          <FormKit
+            v-if="!filter.operators.find(o => o.key == query[filter.key].operator)?.standalone"
             v-model="query[filter.key].value"
             v-bind="filter.props"
           />

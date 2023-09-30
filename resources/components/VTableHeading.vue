@@ -16,7 +16,7 @@ const { sortBy, isDesc, isCurrent } = useSorter();
         // 'text-left': align == 'left',
         // 'text-right': align == 'right',
       }"
-      class="border-none py-2 text-left uppercase font-medium tracking-wide text-xs text-gray-700"
+      class="border-none text-left uppercase font-medium tracking-wide text-xs text-gray-700"
     >
       <template v-if="!sort">
         <slot></slot>

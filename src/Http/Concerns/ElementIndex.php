@@ -2,6 +2,7 @@
 
 namespace Performing\Harmony\Http\Concerns;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Response;
 use Performing\Harmony\Components\Link;
@@ -18,9 +19,11 @@ trait ElementIndex
                     ->route($this->element()->handle() . '.index')
             )
             ->actions(
-                Link::make('Create ' . Str::singular($this->element()->handle()))
+                ...array_filter([Route::has($this->element()->handle() . '.create')
+                ? Link::make('Create ' . Str::singular($this->element()->handle()))
                     ->route($this->element()->handle() . '.create')
-                    ->class('btn btn-primary'),
+                    ->class('btn btn-primary')
+                : null]),
             )
             ->table(
                 Table::make()

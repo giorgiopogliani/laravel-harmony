@@ -11,10 +11,10 @@ abstract class Component implements Arrayable
 
     public function __construct()
     {
-        $this->boot();
+        $this->booting();
     }
 
-    public function boot()
+    private function booting()
     {
         $reflect = new ReflectionClass($this);
 
@@ -23,6 +23,12 @@ abstract class Component implements Arrayable
                 $this->{'boot' . $trait->getShortName()}();
             }
         }
+
+        $this->boot();
+    }
+
+    public function boot()
+    {
     }
 
     public function getProps(): array
@@ -46,7 +52,7 @@ abstract class Component implements Arrayable
         return $this->data[$key] ?? null;
     }
 
-    public function toArray(): array
+    public function toArray()
     {
         return array_merge($this->data, $this->getProps());
     }
