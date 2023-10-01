@@ -6,26 +6,24 @@ let props = defineProps<{
   ask?: null | string;
   method?: null | string;
   as?: null | string;
+  inertia?: boolean;
 }>();
 
 const submit = () => {
   if (props.ask && !confirm(props.ask)) return;
 
-  if (!props.method) {
-    throw new Error(
-      "You must provide a `method` prop when using `v-button` without an `href`."
-    );
-  }
-
-  //@ts-ignore
+  // @ts-ignore
   router[props.method](props.href);
 };
 </script>
 
 <template>
-  <component :is="as" type="button" v-if="as" class="btn" @click="submit()">
+  <button type="button" v-if="['post', 'delete', 'put'].includes(method ?? '')" class="btn" @click="submit()">
     <slot />
-  </component>
+  </button>
+  <a v-else-if="inertia === false" :href="href ?? '#'" class="btn">
+    <slot />
+  </a>
   <Link v-else-if="href" :href="href" class="btn">
     <slot />
   </Link>

@@ -21,14 +21,14 @@ onClickOutside(drawer, (event) => sidebarStore.close());
     <v-app-bar class="flex items-center justify-between h-[64px]">
       <v-list>
         <v-list-item>
-          <v-button @click="sidebarStore.toggle()">
+          <v-button @click="sidebarStore.toggle()" class="focus">
             <v-icon name="menu" class="h-5 w-5 flex-shrink-0 text-gray-900"></v-icon>
           </v-button>
         </v-list-item>
       </v-list>
       <v-list class="flex items-center gap-2">
         <v-list-item>
-          <v-button @click="() => darkMode.toggle()">
+          <v-button @click="() => darkMode.toggle()" class="focus">
             <v-icon v-if="darkMode.active" class="h-5 w-5" name="sun"></v-icon>
             <v-icon v-else class="h-5 w-5" name="moon"></v-icon>
           </v-button>

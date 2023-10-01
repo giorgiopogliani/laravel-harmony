@@ -36,6 +36,13 @@
             focus:ring-gray-400/[.45] focus:ring-offset-gray-300/[.50]
             dark:focus:ring-gray-200/[.20] dark:focus:ring-offset-gray-100/[.20];
     }
+    .focus-visible {
+        @apply focus-visible:outline-none
+            focus-visible:ring-2 focus-visible:ring-offset-1
+            focus-visible:border focus-visible:border-gray-500/[.65] dark:focus-visible:border-gray-300/[.70]
+            focus-visible:ring-gray-400/[.45] focus-visible:ring-offset-gray-300/[.50]
+            dark:focus-visible:ring-gray-200/[.20] dark:focus-visible:ring-offset-gray-100/[.20];
+    }
 }
 
 @layer components {

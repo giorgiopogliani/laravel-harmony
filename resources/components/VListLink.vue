@@ -19,7 +19,7 @@ export default {
       active()
         ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700',
-      'w-full flex items-center px-2 h-8 text-sm font-medium rounded-md',
+      'w-full flex items-center px-2 h-8 text-sm font-medium rounded-md focus-visible',
     ]"
     :aria-current="active() ? 'page' : undefined"
   >

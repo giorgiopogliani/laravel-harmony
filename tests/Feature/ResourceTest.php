@@ -110,11 +110,10 @@ it('can store a resource', function () {
         'body' => 'New Body',
     ])
         ->assertRedirect()
-        ->assertSessionHas('laravel_flash_message', [
-            'message' => 'Created successfully.',
-            'level' => 'success',
-            'class' => null,
-        ]);
+        ->assertSessionHas('flash_notification');
+
+    expect(session('flash_notification.0.message'))->toBe('Created successfully.');
+    expect(session('flash_notification.0.level'))->toBe('success');
 
     $post = Post::first();
 
@@ -132,11 +131,10 @@ it('can update a resource', function () {
         'body' => 'New Body',
     ])
         ->assertRedirect()
-        ->assertSessionHas('laravel_flash_message', [
-            'message' => 'Updated successfully.',
-            'level' => 'success',
-            'class' => null,
-        ]);
+        ->assertSessionHas('flash_notification');
+
+    expect(session('flash_notification.0.message'))->toBe('Updated successfully.');
+    expect(session('flash_notification.0.level'))->toBe('success');
 
     $post = Post::where('id', $post->id)->first();
 
@@ -154,11 +152,10 @@ it('can delete a resource', function () {
         'body' => 'New Body',
     ])
         ->assertRedirect()
-        ->assertSessionHas('laravel_flash_message', [
-            'message' => 'Deleted successfully.',
-            'level' => 'success',
-            'class' => null,
-        ]);
+        ->assertSessionHas('flash_notification');
+
+    expect(session('flash_notification.0.message'))->toBe('Deleted successfully.');
+    expect(session('flash_notification.0.level'))->toBe('success');
 
     $post = Post::where('id', $post->id)->first();
 

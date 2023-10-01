@@ -10,6 +10,7 @@ use Tests\App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Laracasts\Flash\FlashServiceProvider;
 use Tests\App\Http\Controllers\PostController;
 
 class TestCase extends Orchestra
@@ -44,6 +45,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            FlashServiceProvider::class,
             HarmonyServiceProvider::class,
             InertiaServiceProvider::class,
         ];

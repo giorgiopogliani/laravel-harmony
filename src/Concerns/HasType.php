@@ -2,6 +2,8 @@
 
 namespace Performing\Harmony\Concerns;
 
+use Performing\Harmony\Prop;
+
 trait HasType
 {
     public function bootHasType(): void
@@ -16,6 +18,7 @@ trait HasType
         return $this;
     }
 
+    #[Prop('type')]
     public function getType(): ?string
     {
         return $this->data['type'] ?? null;
