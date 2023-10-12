@@ -4,11 +4,15 @@ namespace Performing\Harmony\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Performing\Harmony\Concerns\HasProps;
 use Performing\Harmony\Facades\Harmony;
+use Performing\Harmony\Prop;
 use Tightenco\Ziggy\Ziggy;
 
-class HandleInertiaRequests extends Middleware
+class HandleInertiaRequest extends Middleware
 {
+    use HasProps;
+
     /**
      * The root template that is loaded on the first page visit.
      *
@@ -31,24 +35,34 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'ziggy' => function () use ($request) {
-                return array_merge((new Ziggy())->toArray(), [
-                    'location' => $request->url(),
-                ]);
-            },
-            'locale' => function () {
-                return app()->getLocale();
-            },
-            'language' => function () {
-                return json_encode(file_get_contents(base_path('lang/' . app()->getLocale() . '.json')));
-            },
-            'menu' => function () {
-                return Harmony::menu()->toArray();
-            },
+        return array_merge(parent::share($request), $this->getProps());
+    }
+
+    #[Prop]
+    public function ziggy()
+    {
+        return array_merge((new Ziggy())->toArray(), [
+            'location' => request()->url(),
         ]);
+    }
+
+    #[Prop]
+    public function flash()
+    {
+        return fn () => session('flash_notification') ?? [];
+    }
+
+    #[Prop]
+    public function auth()
+    {
+        return [
+            'user' => auth()->user()
+        ];
+    }
+
+    #[Prop]
+    public function locale()
+    {
+        return fn () => app()->getLocale();
     }
 }
