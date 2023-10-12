@@ -5,11 +5,10 @@ namespace Performing\Harmony\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Performing\Harmony\Concerns\HasProps;
-use Performing\Harmony\Facades\Harmony;
 use Performing\Harmony\Prop;
 use Tightenco\Ziggy\Ziggy;
 
-class HandleInertiaRequest extends Middleware
+class HandleInertiaRequests extends Middleware
 {
     use HasProps;
 
