@@ -35,9 +35,9 @@ class Link extends Component
 
     public function getProps(): array
     {
-        return [
+        return array_filter([
             'href' => $this->href,
             'method' => $this->method,
-        ];
+        ]);
     }
 }
