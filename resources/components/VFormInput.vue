@@ -5,7 +5,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-  defineProps(['label', 'modelValue', 'icon', 'errors']);
+  defineProps(['label', 'modelValue', 'icon', 'errors', 'error']);
   defineEmits(['update:modelValue']);
 </script>
 
@@ -28,7 +28,10 @@ export default {
       />
     </div>
     <div v-if="errors && errors.length > 0">
-      <div v-for="error in errors" class="text-red-500 text-xs italic">{{ error }}</div>
+      <div v-for="error in errors" class="text-red-600 mt-1 text-sm">{{ error }}</div>
+    </div>
+    <div v-else-if="error">
+      <div class="text-red-600 mt-1 text-sm">{{ error }}</div>
     </div>
   </label>
 </template>

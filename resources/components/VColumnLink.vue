@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-defineProps<{ row: any }>();
+defineProps<{ row: any; value: any }>();
 </script>
 
 <template>
-  <div class="">
-    <Link class="link" :href="row.links.show">
-      <slot></slot>
-    </Link>
+  <div>
+    <v-button v-bind="value">
+      {{ value.title }}
+    </v-button>
   </div>
 </template>

@@ -1,0 +1,9 @@
+<template>
+  <tr>
+    <slot></slot>
+  </tr>
+</template>
+
+<script setup lang="ts">
+import { defineProps } from "vue";
+</script>

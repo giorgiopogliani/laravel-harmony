@@ -9,7 +9,7 @@ const { sortBy, isDesc, isCurrent } = useSorter();
 </script>
 
 <template>
-  <th class="">
+  <th class="px-3 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-900">
     <div
       :class="{
         'cursor-pointer hover:bg-gray-100': sort,
