@@ -28,20 +28,6 @@ class Page extends Component
         return $this;
     }
 
-    public function table(Table $table)
-    {
-        $this->data['table'] = $table;
-
-        return $this;
-    }
-
-    public function form(Form $form)
-    {
-        $this->data['form'] = $form;
-
-        return $this;
-    }
-
     public function __call($name, $arguments)
     {
         $this->data[$name] = $arguments[0];
