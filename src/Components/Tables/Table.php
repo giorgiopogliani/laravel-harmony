@@ -141,7 +141,7 @@ class Table extends Component
             }
             foreach ($this->columns as $column) {
                 if ($column->format instanceof \Closure) {
-                    $data[$column->getKey()] = call_user_func($column->format, $item, $column);
+                    $data[$column->getKey()] = call_user_func($column->format, $item, $data[$column->getKey()], $column);
                 }
             }
 
@@ -180,6 +180,9 @@ class Table extends Component
 
     public function getPerPage()
     {
-        return (int) request()->input("{$this->filtersKey}.per_page", $this->query['per_page'] ?? 10);
+        return (int) request()->input(
+            "{$this->filtersKey}.per_page",
+            request()->input("per_page", $this->query['per_page'] ?? 10)
+        );
     }
 }
