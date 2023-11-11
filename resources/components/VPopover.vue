@@ -22,7 +22,7 @@ const api = computed(() => popover.connect(state.value, send, normalizeProps));
     </button>
     <Teleport to="body">
       <div v-bind="api.positionerProps" class="w-56 left-0">
-        <div v-bind="api.contentProps" class="p-2 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div v-bind="api.contentProps" class="p-2 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-96">
           <slot></slot>
         </div>
       </div>
