@@ -14,11 +14,11 @@ const api = computed(() => popover.connect(state.value, send, normalizeProps));
 <template>
   <div ref="ref">
     <button class="btn btn-secondary" v-bind="api.triggerProps">
-      <v-icon v-if="icon" :name="icon" class="h-3 w-3 flex-shrink-0 mr-2"></v-icon>
+      <v-icon v-if="icon" :name="icon" class="h-3 w-3 flex-shrink-0" :class="{ 'mr-2': !!label }"></v-icon>
       <span v-if="label" class="flex flex-shrink-0">
         {{ label }}
       </span>
-      <v-icon name="chevron-down" class="h-4 w-4 flex-shrink-0" :class="{ 'ml-2': !!label }"></v-icon>
+      <v-icon v-if="!icon" name="chevron-down" class="h-4 w-4 flex-shrink-0" :class="{ 'ml-2': !!label }"></v-icon>
     </button>
     <Teleport to="body">
       <div v-bind="api.positionerProps" class="w-56 left-0">
