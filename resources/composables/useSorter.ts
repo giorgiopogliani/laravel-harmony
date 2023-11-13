@@ -1,6 +1,6 @@
 import { router } from "@inertiajs/vue3";
 
-export function useSorter() {
+export function useSorter(sortkey: string = 'sort') {
   function ltrim(string: string, char: string) {
     const first = [...string].findIndex((a) => a !== char);
     return string.substring(first, string.length);
@@ -8,13 +8,13 @@ export function useSorter() {
 
   function isCurrent(column: string) {
     const urlParams = new URLSearchParams(window.location.search);
-    return ltrim(urlParams.get("table_sort") ?? "", "-") === column;
+    return ltrim(urlParams.get(sortkey) ?? "", "-") === column;
   }
 
   function isDesc(column: string) {
     const urlParams = new URLSearchParams(window.location.search);
 
-    let handle = urlParams.get("table_sort") ?? "";
+    let handle = urlParams.get(sortkey) ?? "";
 
     return handle.includes("-");
   }
@@ -22,17 +22,17 @@ export function useSorter() {
   function sortBy(column: string) {
     const urlParams = new URLSearchParams(window.location.search);
 
-    let current = urlParams.get("table_sort") ?? "";
-    let params: any = { table_sort: current };
+    let current = urlParams.get(sortkey) ?? "";
+    let params: any = { [sortkey]: current };
 
     if (ltrim(current, "-") == column) {
       if (current.startsWith("-")) {
-        params.table_sort = undefined;
+        params[sortkey] = undefined;
       } else {
-        params.table_sort = "-" + column;
+        params[sortkey] = "-" + column;
       }
     } else {
-      params.table_sort = column;
+      params[sortkey] = column;
     }
 
     router.get(location.href, params, { replace: true });
