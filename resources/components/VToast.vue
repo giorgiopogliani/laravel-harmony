@@ -1,22 +1,19 @@
 <script lang="ts" setup>
 import { router } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
 
 defineProps<{ notification: {
   level: string;
   message: string;
 } }>();
-
-onMounted(() => {
-  setTimeout(() => {
-    router.reload();
-  }, 5000);
-});
 </script>
 
 <template>
   <div
-    class="transition-all pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+    class="transition-all pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+    :class="{
+      'bg-green-50 text-green-800': notification.level == 'success',
+      'bg-red-50 text-red-800': notification.level == 'danger',
+    }"
   >
     <div class="p-4 w-full">
       <div class="flex items-start">
@@ -36,7 +33,7 @@ onMounted(() => {
             />
           </svg>
         </div>
-        <div class="flex-shrink-0" v-else-if="notification.level == 'error'">
+        <div class="flex-shrink-0" v-else-if="notification.level == 'danger'">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -53,7 +50,7 @@ onMounted(() => {
           </svg>
         </div>
         <div class="ml-3 w-0 flex-1 pt-0.5">
-          <p class="text-sm font-medium text-gray-900">
+          <p class="text-sm font-medium ">
             {{ notification.message }}
           </p>
         </div>
@@ -61,7 +58,7 @@ onMounted(() => {
           <button
             type="button"
             @click="router.reload()"
-            class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xl bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xl text-gray-500 hover:text-gray-700 focus:outline-none"
           >
             <span class="sr-only">Close</span>
             &times;
