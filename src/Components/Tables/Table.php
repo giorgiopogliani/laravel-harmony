@@ -128,7 +128,7 @@ class Table extends Component
         }
 
         $this->rows = $this->rows
-            ->paginate($this->getPerPage(), ['*'], $this->filtersKey . '_page')
+            ->paginate($this->getPerPage(), ['*'], 'page')
             ->withQueryString();
 
         $class = $this->resource;
@@ -151,9 +151,9 @@ class Table extends Component
 
     protected function applySorting()
     {
-        if (request()->has($this->filtersKey . '_sort')) {
-            $column = str_replace('-', '', request()->input($this->filtersKey . '_sort'));
-            $direction = str_starts_with(request()->input($this->filtersKey . '_sort'), '-') ? 'asc' : 'desc';
+        if (request()->has('sort')) {
+            $column = str_replace('-', '', request()->input('sort'));
+            $direction = str_starts_with(request()->input('sort'), '-') ? 'asc' : 'desc';
             if (array_key_exists($column, $this->sorters)) {
                 $this->sorters[$column]($this->rows, $direction);
             } else {
@@ -180,9 +180,6 @@ class Table extends Component
 
     public function getPerPage()
     {
-        return (int) request()->input(
-            "{$this->filtersKey}.per_page",
-            request()->input("per_page", $this->query['per_page'] ?? 10)
-        );
+        return (int) request()->input("per_page", $this->query['per_page']);
     }
 }
