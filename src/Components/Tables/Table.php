@@ -141,7 +141,7 @@ class Table extends Component
             }
             foreach ($this->columns as $column) {
                 if ($column->format instanceof \Closure) {
-                    $data[$column->getKey()] = call_user_func($column->format, $item, $data[$column->getKey()], $column);
+                    $data[$column->getKey()] = call_user_func($column->format, $item, $column);
                 }
             }
 
