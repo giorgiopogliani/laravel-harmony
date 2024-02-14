@@ -8,7 +8,7 @@ class Dataset extends Component
 {
     use HasType;
 
-    protected $data = [
+    protected array $data = [
         "showlegend" => true,
         "type" => "scatter",
         "mode" => "line"
