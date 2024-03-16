@@ -1,6 +1,6 @@
 <?php
 
-namespace Performing\Harmony\Components;
+namespace Performing\Harmony\Components\Filters\Styles;
 
 use Illuminate\Database\Eloquent\Builder;
 
