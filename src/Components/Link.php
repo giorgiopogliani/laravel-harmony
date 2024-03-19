@@ -13,8 +13,11 @@ class Link extends Component
 
     protected ?string $method = null;
 
+    protected ?string $route = null;
+
     public function route(...$args)
     {
+        $this->route = $args[0];
         $this->href = route(...$args);
 
         return $this;
@@ -36,6 +39,7 @@ class Link extends Component
     public function getProps(): array
     {
         return array_filter([
+            'route' => $this->route,
             'href' => $this->href,
             'method' => $this->method,
         ]);
