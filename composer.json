@@ -22,7 +22,7 @@
         "illuminate/support": "^10.0|^11.0",
         "inertiajs/inertia-laravel": "^0.6.10|^1.0",
         "laracasts/flash": "^3.2",
-        "tightenco/ziggy": "^1.6"
+        "tightenco/ziggy": "^1.6|^2.0"
       },
       "require-dev": {
         "silber/bouncer": "^1.0",
