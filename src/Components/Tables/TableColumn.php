@@ -17,9 +17,11 @@ class TableColumn extends Component
 
     public function __construct(string $title, ?string $key = null)
     {
+        $this->data['type'] = 'text';
+        parent::__construct();
+        
         $this->data['title'] = $title;
         $this->data['key'] = $key ?? Str::of($title)->lower()->slug('_')->toString();
-        $this->data['type'] = 'text';
     }
 
     public static function make(string $title, ?string $key = null)
