@@ -14,6 +14,7 @@ test('filters can filter', function () {
     $res = $this->get(route('posts.index', [
         'filters' => [
             's' => 'test',
+            'status' => 'draft'
         ]
     ]));
 
@@ -24,12 +25,15 @@ test('filters can filter', function () {
         ->has('table', fn(AssertableInertia $page) => $page
             ->where('columns', to_array($element->columns()))
             ->has(
-                'filters',
-                1,
+                'filters.1',
                 fn(AssertableInertia $page) => $page
-                    ->where('title', 'Search')
-                    ->where('key', 's')
-                    ->where('type', 'text')
+                    ->where('title', 'Status')
+                    ->where('key', 'status')
+                    ->where('options', [
+                        ['value' => 'published', 'label' => 'Published'],
+                        ['value' => 'draft', 'label' => 'Draft'],
+                    ])
+                    ->where('value', 'draft')
                     ->etc()
             )
             ->where('actions', to_array($element->bulkActions()))

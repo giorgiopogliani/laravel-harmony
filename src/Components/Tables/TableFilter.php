@@ -8,6 +8,7 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasProps;
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Prop;
 
 class TableFilter extends Component
 {
@@ -42,6 +43,12 @@ class TableFilter extends Component
     {
         $this->data['options'] = $options;
         return $this;
+    }
+
+    #[Prop('value')]
+    public function getValue()
+    {
+        return request()->input('filters.' . $this->getKey());
     }
 
     public function handle($query, Closure $next)

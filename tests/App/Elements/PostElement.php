@@ -28,6 +28,13 @@ class PostElement extends Element
             TableFilter::make('Search', 's')->query(function ($query, $value) {
                 $query->where('title', 'like', '%' . $value . '%');
             }),
+            TableFilter::make('Status', 'status')
+                ->options([
+                    ['value' => 'published', 'label' => 'Published'],
+                    ['value' => 'draft', 'label' => 'Draft'],
+                ])
+                ->query(function ($query, $value) {
+                }),
         ];
     }
 
