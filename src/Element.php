@@ -24,5 +24,8 @@ abstract class Element
     abstract public function columns(): array;
 
     /** @return FormField[] */
-    abstract public function fields(): array;
+    public function fields(): array
+    {
+        return [];
+    }
 }

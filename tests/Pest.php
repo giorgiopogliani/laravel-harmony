@@ -54,9 +54,13 @@ expect()->extend('toBeOne', function () {
 
 function to_array($array)
 {
-    if (!is_array($array)) {
-        return $array;
+    if (is_array($array)) {
+        return array_map('to_array', $array);
     }
 
-    return $array instanceof Arrayable ? $array->toArray() : array_map('to_array', $array);
+    if ($array instanceof Arrayable) {
+        return $array->toArray();
+    }
+
+    return $array;
 }

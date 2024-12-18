@@ -27,12 +27,10 @@
       "require-dev": {
         "silber/bouncer": "^1.0",
         "spatie/laravel-data": "^3.9",
-        "spatie/laravel-medialibrary": "^10.12",
         "spatie/laravel-package-tools": "^1.14.0",
         "calebporzio/sushi": "^2.4",
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^7.8",
-        "nunomaduro/larastan": "^2.0.1",
         "orchestra/testbench": "^8.11",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-arch": "^2.0",

@@ -3,10 +3,10 @@
 namespace Performing\Harmony\Components\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pipeline\Pipeline;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Components\Tables\TableColumn;
 use Performing\Harmony\Concerns\HasMake;
-use Performing\Harmony\Criterias\Criteria;
 
 class Table extends Component
 {
@@ -105,20 +105,10 @@ class Table extends Component
 
     protected function applyFilters()
     {
-        foreach ($this->filters as $filter) {
-            $this->applyFilter($filter);
-        }
-    }
-
-    public function applyFilter(TableFilter $filter)
-    {
-        $criteria = Criteria::from($filter);
-
-        if (!$criteria) {
-            return;
-        }
-
-        $criteria->apply($this->rows);
+        app(Pipeline::class)
+            ->send($this->rows)
+            ->through($this->filters)
+            ->thenReturn();
     }
 
     protected function applyPaginate()

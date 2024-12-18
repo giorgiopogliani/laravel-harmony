@@ -3,75 +3,55 @@
 namespace Performing\Harmony\Components\Tables;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
+use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasProps;
-use Performing\Harmony\Concerns\HasTitle;
 use Performing\Harmony\Concerns\HasType;
-use Performing\Harmony\Prop;
 
 class TableFilter extends Component
 {
-    use HasTitle;
     use HasType;
+    use HasKey;
     use HasProps;
 
-    protected array $options = [];
+    protected ?Closure $query = null;
 
-    protected array $operators = [];
-
-    protected ?string $key;
-
-    protected ?Closure $callback = null;
-
-    public function callback(Closure $callback): self
+    public function __construct(string $title, ?string $key = null)
     {
-        $this->callback = $callback;
+        $this->data['type'] = 'text';
+        parent::__construct();
+
+        $this->data['title'] = $title;
+        $this->data['key'] = $key ?? Str::of($title)->lower()->slug('_')->toString();
+    }
+
+    public static function make(string $title, ?string $key = null): static
+    {
+        return new static($title, $key);
+    }
+
+    public function query(Closure $callback): self
+    {
+        $this->query = $callback;
 
         return $this;
     }
 
-    public function getCallback()
+    public function options(array $options)
     {
-        return $this->callback;
-    }
-
-    public function options($options)
-    {
-        $this->options = $options;
-
+        $this->data['options'] = $options;
         return $this;
     }
 
-    #[Prop('options')]
-    public function getOptions(): array
+    public function handle($query, Closure $next)
     {
-        return $this->options;
-    }
+        $value = request()->input('filters.' . $this->getKey());
 
-    public function operators($operators)
-    {
-        $this->operators = $operators;
+        if (is_string($value)) {
+            call_user_func($this->query, $query, $value);
+        }
 
-        return $this;
-    }
-
-    #[Prop('operators')]
-    public function getOperators(): array
-    {
-        return $this->operators;
-    }
-
-    public function key(string $key): self
-    {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    #[Prop('key')]
-    public function getKey(): string
-    {
-        return $this->data['key'] ?? str($this->getTitle())->slug('_')->toString();
+        return $next($query);
     }
 }
