@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Http\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Performing\Harmony\Components\Forms\FormField;
 use Performing\Harmony\Http\Requests\UpdateRequest;
-use Spatie\Flash\Message;
 
 trait ElementUpdate
 {

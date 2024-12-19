@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Components\Forms;
 
 use Performing\Harmony\Components\Component;

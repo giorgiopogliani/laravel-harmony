@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Http\Concerns;
 
 use Illuminate\Http\RedirectResponse;
-use Spatie\Flash\Message;
 
 trait ElementDelete
 {

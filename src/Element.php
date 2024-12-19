@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony;
+
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class Element
 {
-    abstract public function query(): \Illuminate\Database\Eloquent\Builder;
+    abstract public function query(): Builder;
 
     abstract public function handle(): string;
 

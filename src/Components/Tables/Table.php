@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Components\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pipeline\Pipeline;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Components\Tables\TableColumn;
 use Performing\Harmony\Concerns\HasMake;
 
 class Table extends Component

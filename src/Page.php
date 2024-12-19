@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony;
 
 use Inertia\Inertia;
 use Illuminate\Support\Traits\Macroable;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Components\Tables\Table;
-use Performing\Harmony\Components\Forms\Form;
 use Performing\Harmony\Concerns\HasTitle;
 
 class Page extends Component
@@ -31,6 +31,13 @@ class Page extends Component
     public function __call($name, $arguments)
     {
         $this->data[$name] = $arguments[0];
+
+        return $this;
+    }
+
+    public function additional(array $data)
+    {
+        $this->data = array_merge($this->data, $data);
 
         return $this;
     }

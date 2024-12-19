@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\App\Elements;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Performing\Harmony\Components\Forms\FormField;
 use Performing\Harmony\Components\Tables\TableColumn;
 use Performing\Harmony\Components\Tables\TableFilter;
@@ -12,6 +13,8 @@ use Tests\App\Models\Post;
 
 class PostElement extends Element
 {
+
+
     public function query(): Builder
     {
         return Post::query();
@@ -34,6 +37,7 @@ class PostElement extends Element
                     ['value' => 'draft', 'label' => 'Draft'],
                 ])
                 ->query(function ($query, $value) {
+                    //$query->where('status', $value);
                 }),
         ];
     }
@@ -43,6 +47,14 @@ class PostElement extends Element
         return [
             TableColumn::make('Title'),
             TableColumn::make('Body'),
+        ];
+    }
+
+    public function fields(): array
+    {
+        return [
+            FormField::make('Title'),
+            FormField::make('Body'),
         ];
     }
 }

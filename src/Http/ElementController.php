@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Http;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 use Performing\Harmony\Element;
-use Performing\Harmony\Http\Contracts;
-use Performing\Harmony\Http\Concerns;
 
 abstract class ElementController extends Controller implements
     Contracts\ElementIndexable,

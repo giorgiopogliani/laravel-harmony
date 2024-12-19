@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Components\Filters\Styles;
 
 use Illuminate\Database\Eloquent\Builder;

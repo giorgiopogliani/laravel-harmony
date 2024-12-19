@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Inertia\Testing\AssertableInertia;
 use Tests\App\Elements\PostElement;
 use Tests\App\Models\Post;
@@ -20,13 +22,13 @@ test('filters can filter', function () {
 
     $element = new PostElement();
 
-    $res->assertInertia(fn(AssertableInertia $page) => $page
+    $res->assertInertia(fn (AssertableInertia $page) => $page
         // ->component('resources/index')
-        ->has('table', fn(AssertableInertia $page) => $page
+        ->has('table', fn (AssertableInertia $page) => $page
             ->where('columns', to_array($element->columns()))
             ->has(
                 'filters.1',
-                fn(AssertableInertia $page) => $page
+                fn (AssertableInertia $page) => $page
                     ->where('title', 'Status')
                     ->where('key', 'status')
                     ->where('options', [
@@ -37,11 +39,11 @@ test('filters can filter', function () {
                     ->etc()
             )
             ->where('actions', to_array($element->bulkActions()))
-            ->has('rows', fn(AssertableInertia $page) => $page
+            ->has('rows', fn (AssertableInertia $page) => $page
                 ->has(
                     'data',
                     1,
-                    fn(AssertableInertia $page) => $page
+                    fn (AssertableInertia $page) => $page
                         ->where('title', 'test')
                         ->etc()
                 )

@@ -1,0 +1,8 @@
+{
+  "preset": "psr12",
+  "rules": {
+    "array_indentation": true,
+    "declare_strict_types": true,
+    "method_chaining_indentation": true
+  }
+}

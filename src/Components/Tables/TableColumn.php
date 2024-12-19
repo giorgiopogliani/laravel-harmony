@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Components\Tables;
 
 use Closure;
@@ -19,7 +21,7 @@ class TableColumn extends Component
     {
         $this->data['type'] = 'text';
         parent::__construct();
-        
+
         $this->data['title'] = $title;
         $this->data['key'] = $key ?? Str::of($title)->lower()->slug('_')->toString();
     }

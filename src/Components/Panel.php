@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Performing\Harmony\Components;
 
-use Illuminate\Support\Str;
 use Performing\Harmony\Concerns\HasTitle;
 use Performing\Harmony\Concerns\HasType;
 

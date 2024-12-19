@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Inertia\Testing\AssertableInertia;
 use Tests\App\Elements\PostElement;
 use Tests\App\Models\Post;
@@ -12,16 +14,14 @@ it('can list all resources', function () {
     $element = new PostElement();
 
     $response = $this->get(route('posts.index', [
-        'filters_page' => 2,
-        'filters' => [
-            'per_page' => 40
-        ],
+        'page' => 2,
+        'per_page' => 40
     ]));
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
         // ->component('resources/index')
         ->has('table', fn (AssertableInertia $page) => $page
-            ->where('columns', $element->columns())
+            ->where('columns', to_array($element->columns()))
             ->has('rows', fn (AssertableInertia $page) => $page
                 ->has('data', 40)
                 ->where('current_page', 2)
