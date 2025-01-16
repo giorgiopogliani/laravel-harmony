@@ -50,12 +50,12 @@ class TableFilter extends Component
     #[Prop('value')]
     public function getValue()
     {
-        return request()->input('filters.' . $this->getKey());
+        return request()->input($this->getKey());
     }
 
     public function handle($query, Closure $next)
     {
-        $value = request()->input('filters.' . $this->getKey());
+        $value = request()->input($this->getKey());
 
         if (is_string($value)) {
             call_user_func($this->query, $query, $value);
