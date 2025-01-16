@@ -42,8 +42,8 @@ class Page extends Component
         return $this;
     }
 
-    public function render($component)
+    public function render($component, $data = [])
     {
-        return Inertia::render($component, $this->toArray());
+        return Inertia::render($component, array_merge($this->toArray(), $data));
     }
 }
