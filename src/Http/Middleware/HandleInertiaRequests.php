@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Performing\Harmony\Concerns\HasProps;
 use Performing\Harmony\Prop;
-use Tightenco\Ziggy\Ziggy;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {

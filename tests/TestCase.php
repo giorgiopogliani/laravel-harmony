@@ -10,10 +10,11 @@ use Orchestra\Testbench\TestCase as Orchestra;
 use Performing\Harmony\HarmonyServiceProvider;
 use Tests\App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Laracasts\Flash\FlashServiceProvider;
-use Tests\App\Http\Controllers\PostController;
+use Performing\Harmony\Facades\Harmony;
+use Tests\App\Components\CounterComponent;
+use Tighten\Ziggy\ZiggyServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -36,7 +37,7 @@ class TestCase extends Orchestra
 
         $this->artisan('migrate');
 
-        Route::harmoned('posts', PostController::class);
+        Harmony::registerRoute('counter', CounterComponent::class);
     }
 
     protected function resolveApplicationHttpKernel($app)
@@ -49,6 +50,7 @@ class TestCase extends Orchestra
         return [
             FlashServiceProvider::class,
             HarmonyServiceProvider::class,
+            ZiggyServiceProvider::class,
             InertiaServiceProvider::class,
         ];
     }
