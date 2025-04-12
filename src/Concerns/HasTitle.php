@@ -8,9 +8,9 @@ trait HasTitle
 {
     public function __construct(?string $title = null)
     {
-        parent::__construct();
-
         $this->data['title'] = $title;
+        
+        parent::__construct();
     }
 
     public static function make(?string $title = null)
