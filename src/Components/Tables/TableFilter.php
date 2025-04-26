@@ -20,6 +20,8 @@ class TableFilter extends Component
 
     protected ?Closure $query = null;
 
+    protected mixed $default = null;
+
     public function __construct(string $title, ?string $key = null)
     {
         $this->data['type'] = 'text';
@@ -47,17 +49,24 @@ class TableFilter extends Component
         return $this;
     }
 
+    public function default(mixed $default): self
+    {
+        $this->default = $default;
+
+        return $this;
+    }
+
     #[Prop('value')]
     public function getValue()
     {
-        return request()->input($this->getKey());
+        return request()->input($this->getKey(), $this->default);
     }
 
     public function handle($query, Closure $next)
     {
-        $value = request()->input($this->getKey());
+        $value = $this->getValue();
 
-        if (is_string($value)) {
+        if (is_string($value) && is_callable($this->query)) {
             call_user_func($this->query, $query, $value);
         }
 

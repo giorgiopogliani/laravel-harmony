@@ -32,7 +32,7 @@ class Table extends Component
 
     protected ?string $resource = null;
 
-    protected array $query = ['per_page' => 10];
+    protected array $query = ['per_page' => 15];
 
     protected string $filtersKey = 'filters';
 
