@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
 
 abstract class Component implements Arrayable
 {
+    use Conditionable;
+
     protected array $data = [];
 
     public function __construct()
