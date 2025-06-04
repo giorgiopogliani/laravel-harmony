@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pipeline\Pipeline;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
+use Spatie\LaravelData\Data;
 
 class Table extends Component
 {
@@ -127,9 +129,12 @@ class Table extends Component
         $this->rows->through(function ($item) use ($class) {
             if (is_null($class)) {
                 $data = $item->toArray();
-            } else {
+            } elseif (is_a($class, JsonResource::class, true)) {
                 $data = $class::make($item)->resolve();
+            } elseif (is_a($class, Data::class, true)) {
+                $data = $class::from($item)->toArray();
             }
+
             foreach ($this->columns as $column) {
                 if ($column->format instanceof \Closure) {
                     $data[$column->getKey()] = call_user_func($column->format, $item, $column);
