@@ -21,16 +21,10 @@ class Table extends Component
     /** @var TableFilter[] */
     protected array $filters = [];
 
-    /** @var TableAction[] */
-    protected array $actions = [];
-
-    /** @var TableSorters[] */
+    /** @var array<string, callable> */
     protected array $sorters = [];
 
-    /** @var Builder */
-    protected $rows = null;
-
-    protected bool $selectable = false;
+    protected ?Builder $rows = null;
 
     protected ?string $resource = null;
 
@@ -38,49 +32,35 @@ class Table extends Component
 
     protected string $filtersKey = 'filters';
 
-    public function columns(array $columns)
+    public function columns(array $columns): self
     {
         $this->columns = $columns;
 
         return $this;
     }
 
-    public function actions(array $actions)
-    {
-        $this->actions = $actions;
-
-        return $this;
-    }
-
-    public function filters(array $filters)
+    public function filters(array $filters): self
     {
         $this->filters = array_merge($this->filters, $filters);
 
         return $this;
     }
 
-    public function filtersKey(string $key)
+    public function filtersKey(string $key): self
     {
         $this->filtersKey = $key;
 
         return $this;
     }
 
-    public function sorters(array $sorters)
+    public function sorters(array $sorters): self
     {
         $this->sorters = array_merge($this->sorters, $sorters);
 
         return $this;
     }
 
-    public function selectable()
-    {
-        $this->selectable = true;
-
-        return $this;
-    }
-
-    public function rows($data, ?string $class = null)
+    public function rows(Builder $data, ?string $class = null): self
     {
         $this->rows = $data;
         $this->resource = $class;
@@ -101,20 +81,22 @@ class Table extends Component
             'rows' => $this->rows,
             'filters' => $this->filters,
             'query' => $this->getQuery(),
-            'selectable' => $this->selectable,
-            'actions' => $this->actions,
         ];
     }
 
-    protected function applyFilters()
+    protected function applyFilters(): void
     {
-        app(Pipeline::class)
+        if (is_null($this->rows)) {
+            return;
+        }
+
+        $this->rows = app(Pipeline::class)
             ->send($this->rows)
             ->through($this->filters)
             ->thenReturn();
     }
 
-    protected function applyPaginate()
+    protected function applyPaginate(): void
     {
         if (is_null($this->rows)) {
             return;
@@ -124,37 +106,55 @@ class Table extends Component
             ->paginate($this->getPerPage(), ['*'], 'page')
             ->withQueryString();
 
-        $class = $this->resource;
-
-        $this->rows->through(function ($item) use ($class) {
-            if (is_null($class)) {
-                $data = $item->toArray();
-            } elseif (is_a($class, JsonResource::class, true)) {
-                $data = $class::make($item)->resolve();
-            } elseif (is_a($class, Data::class, true)) {
-                $data = $class::from($item)->toArray();
-            }
-
-            foreach ($this->columns as $column) {
-                if ($column->format instanceof \Closure) {
-                    $data[$column->getKey()] = call_user_func($column->format, $item, $column);
-                }
-            }
-
-            return $data;
-        });
+        $this->rows->through(fn($item) => $this->transformRowItem($item));
     }
 
-    protected function applySorting()
+    protected function transformRowItem($item): array
     {
-        if (request()->has('sort')) {
-            $column = str_replace('-', '', request()->input('sort'));
-            $direction = str_starts_with(request()->input('sort'), '-') ? 'asc' : 'desc';
-            if (array_key_exists($column, $this->sorters)) {
-                $this->sorters[$column]($this->rows, $direction);
-            } else {
-                $this->rows->orderBy($column, $direction);
+        $data = $this->resolveItemData($item);
+
+        foreach ($this->columns as $column) {
+            if ($column->format instanceof \Closure) {
+                $data[$column->getKey()] = call_user_func($column->format, $item, $column);
             }
+        }
+
+        return $data;
+    }
+
+    protected function resolveItemData($item): array
+    {
+        $class = $this->resource;
+
+        if (is_null($class)) {
+            return $item->toArray();
+        }
+
+        if (is_a($class, JsonResource::class, true)) {
+            return $class::make($item)->resolve();
+        }
+
+        if (is_a($class, Data::class, true)) {
+            return $class::from($item)->toArray();
+        }
+
+        return $item->toArray();
+    }
+
+    protected function applySorting(): void
+    {
+        if (!request()->has('sort') || is_null($this->rows)) {
+            return;
+        }
+
+        $sortParam = request()->input('sort');
+        $column = str_replace('-', '', $sortParam);
+        $direction = str_starts_with($sortParam, '-') ? 'desc' : 'asc';
+
+        if (array_key_exists($column, $this->sorters)) {
+            $this->sorters[$column]($this->rows, $direction);
+        } else {
+            $this->rows->orderBy($column, $direction);
         }
     }
 
@@ -174,7 +174,7 @@ class Table extends Component
             ->toArray();
     }
 
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return (int) request()->input("per_page", $this->query['per_page']);
     }
