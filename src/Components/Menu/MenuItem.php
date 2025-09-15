@@ -28,7 +28,7 @@ class MenuItem extends Component
     public function getProps(): array
     {
         return [
-            'href' => route($this->data['route']) ?? '',
+            'href' => array_key_exists('route', $this->data) ? route($this->data['route']) : '',
         ];
     }
 }
