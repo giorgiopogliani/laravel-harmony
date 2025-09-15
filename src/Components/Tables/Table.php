@@ -24,7 +24,7 @@ class Table extends Component
     /** @var array<string, callable> */
     protected array $sorters = [];
 
-    protected ?Builder $rows = null;
+    protected $rows = null;
 
     protected ?string $resource = null;
 
