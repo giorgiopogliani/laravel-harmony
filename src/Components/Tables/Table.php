@@ -60,7 +60,7 @@ class Table extends Component
         return $this;
     }
 
-    public function rows(Builder $data, ?string $class = null): self
+    public function rows($data, ?string $class = null): self
     {
         $this->rows = $data;
         $this->resource = $class;
