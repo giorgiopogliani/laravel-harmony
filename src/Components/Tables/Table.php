@@ -30,7 +30,7 @@ class Table extends Component
 
     protected array $query = ['per_page' => 15];
 
-    protected string $filtersKey = 'filters';
+    protected string $filtersKey = '';
 
     public function columns(array $columns): self
     {
@@ -162,10 +162,10 @@ class Table extends Component
     {
         return collect($this->filters)
             ->mapWithKeys(fn (TableFilter $filter) => [
-                $filter->getKey() => request()->input("$this->filtersKey." . $filter->getKey()),
+                $filter->getKey() => $this->getInput($filter->getkey()),
             ])
             ->merge([
-                'search' => request()->input("$this->filtersKey.search"),
+                'search' => $this->getInput('search'),
             ])
             ->filter()
             ->merge([
@@ -174,8 +174,16 @@ class Table extends Component
             ->toArray();
     }
 
+    public function getInput(string $key, mixed $default = null) {
+        if (strlen($this->filtersKey) == 0) {
+            return request()->input($key, $default);
+        }
+
+        return request()->input($this->filtersKey . '.' . $key, $default);
+    }
+
     public function getPerPage(): int
     {
-        return (int) request()->input("per_page", $this->query['per_page']);
+        return (int) $this->getInput('per_page', $this->query['per_page']);
     }
 }
