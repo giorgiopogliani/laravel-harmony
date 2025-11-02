@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
 
 abstract class Component implements Arrayable
 {
-    use Conditionable;
-
     protected array $data = [];
 
     public function __construct()
@@ -19,6 +16,14 @@ abstract class Component implements Arrayable
         $this->booting();
     }
 
+    public function when(bool $condition)
+    {
+        $this->data['when'] = $condition;
+
+        return $this;
+        
+    }
+    
     private function booting()
     {
         $reflect = new ReflectionClass($this);
