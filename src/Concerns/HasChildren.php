@@ -11,7 +11,11 @@ trait HasChildren
 {
     public function children(Component|Closure ...$children)
     {
-        $this->data['children'] = $children;
+        if (is_callable($children)) {
+            $children = $children();
+        }
+
+        $this->data['children'] = array_values(array_filter($children, fn ($child) => $child->data['when'] ?? true));
 
         return $this;
     }
