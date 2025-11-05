@@ -9,7 +9,7 @@ use ReflectionClass;
 
 abstract class Component implements Arrayable
 {
-    protected array $data = [];
+    protected array $data = ['when' => true];
 
     public function __construct()
     {
@@ -21,9 +21,9 @@ abstract class Component implements Arrayable
         $this->data['when'] = $condition;
 
         return $this;
-        
+
     }
-    
+
     private function booting()
     {
         $reflect = new ReflectionClass($this);
@@ -64,6 +64,10 @@ abstract class Component implements Arrayable
 
     public function toArray()
     {
+        if (! $this->data['when']) {
+            return [];
+        }
+
         return array_merge($this->data, $this->getProps());
     }
 }
