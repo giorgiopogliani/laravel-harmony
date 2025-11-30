@@ -18,6 +18,8 @@ class TableFilter extends Component
     use HasKey;
     use HasProps;
 
+    protected string $filtersKey = '';
+
     protected ?Closure $query = null;
 
     protected mixed $default = null;
@@ -34,6 +36,13 @@ class TableFilter extends Component
     public static function make(string $title, ?string $key = null): static
     {
         return new static($title, $key);
+    }
+
+    public function setFiltersKey(string $key): self
+    {
+        $this->filtersKey = $key;
+
+        return $this;
     }
 
     public function query(Closure $callback): self
@@ -59,7 +68,13 @@ class TableFilter extends Component
     #[Prop('value')]
     public function getValue()
     {
-        return request()->input($this->getKey(), $this->default);
+        return request()->input($this->filtersKey . '.' .$this->getKey(), $this->default);
+    }
+
+    #[Prop('active')]
+    public function getActive()
+    {
+        return request()->has($this->filtersKey . '.' . $this->data['key']);
     }
 
     public function handle($query, Closure $next)

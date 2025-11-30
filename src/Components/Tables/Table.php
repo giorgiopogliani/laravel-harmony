@@ -7,8 +7,11 @@ namespace Performing\Harmony\Components\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pipeline\Pipeline;
+use Inertia\Inertia;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
+use Performing\Harmony\Http\Resources\TableResource;
+use Performing\Harmony\Http\TableScrollMetadata;
 use Spatie\LaravelData\Data;
 
 class Table extends Component
@@ -32,6 +35,8 @@ class Table extends Component
 
     protected string $filtersKey = '';
 
+    protected bool $scrollable = false;
+
     public function columns(array $columns): self
     {
         $this->columns = $columns;
@@ -42,6 +47,10 @@ class Table extends Component
     public function filters(array $filters): self
     {
         $this->filters = array_merge($this->filters, $filters);
+
+        foreach ($this->filters as $filter) {
+            $filter->setFiltersKey($this->filtersKey);
+        }
 
         return $this;
     }
@@ -68,19 +77,34 @@ class Table extends Component
         return $this;
     }
 
-    public function toArray(): array
+    public function scrollable(): self
+    {
+        $this->scrollable = true;
+
+        return $this;
+    }
+
+    public function toArray(): array|\Inertia\ScrollProp
     {
         $this->applyFilters();
         $this->applySorting();
         $this->applyPaginate();
 
-        return [
+        $extra = [
             'key' => $this->filtersKey,
             'endpoint' => request()->url(),
-            'columns' => $this->columns,
-            'rows' => $this->rows,
-            'filters' => $this->filters,
+            'columns' => collect($this->columns),
+            'filters' => collect($this->filters),
             'query' => $this->getQuery(),
+        ];
+
+        if ($this->scrollable) {
+            return Inertia::scroll(TableResource::collection($this->rows)->additional($extra));
+        }
+
+        return [
+            'rows' => $this->rows,
+            ...$extra,
         ];
     }
 

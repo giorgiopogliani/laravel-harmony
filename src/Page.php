@@ -44,6 +44,11 @@ class Page extends Component
 
     public function render($component, $data = [])
     {
-        return Inertia::render($component, array_merge($this->toArray(), $data));
+        $acc = [];
+        foreach ($data as $key => $value) {
+            $acc[$key] = is_subclass_of($value, Component::class) ? $value->toArray() : $value;
+        }
+
+        return Inertia::render($component, array_merge($this->toArray(), $acc));
     }
 }

@@ -68,6 +68,12 @@ abstract class Component implements Arrayable
             return [];
         }
 
+        $acc = [];
+
+        foreach ($this->data as $key => $value) {
+            $acc[$key] = is_subclass_of($value, Component::class) ? $value->toArray() : $value;
+        }
+
         return array_merge($this->data, $this->getProps());
     }
 }
