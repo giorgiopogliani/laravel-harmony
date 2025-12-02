@@ -155,7 +155,7 @@ class Table extends Component
 
     public function applyGrouping(Collection $results): Collection
     {
-        $group = collect([]);
+        $group = [];
 
         foreach ($results as $row) {
             $groupKey = $row[$this->group] ?? '__nogroup__';
@@ -163,7 +163,7 @@ class Table extends Component
             $group[$groupKey][] = $row;
         }
 
-        return $group;
+        return collect($group);
     }
 
     protected function transformRowItem($item): array
