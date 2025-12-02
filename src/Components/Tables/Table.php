@@ -159,6 +159,7 @@ class Table extends Component
 
         foreach ($results as $row) {
             $groupKey = $row[$this->group] ?? '__nogroup__';
+            $group[$groupKey] ??= [];
             $group[$groupKey][] = $row;
         }
 
