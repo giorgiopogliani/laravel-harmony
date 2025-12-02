@@ -7,6 +7,7 @@ namespace Performing\Harmony\Components\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
@@ -36,6 +37,8 @@ class Table extends Component
     protected string $filtersKey = '';
 
     protected bool $scrollable = false;
+
+    protected ?string $group = null;
 
     public function columns(array $columns): self
     {
@@ -84,11 +87,17 @@ class Table extends Component
         return $this;
     }
 
+    public function group(string $column): self
+    {
+        $this->group = $column;
+
+        return $this;
+    }
+
     public function toArray(): array|\Inertia\ScrollProp
     {
         $this->applyFilters();
         $this->applySorting();
-        $this->applyPaginate();
 
         $extra = [
             'key' => $this->filtersKey,
@@ -96,7 +105,18 @@ class Table extends Component
             'columns' => collect($this->columns),
             'filters' => collect($this->filters),
             'query' => $this->getQuery(),
+            'group' => $this->group,
         ];
+
+        if ($this->group) {
+            $results = $this->rows->get()->map(fn($row) => $this->transformRowItem($row));
+            return [
+                'rows' => $this->applyGrouping($results),
+                ...$extra,
+            ];
+        }
+
+        $this->applyPaginate();
 
         if ($this->scrollable) {
             return Inertia::scroll(TableResource::collection($this->rows)->additional($extra));
@@ -131,6 +151,18 @@ class Table extends Component
             ->withQueryString();
 
         $this->rows->through(fn($item) => $this->transformRowItem($item));
+    }
+
+    public function applyGrouping(Collection $results): Collection
+    {
+        $group = collect([]);
+
+        foreach ($results as $row) {
+            $groupKey = $row[$this->group] ?? '__nogroup__';
+            $group[$groupKey][] = $row;
+        }
+
+        return $group;
     }
 
     protected function transformRowItem($item): array
