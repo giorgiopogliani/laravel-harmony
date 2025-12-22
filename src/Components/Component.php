@@ -74,6 +74,6 @@ abstract class Component implements Arrayable
             $acc[$key] = is_subclass_of($value, Component::class) ? $value->toArray() : $value;
         }
 
-        return array_merge($this->data, $this->getProps());
+        return array_merge($acc, $this->getProps());
     }
 }
