@@ -13,8 +13,8 @@ class HarmonyServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'harmony');
+        // $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        // $this->loadViewsFrom(__DIR__ . '/../resources/views', 'harmony');
 
         // if ($this->app->runningInConsole()) {
         //     $this->publishes([
