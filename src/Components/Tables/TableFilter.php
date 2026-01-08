@@ -68,13 +68,21 @@ class TableFilter extends Component
     #[Prop('value')]
     public function getValue()
     {
-        return request()->input($this->filtersKey . '.' .$this->getKey(), $this->default);
+        if ($this->filtersKey === '') {
+            return request()->input($this->getKey(), $this->default);
+        }
+
+        return request()->input($this->filtersKey . '.' . $this->getKey(), $this->default);
     }
 
     #[Prop('active')]
     public function getActive()
     {
-        return request()->has($this->filtersKey . '.' . $this->data['key']);
+        if ($this->filtersKey === '') {
+            return request()->has($this->getKey());
+        }
+
+        return request()->has($this->filtersKey . '.' . $this->getKey());
     }
 
     public function handle($query, Closure $next)
