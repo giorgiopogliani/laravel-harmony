@@ -109,9 +109,9 @@ class Table extends Component
         ];
 
         if ($this->group) {
-            $results = $this->rows->get()->map(fn($row) => $this->transformRowItem($row));
+            $models = $this->rows->get();
             return [
-                'rows' => $this->applyGrouping($results),
+                'rows' => $this->applyGrouping($models),
                 ...$extra,
             ];
         }
@@ -153,12 +153,22 @@ class Table extends Component
         $this->rows->through(fn($item) => $this->transformRowItem($item));
     }
 
-    public function applyGrouping(Collection $results): Collection
+    public function applyGrouping(Collection $models): Collection
     {
+        $column = collect($this->columns)->first(fn (TableColumn $col) => $col->getKey() === $this->group);
+        $groupAsClosure = $column?->groupAs;
+
         $group = [];
 
-        foreach ($results as $row) {
-            $groupKey = $row[$this->group] ?? '__nogroup__';
+        foreach ($models as $model) {
+            $row = $this->transformRowItem($model);
+
+            if ($groupAsClosure) {
+                $groupKey = $groupAsClosure($model) ?? '__nogroup__';
+            } else {
+                $groupKey = $row[$this->group] ?? '__nogroup__';
+            }
+
             $group[$groupKey] ??= [];
             $group[$groupKey][] = $row;
         }
