@@ -10,13 +10,17 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasProps;
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Concerns\IsComponent;
 use Performing\Harmony\Prop;
 
-class TableFilter extends Component
+class TableFilter implements Component
 {
+    use IsComponent;
     use HasType;
     use HasKey;
-    use HasProps;
+    use HasProps {
+        HasProps::getProps insteadof IsComponent;
+    }
 
     protected string $filtersKey = '';
 
@@ -27,7 +31,7 @@ class TableFilter extends Component
     public function __construct(string $title, ?string $key = null)
     {
         $this->data['type'] = 'text';
-        parent::__construct();
+        $this->booting();
 
         $this->data['title'] = $title;
         $this->data['key'] = $key ?? Str::of($title)->lower()->slug('_')->toString();

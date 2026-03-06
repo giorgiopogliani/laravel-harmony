@@ -15,7 +15,7 @@ trait HasChildren
             $children = $children();
         }
 
-        $this->data['children'] = array_values(array_filter($children, fn ($child) => $child->data['when'] ?? true));
+        $this->data['children'] = array_values(array_filter($children, fn ($child) => $child->get('when') ?? true));
 
         return $this;
     }

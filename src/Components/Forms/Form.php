@@ -5,14 +5,22 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Forms;
 
 use Performing\Harmony\Components\Component;
+use Performing\Harmony\Concerns\IsComponent;
 
-class Form extends Component
+class Form implements Component
 {
+    use IsComponent;
+
     protected array $fields = [];
 
-    protected array $data = [];
+    protected array $formData = [];
 
     protected string $action = '';
+
+    public function __construct()
+    {
+        $this->booting();
+    }
 
     public static function make()
     {
@@ -21,7 +29,7 @@ class Form extends Component
 
     public function data($data)
     {
-        $this->data = $data;
+        $this->formData = $data;
 
         return $this;
     }
@@ -44,7 +52,7 @@ class Form extends Component
     {
         return [
             'fields' => $this->fields,
-            'data' => $this->data,
+            'data' => $this->formData,
             'action' => $this->action,
         ];
     }

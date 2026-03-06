@@ -6,6 +6,11 @@ namespace Performing\Harmony\Concerns;
 
 trait HasMake
 {
+    public function __construct()
+    {
+        $this->booting();
+    }
+
     public static function make()
     {
         return new static();

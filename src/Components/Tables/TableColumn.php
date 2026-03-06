@@ -9,9 +9,11 @@ use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Concerns\IsComponent;
 
-class TableColumn extends Component
+class TableColumn implements Component
 {
+    use IsComponent;
     use HasType;
     use HasKey;
 
@@ -22,7 +24,7 @@ class TableColumn extends Component
     public function __construct(string $title, ?string $key = null)
     {
         $this->data['type'] = 'text';
-        parent::__construct();
+        $this->booting();
 
         $this->data['title'] = $title;
         $this->data['key'] = $key ?? Str::of($title)

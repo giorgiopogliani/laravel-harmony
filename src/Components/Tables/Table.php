@@ -11,12 +11,14 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
+use Performing\Harmony\Concerns\IsComponent;
 use Performing\Harmony\Http\Resources\TableResource;
 use Performing\Harmony\Http\TableScrollMetadata;
 use Spatie\LaravelData\Data;
 
-class Table extends Component
+class Table implements Component
 {
+    use IsComponent;
     use HasMake;
 
     /** @var TableColumn[] */

@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Forms;
 
 use Performing\Harmony\Components\Component;
+use Performing\Harmony\Concerns\IsComponent;
 use Illuminate\Support\Str;
 
-class FormField extends Component
+class FormField implements Component
 {
+    use IsComponent;
+
     public string $label;
 
     public string $name;
@@ -25,6 +28,7 @@ class FormField extends Component
     {
         $this->label = $label;
         $this->name = $name ?? Str::of($label)->lower()->slug('_')->toString();
+        $this->booting();
     }
 
     public static function make($label, $name = null): self

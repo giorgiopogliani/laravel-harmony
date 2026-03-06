@@ -6,9 +6,11 @@ namespace Performing\Harmony\Components;
 
 use Illuminate\Support\Str;
 use Performing\Harmony\Concerns\HasTitle;
+use Performing\Harmony\Concerns\IsComponent;
 
-class Link extends Component
+class Link implements Component
 {
+    use IsComponent;
     use HasTitle;
 
     protected ?string $href = null;

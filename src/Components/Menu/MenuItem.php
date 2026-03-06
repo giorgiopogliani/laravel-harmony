@@ -6,9 +6,11 @@ namespace Performing\Harmony\Components\Menu;
 
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasTitle;
+use Performing\Harmony\Concerns\IsComponent;
 
-class MenuItem extends Component
+class MenuItem implements Component
 {
+    use IsComponent;
     use HasTitle;
 
     public function route(string $route)

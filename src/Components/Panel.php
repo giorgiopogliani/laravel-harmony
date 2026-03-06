@@ -6,9 +6,11 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\HasTitle;
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Concerns\IsComponent;
 
-class Panel extends Component
+class Panel implements Component
 {
+    use IsComponent;
     use HasTitle;
     use HasType;
 }

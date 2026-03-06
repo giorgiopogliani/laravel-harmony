@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Concerns\IsComponent;
 
-class Dataset extends Component
+class Dataset implements Component
 {
+    use IsComponent;
     use HasType;
 
-    protected array $data = [
-        "showlegend" => true,
-        "type" => "scatter",
-        "mode" => "line"
-    ];
+    public function __construct()
+    {
+        $this->data['showlegend'] = true;
+        $this->data['type'] = 'scatter';
+        $this->data['mode'] = 'line';
+        $this->booting();
+    }
 
     public static function make(string $name): static
     {

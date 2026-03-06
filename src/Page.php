@@ -8,9 +8,11 @@ use Inertia\Inertia;
 use Illuminate\Support\Traits\Macroable;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasTitle;
+use Performing\Harmony\Concerns\IsComponent;
 
-class Page extends Component
+class Page implements Component
 {
+    use IsComponent;
     use HasTitle;
     use Macroable;
 
@@ -46,7 +48,7 @@ class Page extends Component
     {
         $acc = [];
         foreach ($data as $key => $value) {
-            $acc[$key] = is_subclass_of($value, Component::class) ? $value->toArray() : $value;
+            $acc[$key] = $value instanceof Component ? $value->toArray() : $value;
         }
 
         return Inertia::render($component, array_merge($this->toArray(), $acc));
