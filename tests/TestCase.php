@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Performing\Harmony\HarmonyServiceProvider;
 use Tests\App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Schema;
-use Laracasts\Flash\FlashServiceProvider;
-use Performing\Harmony\Facades\Harmony;
-use Tests\App\Components\CounterComponent;
-use Tighten\Ziggy\ZiggyServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -23,7 +19,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'Database\\Factories\\' . class_basename($modelName) . 'Factory',
         );
 
         $this->loadLaravelMigrations();
@@ -36,8 +32,6 @@ class TestCase extends Orchestra
         });
 
         $this->artisan('migrate');
-
-        Harmony::registerRoute('counter', CounterComponent::class);
     }
 
     protected function resolveApplicationHttpKernel($app)
@@ -48,9 +42,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            FlashServiceProvider::class,
             HarmonyServiceProvider::class,
-            ZiggyServiceProvider::class,
             InertiaServiceProvider::class,
         ];
     }
