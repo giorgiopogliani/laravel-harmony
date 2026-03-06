@@ -38,7 +38,7 @@ it('can set options', function () {
     $options = ['active' => 'Active', 'inactive' => 'Inactive'];
     $filter = TableFilter::make('Status')->options($options);
 
-    expect($filter->get('options'))->toBe($options);
+    expect($filter->toArray()['options'])->toBe($options);
 });
 
 it('can set a default value', function () {
@@ -54,9 +54,12 @@ it('can set a query closure', function () {
     expect($filter)->toBeInstanceOf(TableFilter::class);
 });
 
-it('can set filters key prefix', function () {
+it('can resolve value and active state', function () {
     $filter = TableFilter::make('Status');
-    $filter->setFiltersKey('table1');
+    $filter->resolve('active', true);
 
-    expect($filter)->toBeInstanceOf(TableFilter::class);
+    $array = $filter->toArray();
+
+    expect($array['value'])->toBe('active')
+        ->and($array['active'])->toBeTrue();
 });

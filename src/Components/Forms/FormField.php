@@ -4,60 +4,62 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components\Forms;
 
-use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\IsComponent;
 use Illuminate\Support\Str;
+use Performing\Harmony\Components\Component;
+use Performing\Harmony\Concerns\IsConditional;
 
 class FormField implements Component
 {
-    use IsComponent;
+    use IsConditional;
 
-    public string $label;
+    protected string $label;
 
-    public string $name;
+    protected string $name;
 
-    public string $type = 'text';
+    protected string $type = 'text';
 
-    public string $help = '';
+    protected string $help = '';
 
-    public string|array $rules = '';
+    protected string|array $rules = '';
 
-    public array $options = [];
+    protected array $options = [];
 
     public function __construct(string $label, ?string $name = null)
     {
         $this->label = $label;
-        $this->name = $name ?? Str::of($label)->lower()->slug('_')->toString();
-        $this->booting();
+        $this->name = $name ?? Str::of($label)
+            ->lower()
+            ->slug('_')
+            ->toString();
     }
 
-    public static function make($label, $name = null): self
+    public static function make(string $label, ?string $name = null): static
     {
         return new static($label, $name);
     }
 
-    public function help(string $help)
+    public function help(string $help): static
     {
         $this->help = $help;
 
         return $this;
     }
 
-    public function type(string $type)
+    public function type(string $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function options(array $options)
+    public function options(array $options): static
     {
         $this->options = $options;
 
         return $this;
     }
 
-    public function rules(array|string $rules)
+    public function rules(array|string $rules): static
     {
         $this->rules = $rules;
 

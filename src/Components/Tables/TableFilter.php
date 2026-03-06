@@ -5,36 +5,38 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Tables;
 
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\HasKey;
-use Performing\Harmony\Concerns\HasProps;
-use Performing\Harmony\Concerns\HasType;
-use Performing\Harmony\Concerns\IsComponent;
-use Performing\Harmony\Prop;
+use Performing\Harmony\Concerns\IsConditional;
 
 class TableFilter implements Component
 {
-    use IsComponent;
-    use HasType;
-    use HasKey;
-    use HasProps {
-        HasProps::getProps insteadof IsComponent;
-    }
+    use IsConditional;
 
-    protected string $filtersKey = '';
+    protected string $title;
+
+    protected string $key;
+
+    protected string $type = 'text';
 
     protected ?Closure $query = null;
 
     protected mixed $default = null;
 
+    protected array $options = [];
+
+    protected mixed $value = null;
+
+    protected bool $active = false;
+
     public function __construct(string $title, ?string $key = null)
     {
-        $this->data['type'] = 'text';
-        $this->booting();
-
-        $this->data['title'] = $title;
-        $this->data['key'] = $key ?? Str::of($title)->lower()->slug('_')->toString();
+        $this->title = $title;
+        $this->key = $key ?? Str::of($title)
+            ->lower()
+            ->slug('_')
+            ->toString();
     }
 
     public static function make(string $title, ?string $key = null): static
@@ -42,61 +44,75 @@ class TableFilter implements Component
         return new static($title, $key);
     }
 
-    public function setFiltersKey(string $key): self
+    public function getKey(): string
     {
-        $this->filtersKey = $key;
+        return $this->key;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function type(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
 
-    public function query(Closure $callback): self
+    public function query(Closure $callback): static
     {
         $this->query = $callback;
 
         return $this;
     }
 
-    public function options(array $options)
+    public function options(array $options): static
     {
-        $this->data['options'] = $options;
+        $this->options = $options;
+
         return $this;
     }
 
-    public function default(mixed $default): self
+    public function default(mixed $default): static
     {
         $this->default = $default;
 
         return $this;
     }
 
-    #[Prop('value')]
-    public function getValue()
+    public function getDefault(): mixed
     {
-        if ($this->filtersKey === '') {
-            return request()->input($this->getKey(), $this->default);
-        }
-
-        return request()->input($this->filtersKey . '.' . $this->getKey(), $this->default);
+        return $this->default;
     }
 
-    #[Prop('active')]
-    public function getActive()
+    public function resolve(mixed $value, bool $active): static
     {
-        if ($this->filtersKey === '') {
-            return request()->has($this->getKey());
-        }
+        $this->value = $value;
+        $this->active = $active;
 
-        return request()->has($this->filtersKey . '.' . $this->getKey());
+        return $this;
     }
 
-    public function handle($query, Closure $next)
+    public function handle(Builder $builder, Closure $next): mixed
     {
-        $value = $this->getValue();
-
-        if (is_string($value) && is_callable($this->query)) {
-            call_user_func($this->query, $query, $value);
+        if (is_string($this->value) && is_callable($this->query)) {
+            call_user_func($this->query, $builder, $this->value);
         }
 
-        return $next($query);
+        return $next($builder);
+    }
+
+    public function toArray(): array
+    {
+        return array_filter([
+            'title' => $this->title,
+            'key' => $this->key,
+            'type' => $this->type,
+            'options' => $this->options ?: null,
+            'value' => $this->value,
+            'active' => $this->active ?: null,
+        ]);
     }
 }

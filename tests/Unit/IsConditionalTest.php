@@ -2,32 +2,11 @@
 
 declare(strict_types=1);
 
-use Performing\Harmony\Concerns\IsConditional;
+use Performing\Harmony\Components\ConditionalComponent;
+use Performing\Harmony\Components\Panel;
 
-it('is visible by default', function () {
-    $subject = new class {
-        use IsConditional;
-    };
+it('returns a ConditionalComponent from when', function () {
+    $result = Panel::make('Test')->when(true);
 
-    expect($subject->isVisible())->toBeTrue();
-});
-
-it('can be hidden with when false', function () {
-    $subject = new class {
-        use IsConditional;
-    };
-
-    $subject->when(false);
-
-    expect($subject->isVisible())->toBeFalse();
-});
-
-it('returns static for fluent chaining', function () {
-    $subject = new class {
-        use IsConditional;
-    };
-
-    $result = $subject->when(true);
-
-    expect($result)->toBe($subject);
+    expect($result)->toBeInstanceOf(ConditionalComponent::class);
 });

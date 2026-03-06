@@ -4,23 +4,43 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
-use Performing\Harmony\Concerns\HasTitle;
-use Performing\Harmony\Concerns\IsComponent;
+use Performing\Harmony\Concerns\IsConditional;
 
 class Widget implements Component
 {
-    use IsComponent;
-    use HasTitle;
+    use IsConditional;
 
-    public function type(string $type)
+    protected ?string $title = null;
+
+    protected string $type = 'text';
+
+    public function __construct(?string $title = null)
     {
-        $this->data['type'] = $type;
+        $this->title = $title;
+    }
+
+    public static function make(?string $title = null): static
+    {
+        return new static($title);
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function type(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
 
-    public function getProps(): array
+    public function toArray(): array
     {
-        return [];
+        return [
+            'title' => $this->title,
+            'type' => $this->type,
+        ];
     }
 }

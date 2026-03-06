@@ -13,7 +13,7 @@ it('can be created with make', function () {
 it('can be created without a title', function () {
     $page = Page::make();
 
-    expect($page->get('title'))->toBeNull();
+    expect($page->getTitle())->toBeNull();
 });
 
 it('can set breadcrumbs', function () {
@@ -42,15 +42,6 @@ it('can set additional data', function () {
 
     expect($array['foo'])->toBe('bar')
         ->and($array['baz'])->toBe(123);
-});
-
-it('can set arbitrary properties via magic call', function () {
-    $page = Page::make('Page')
-        ->subtitle('A subtitle');
-
-    $array = $page->toArray();
-
-    expect($array['subtitle'])->toBe('A subtitle');
 });
 
 it('returns empty array when condition is false', function () {

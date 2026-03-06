@@ -21,13 +21,16 @@ it('can add children to menu', function () {
     expect($menu->getChildren())->toHaveCount(2);
 });
 
-it('filters out children with when false', function () {
+it('hidden children produce empty array in toArray', function () {
     $item1 = MenuItem::make('Visible');
     $item2 = MenuItem::make('Hidden')->when(false);
 
     $menu = Menu::make('Nav')->children($item1, $item2);
 
-    expect($menu->getChildren())->toHaveCount(1);
+    $array = $menu->toArray();
+
+    expect($menu->getChildren())->toHaveCount(2)
+        ->and($array['children'][1])->toBe([]);
 });
 
 it('creates a menu item with title', function () {

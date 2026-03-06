@@ -5,32 +5,54 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Menu;
 
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\HasTitle;
-use Performing\Harmony\Concerns\IsComponent;
+use Performing\Harmony\Concerns\IsConditional;
 
 class MenuItem implements Component
 {
-    use IsComponent;
-    use HasTitle;
+    use IsConditional;
 
-    public function route(string $route)
+    protected ?string $title = null;
+
+    protected ?string $route = null;
+
+    protected ?string $icon = null;
+
+    public function __construct(?string $title = null)
     {
-        $this->data['route'] = $route;
+        $this->title = $title;
+    }
+
+    public static function make(?string $title = null): static
+    {
+        return new static($title);
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function route(string $route): static
+    {
+        $this->route = $route;
 
         return $this;
     }
 
-    public function icon(string $icon)
+    public function icon(string $icon): static
     {
-        $this->data['icon'] = $icon;
+        $this->icon = $icon;
 
         return $this;
     }
 
-    public function getProps(): array
+    public function toArray(): array
     {
-        return [
-            'href' => array_key_exists('route', $this->data) ? route($this->data['route']) : '',
-        ];
+        return array_filter([
+            'title' => $this->title,
+            'route' => $this->route,
+            'href' => $this->route ? route($this->route) : null,
+            'icon' => $this->icon,
+        ]);
     }
 }

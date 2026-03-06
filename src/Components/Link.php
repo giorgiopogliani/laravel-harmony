@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
-use Illuminate\Support\Str;
-use Performing\Harmony\Concerns\HasTitle;
-use Performing\Harmony\Concerns\IsComponent;
+use Performing\Harmony\Concerns\IsConditional;
 
 class Link implements Component
 {
-    use IsComponent;
-    use HasTitle;
+    use IsConditional;
+
+    protected ?string $title = null;
 
     protected ?string $href = null;
 
@@ -19,7 +18,54 @@ class Link implements Component
 
     protected ?string $route = null;
 
-    public function route(...$args)
+    protected ?string $icon = null;
+
+    protected ?string $confirm = null;
+
+    public function __construct(?string $title = null)
+    {
+        $this->title = $title;
+    }
+
+    public static function make(?string $title = null): static
+    {
+        return new static($title);
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function asDelete(): static
+    {
+        $this->method = 'delete';
+
+        return $this;
+    }
+
+    public function asPost(): static
+    {
+        $this->method = 'post';
+
+        return $this;
+    }
+
+    public function asPut(): static
+    {
+        $this->method = 'put';
+
+        return $this;
+    }
+
+    public function asPatch(): static
+    {
+        $this->method = 'patch';
+
+        return $this;
+    }
+
+    public function route(string ...$args): static
     {
         $this->route = $args[0];
         $this->href = route(...$args);
@@ -27,25 +73,29 @@ class Link implements Component
         return $this;
     }
 
-    public function __call($name, $arguments)
+    public function icon(string $icon): static
     {
-        if (in_array($name, ['asDelete', 'asPost', 'asPut', 'asPatch'])) {
-            $this->method = Str::replace('as', '', strtolower($name));
-
-            return $this;
-        }
-
-        $this->data[$name] = $arguments[0];
+        $this->icon = $icon;
 
         return $this;
     }
 
-    public function getProps(): array
+    public function confirm(string $message): static
+    {
+        $this->confirm = $message;
+
+        return $this;
+    }
+
+    public function toArray(): array
     {
         return array_filter([
-            'route' => $this->route,
+            'title' => $this->title,
             'href' => $this->href,
             'method' => $this->method,
+            'route' => $this->route,
+            'icon' => $this->icon,
+            'confirm' => $this->confirm,
         ]);
     }
 }

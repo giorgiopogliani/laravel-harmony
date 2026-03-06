@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Concerns;
 
+use Performing\Harmony\Components\ConditionalComponent;
+
 trait IsConditional
 {
-    protected bool $when = true;
-
-    public function when(bool $condition): static
+    public function when(bool $condition): ConditionalComponent
     {
-        $this->when = $condition;
-
-        return $this;
-    }
-
-    public function isVisible(): bool
-    {
-        return $this->when;
+        return new ConditionalComponent($this, $condition);
     }
 }

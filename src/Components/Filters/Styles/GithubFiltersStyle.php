@@ -10,9 +10,8 @@ class GithubFiltersStyle
 {
     public function __construct(
         /** @var FilterType[] */
-        protected array $filters = []
-    ) {
-    }
+        protected array $filters = [],
+    ) {}
 
     public function apply(Builder $query)
     {
@@ -22,7 +21,6 @@ class GithubFiltersStyle
 
         foreach ($qs as $q) {
             $q = explode(':', $q);
-
 
             if (count($q) == 3) {
                 [$key, $operator, $value] = $q;

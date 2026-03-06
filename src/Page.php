@@ -5,46 +5,66 @@ declare(strict_types=1);
 namespace Performing\Harmony;
 
 use Inertia\Inertia;
-use Illuminate\Support\Traits\Macroable;
+use Inertia\Response;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\HasTitle;
-use Performing\Harmony\Concerns\IsComponent;
+use Performing\Harmony\Concerns\IsConditional;
 
 class Page implements Component
 {
-    use IsComponent;
-    use HasTitle;
-    use Macroable;
+    use IsConditional;
 
-    public function breadcrumbs(...$breadcrumbs)
+    protected ?string $title = null;
+
+    protected array $breadcrumbs = [];
+
+    protected array $actions = [];
+
+    protected array $additional = [];
+
+    public function __construct(?string $title = null)
     {
-        $this->data['breadcrumbs'] = $breadcrumbs;
+        $this->title = $title;
+    }
+
+    public static function make(?string $title = null): static
+    {
+        return new static($title);
+    }
+
+    public function title(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }
 
-    public function actions(...$actions)
+    public function getTitle(): ?string
     {
-        $this->data['actions'] = $actions;
+        return $this->title;
+    }
+
+    public function breadcrumbs(mixed ...$breadcrumbs): static
+    {
+        $this->breadcrumbs = $breadcrumbs;
 
         return $this;
     }
 
-    public function __call($name, $arguments)
+    public function actions(mixed ...$actions): static
     {
-        $this->data[$name] = $arguments[0];
+        $this->actions = $actions;
 
         return $this;
     }
 
-    public function additional(array $data)
+    public function additional(array $data): static
     {
-        $this->data = array_merge($this->data, $data);
+        $this->additional = array_merge($this->additional, $data);
 
         return $this;
     }
 
-    public function render($component, $data = [])
+    public function render(string $component, array $data = []): Response
     {
         $acc = [];
         foreach ($data as $key => $value) {
@@ -52,5 +72,17 @@ class Page implements Component
         }
 
         return Inertia::render($component, array_merge($this->toArray(), $acc));
+    }
+
+    public function toArray(): array
+    {
+        return array_merge([
+            'title' => $this->title,
+            'breadcrumbs' => $this->breadcrumbs,
+            'actions' => array_map(
+                fn ($action) => $action instanceof Component ? $action->toArray() : $action,
+                $this->actions,
+            ),
+        ], $this->additional);
     }
 }

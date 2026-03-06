@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Forms;
 
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\IsComponent;
+use Performing\Harmony\Concerns\IsConditional;
 
 class Form implements Component
 {
-    use IsComponent;
+    use IsConditional;
 
     protected array $fields = [];
 
@@ -17,31 +17,28 @@ class Form implements Component
 
     protected string $action = '';
 
-    public function __construct()
-    {
-        $this->booting();
-    }
+    public function __construct() {}
 
-    public static function make()
+    public static function make(): static
     {
         return new static();
     }
 
-    public function data($data)
+    public function data(array $data): static
     {
         $this->formData = $data;
 
         return $this;
     }
 
-    public function fields($fields)
+    public function fields(array $fields): static
     {
         $this->fields = $fields;
 
         return $this;
     }
 
-    public function action($action)
+    public function action(string $action): static
     {
         $this->action = $action;
 
