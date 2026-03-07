@@ -194,9 +194,11 @@ class Table implements Component
         $data = $this->resolveItemData($item);
 
         foreach ($this->columns as $column) {
-            if ($column->format instanceof \Closure) {
-                $data[$column->getKey()] = call_user_func($column->format, $item, $column);
+            if (! $column->format instanceof \Closure) {
+                continue;
             }
+
+            $data[$column->getKey()] = call_user_func($column->format, $item, $column);
         }
 
         return $data;

@@ -4,28 +4,21 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
+use Override;
 use Performing\Harmony\Concerns\IsConditional;
 
-class Link implements Component
+final class Link implements Component
 {
     use IsConditional;
 
-    protected ?string $title = null;
-
-    protected ?string $href = null;
-
-    protected ?string $method = null;
-
-    protected ?string $route = null;
-
-    protected ?string $icon = null;
-
-    protected ?string $confirm = null;
-
-    public function __construct(?string $title = null)
-    {
-        $this->title = $title;
-    }
+    public function __construct(
+        protected ?string $title = null,
+        protected ?string $href = null,
+        protected ?string $method = null,
+        protected ?string $route = null,
+        protected ?string $icon = null,
+        protected ?string $confirm = null,
+    ) {}
 
     public static function make(?string $title = null): static
     {
@@ -65,11 +58,17 @@ class Link implements Component
         return $this;
     }
 
-    public function route(string ...$args): static
+    public function href(string $href): static
     {
-        $this->route = $args[0];
-        $this->href = route(...$args);
+        $this->href = $href;
 
+        return $this;
+    }
+
+    public function route(string $name, mixed $parameters = [], bool $absolute = true): static
+    {
+        $this->route = $name;
+        $this->href = route($name, $parameters, $absolute);
         return $this;
     }
 
@@ -87,6 +86,7 @@ class Link implements Component
         return $this;
     }
 
+    #[Override]
     public function toArray(): array
     {
         return array_filter([

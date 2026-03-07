@@ -60,6 +60,5 @@ it('can resolve value and active state', function () {
 
     $array = $filter->toArray();
 
-    expect($array['value'])->toBe('active')
-        ->and($array['active'])->toBeTrue();
+    expect($array['value'])->toBe('active')->and($array['active'])->toBeTrue();
 });

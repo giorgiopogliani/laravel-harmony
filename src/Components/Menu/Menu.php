@@ -47,7 +47,7 @@ class Menu implements Component
     {
         return [
             'title' => $this->title,
-            'children' => array_map(fn (Component $c) => $c->toArray(), $this->children),
+            'children' => array_map(static fn (Component $c) => $c->toArray(), $this->children),
         ];
     }
 }

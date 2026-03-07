@@ -43,10 +43,14 @@ it('creates a form field with label and generated name', function () {
 
     $array = $field->toArray();
 
-    expect($array['name'])->toBe('first_name')
-        ->and($array['label'])->toBe('First Name')
-        ->and($array['placeholder'])->toBe('First Name')
-        ->and($array['type'])->toBe('text');
+    expect($array['name'])
+        ->toBe('first_name')
+        ->and($array['label'])
+        ->toBe('First Name')
+        ->and($array['placeholder'])
+        ->toBe('First Name')
+        ->and($array['type'])
+        ->toBe('text');
 });
 
 it('accepts a custom name for form field', function () {

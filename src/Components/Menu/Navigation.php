@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Menu;
 
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Components\ConditionalComponent;
 use Performing\Harmony\Concerns\IsConditional;
 
 class Navigation implements Component
@@ -48,7 +47,7 @@ class Navigation implements Component
     {
         return [
             'title' => $this->title,
-            'children' => array_map(fn (Component $c) => $c->toArray(), $this->children),
+            'children' => array_map(static fn (Component $c) => $c->toArray(), $this->children),
         ];
     }
 }

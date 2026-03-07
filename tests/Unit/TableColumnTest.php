@@ -7,8 +7,7 @@ use Performing\Harmony\Components\Tables\TableColumn;
 it('can be created with make', function () {
     $column = TableColumn::make('Title');
 
-    expect($column->getKey())->toBe('title')
-        ->and($column->toArray())->toHaveKey('title', 'Title');
+    expect($column->getKey())->toBe('title')->and($column->toArray())->toHaveKey('title', 'Title');
 });
 
 it('generates key from title using snake case', function () {

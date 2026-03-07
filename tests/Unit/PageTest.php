@@ -40,8 +40,7 @@ it('can set additional data', function () {
 
     $array = $page->toArray();
 
-    expect($array['foo'])->toBe('bar')
-        ->and($array['baz'])->toBe(123);
+    expect($array['foo'])->toBe('bar')->and($array['baz'])->toBe(123);
 });
 
 it('returns empty array when condition is false', function () {

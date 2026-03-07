@@ -36,7 +36,7 @@ class Dataset implements Component
     public function name(string $name): static
     {
         $this->name = $name;
-        $this->hovertemplate = "Name=$name";
+        $this->hovertemplate = "Name={$name}";
 
         return $this;
     }

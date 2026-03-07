@@ -25,7 +25,7 @@ class GithubFiltersStyle
             if (count($q) == 3) {
                 [$key, $operator, $value] = $q;
 
-                $filter = collect($this->filters)->first(fn ($filter) => $filter->name() === $key);
+                $filter = collect($this->filters)->first(static fn ($filter) => $filter->name() === $key);
 
                 if ($filter) {
                     if ($operator) {

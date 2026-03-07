@@ -29,8 +29,7 @@ it('hidden children produce empty array in toArray', function () {
 
     $array = $menu->toArray();
 
-    expect($menu->getChildren())->toHaveCount(2)
-        ->and($array['children'][1])->toBe([]);
+    expect($menu->getChildren())->toHaveCount(2)->and($array['children'][1])->toBe([]);
 });
 
 it('creates a menu item with title', function () {

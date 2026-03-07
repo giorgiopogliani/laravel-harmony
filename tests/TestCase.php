@@ -19,12 +19,12 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Database\\Factories\\' . class_basename($modelName) . 'Factory',
+            static fn (string $modelName) => 'Database\\Factories\\' . class_basename($modelName) . 'Factory',
         );
 
         $this->loadLaravelMigrations();
 
-        Schema::create('posts', function ($table) {
+        Schema::create('posts', static function ($table) {
             $table->id();
             $table->string('title');
             $table->string('body');

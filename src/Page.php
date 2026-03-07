@@ -7,6 +7,7 @@ namespace Performing\Harmony;
 use Inertia\Inertia;
 use Inertia\Response;
 use Performing\Harmony\Components\Component;
+use Performing\Harmony\Components\Filters\Filter;
 use Performing\Harmony\Concerns\IsConditional;
 
 class Page implements Component
@@ -15,10 +16,16 @@ class Page implements Component
 
     protected ?string $title = null;
 
+    /** @var Component[] */
     protected array $breadcrumbs = [];
 
+    /** @var Component[] */
     protected array $actions = [];
 
+    /** @var Filter[] */
+    protected array $filters = [];
+
+    /** @var array<string, mixed> */
     protected array $additional = [];
 
     public function __construct(?string $title = null)
@@ -43,20 +50,39 @@ class Page implements Component
         return $this->title;
     }
 
-    public function breadcrumbs(mixed ...$breadcrumbs): static
+    public function breadcrumbs(Component ...$breadcrumbs): static
     {
         $this->breadcrumbs = $breadcrumbs;
 
         return $this;
     }
 
-    public function actions(mixed ...$actions): static
+    public function actions(Component ...$actions): static
     {
         $this->actions = $actions;
 
         return $this;
     }
 
+    public function actionIf(bool $condition, Component $action): static
+    {
+        if (! $condition) {
+            return $this;
+        }
+
+        $this->actions[] = $action;
+
+        return $this;
+    }
+
+    public function filters(Filter ...$filters): static
+    {
+        $this->filters = $filters;
+
+        return $this;
+    }
+
+    /** @param array<string,mixed> $data */
     public function additional(array $data): static
     {
         $this->additional = array_merge($this->additional, $data);
@@ -64,6 +90,7 @@ class Page implements Component
         return $this;
     }
 
+    /** @param array<string, mixed> $data */
     public function render(string $component, array $data = []): Response
     {
         $acc = [];
@@ -74,15 +101,14 @@ class Page implements Component
         return Inertia::render($component, array_merge($this->toArray(), $acc));
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return array_merge([
             'title' => $this->title,
             'breadcrumbs' => $this->breadcrumbs,
-            'actions' => array_map(
-                fn ($action) => $action instanceof Component ? $action->toArray() : $action,
-                $this->actions,
-            ),
+            'actions' => $this->actions,
+            'filters' => $this->filters,
         ], $this->additional);
     }
 }

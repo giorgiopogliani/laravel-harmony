@@ -47,9 +47,10 @@ it('excludes null props from array', function () {
 
     $array = $link->toArray();
 
-    expect($array)->not->toHaveKey('href')
-        ->and($array)->not->toHaveKey('method')
-        ->and($array)->not->toHaveKey('route');
+    expect($array)
+        ->not->toHaveKey('href')->and($array)
+        ->not->toHaveKey('method')->and($array)
+        ->not->toHaveKey('route');
 });
 
 it('can set arbitrary data via magic call', function () {
