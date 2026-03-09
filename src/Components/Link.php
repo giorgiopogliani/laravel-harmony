@@ -103,6 +103,13 @@ class Link implements Component
         return $this;
     }
 
+    public function title(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
     #[Override]
     public function toArray(): array
     {
