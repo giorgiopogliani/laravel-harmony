@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
+use Closure;
 use Override;
 use Performing\Harmony\Concerns\IsConditional;
 
@@ -105,6 +106,10 @@ class Link implements Component
     #[Override]
     public function toArray(): array
     {
+        if (method_exists($this, 'boot')){
+            $this->boot();
+        }
+
         return array_filter([
             'title' => $this->title,
             'href' => $this->href,
