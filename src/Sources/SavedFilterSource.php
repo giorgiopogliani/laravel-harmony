@@ -13,6 +13,7 @@ final readonly class SavedFilterSource implements FilterSource
         private array $filters,
     ) {}
 
+    #[\Override]
     public function get(string $key): ?string
     {
         return $this->filters[$key] ?? null;

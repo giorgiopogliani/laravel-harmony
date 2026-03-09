@@ -13,6 +13,7 @@ final readonly class RequestFilterSource implements FilterSource
         private Request $request,
     ) {}
 
+    #[\Override]
     public function get(string $key): ?string
     {
         if ($this->request->has("filters.{$key}")) {

@@ -51,7 +51,7 @@ final readonly class AsyncMultiselectColumnFilter implements Filter
             return $query;
         }
 
-        [$operator, $values] = explode('__', (string) $raw, 2);
+        [$operator, $values] = explode('__',  $raw, 2);
 
         // @mago-expect analysis:mixed-return-statement
         return match ($operator) {

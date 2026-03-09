@@ -16,6 +16,7 @@ final readonly class CompositeFilterSource implements FilterSource
         $this->sources = $sources;
     }
 
+    #[\Override]
     public function get(string $key): ?string
     {
         foreach ($this->sources as $source) {
