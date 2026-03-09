@@ -23,9 +23,9 @@ final class ActionsColumn implements Column
      * @param Closure(T): array<string, Link> $links
      */
     public function __construct(
-        public string $name = 'Text',
+        public string $name,
+        public Closure $links,
         public ?string $key = null,
-        public Closure $links = [],
     ) {}
 
     #[Override]
