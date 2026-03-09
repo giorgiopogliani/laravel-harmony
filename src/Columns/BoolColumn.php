@@ -26,8 +26,8 @@ final class BoolColumn implements Column, Sortable
      * @param  class-string<T>  $base
      */
     public function __construct(
-        public string $base,
-        public string $name,
+        public string $base = 'bool',
+        public string $name = 'Bool',
         public ?string $key = null,
     ) {}
 

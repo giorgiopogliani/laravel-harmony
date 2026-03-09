@@ -28,8 +28,8 @@ final class DateColumn implements Column, Sortable
      * @param  class-string<T>  $base
      */
     public function __construct(
-        public string $base,
-        public string $name,
+        public string $base = 'date',
+        public string $name = 'Date',
         public ?string $key = null,
         public string $format = 'd M Y',
     ) {}

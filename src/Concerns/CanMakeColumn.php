@@ -9,6 +9,7 @@ namespace Performing\Harmony\Concerns;
  */
 trait CanMakeColumn
 {
+    #[Deprecated]
     public static function make(string $name, ?string $key = null)
     {
         return new static(name: $name, key: $key);
