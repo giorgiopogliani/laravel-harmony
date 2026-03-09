@@ -50,7 +50,7 @@ final class ActionsColumn implements Column
     /** @param T $model */
     public function value(mixed $model): mixed
     {
-        return call_user_func($this->links, $model);
+        return collect(call_user_func($this->links, $model))->toArray();
     }
 
     #[Override]
