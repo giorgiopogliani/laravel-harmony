@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\App\Models\User;
 use Tests\TestCase;
 
 /*
@@ -18,24 +16,7 @@ use Tests\TestCase;
  |
  */
 
-beforeAll(function () {
-    $this->user = User::factory()->create();
-    $this->actingAs($this->user);
-});
-
-uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 uses(TestCase::class)->in('Arch');
-
-/*
- |--------------------------------------------------------------------------
- | Expectations
- |--------------------------------------------------------------------------
- |
- | When you're writing tests, you often need to check that values meet certain conditions. The
- | "expect()" function gives you access to a set of "expectations" methods that you can use
- | to assert different things. Of course, you may extend the Expectation API at any time.
- |
- */
 
 /*
  |--------------------------------------------------------------------------
