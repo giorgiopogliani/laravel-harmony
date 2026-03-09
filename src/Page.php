@@ -82,14 +82,6 @@ class Page implements Component
         return $this;
     }
 
-    /** @param array<string,mixed> $data */
-    public function additional(array $data): static
-    {
-        $this->additional = array_merge($this->additional, $data);
-
-        return $this;
-    }
-
     /** @param array<string, mixed> $data */
     public function render(string $component, array $data = []): Response
     {
@@ -99,6 +91,13 @@ class Page implements Component
         }
 
         return Inertia::render($component, array_merge($this->toArray(), $acc));
+    }
+
+    public function __call($name, $arguments)
+    {
+        $this->additional[$name] = $arguments[0];
+
+        return $this;
     }
 
     #[\Override]
