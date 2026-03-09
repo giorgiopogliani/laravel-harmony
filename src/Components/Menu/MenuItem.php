@@ -17,6 +17,8 @@ class MenuItem implements Component
 
     protected ?string $icon = null;
 
+    protected ?string $badge = null;
+
     public function __construct(?string $title = null)
     {
         $this->title = $title;
@@ -46,6 +48,13 @@ class MenuItem implements Component
         return $this;
     }
 
+    public function badge(string $badge): static
+    {
+        $this->badge = $badge;
+
+        return $this;
+    }
+
     #[\Override]
     public function toArray(): array
     {
@@ -54,6 +63,7 @@ class MenuItem implements Component
             'route' => $this->route,
             'href' => $this->route ? route($this->route) : null,
             'icon' => $this->icon,
+            'badge' => $this->badge,
         ]);
     }
 }

@@ -21,6 +21,7 @@ class Link implements Component
         protected ?string $confirm = null,
         protected ?string $target = null,
         protected ?string $as = null,
+        protected ?string $variant = null,
     ) {}
 
     public static function make(?string $title = null): static
@@ -61,6 +62,13 @@ class Link implements Component
         return $this;
     }
 
+    public function method(string $method): static
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
     public function href(string $href): static
     {
         $this->href = $href;
@@ -82,8 +90,13 @@ class Link implements Component
         return $this;
     }
 
-    public function confirm(string $message): static
+    public function confirm(string|bool $message): static
     {
+        if (! is_string($message)) {
+            $this->confirm = 'Are you sure?';
+            return $this;
+        }
+
         $this->confirm = $message;
 
         return $this;
@@ -110,6 +123,13 @@ class Link implements Component
         return $this;
     }
 
+    public function variant(mixed $value): static
+    {
+        $this->variant = $value;
+
+        return $this;
+    }
+
     #[Override]
     public function toArray(): array
     {
@@ -126,6 +146,7 @@ class Link implements Component
             'target' => $this->target,
             'as' => $this->as,
             'confirm' => $this->confirm,
+            'variant' => $this->variant,
         ]);
     }
 }
