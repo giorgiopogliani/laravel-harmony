@@ -75,13 +75,6 @@ class Page implements Component
         return $this;
     }
 
-    public function filters(Filter ...$filters): static
-    {
-        $this->filters = $filters;
-
-        return $this;
-    }
-
     /** @param array<string, mixed> $data */
     public function render(string $component, array $data = []): Response
     {
