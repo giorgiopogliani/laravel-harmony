@@ -6,9 +6,10 @@ namespace Performing\Harmony;
 
 use Illuminate\Support\ServiceProvider;
 
-class HarmonyServiceProvider extends ServiceProvider
+final class HarmonyServiceProvider extends ServiceProvider
 {
     public function boot(): void {}
 
+    #[\Override]
     public function register(): void {}
 }

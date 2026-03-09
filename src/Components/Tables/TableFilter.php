@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-class TableFilter implements Component
+final class TableFilter implements Component
 {
     use IsConditional;
 
@@ -104,6 +104,7 @@ class TableFilter implements Component
         return $next($builder);
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return array_filter([

@@ -12,7 +12,7 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 use Spatie\LaravelData\Data;
 
-class Table implements Component
+final class Table implements Component
 {
     use IsConditional;
 
@@ -99,6 +99,7 @@ class Table implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         $this->resolveFilters();
@@ -189,7 +190,7 @@ class Table implements Component
         return collect($group);
     }
 
-    protected function transformRowItem($item): array
+    protected function transformRowItem(mixed $item): array
     {
         $data = $this->resolveItemData($item);
 
@@ -204,7 +205,7 @@ class Table implements Component
         return $data;
     }
 
-    protected function resolveItemData($item): array
+    protected function resolveItemData(mixed $item): array
     {
         $class = $this->resource;
 

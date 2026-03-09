@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-class Widget implements Component
+final class Widget implements Component
 {
     use IsConditional;
 
@@ -36,6 +36,7 @@ class Widget implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

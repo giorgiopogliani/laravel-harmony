@@ -7,7 +7,7 @@ namespace Performing\Harmony\Components\Forms;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-class Form implements Component
+final class Form implements Component
 {
     use IsConditional;
 
@@ -45,6 +45,7 @@ class Form implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

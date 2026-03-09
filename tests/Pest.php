@@ -48,7 +48,7 @@ uses(TestCase::class)->in('Arch');
  |
  */
 
-function to_array($array)
+function to_array(mixed $array)
 {
     if (is_array($array)) {
         return array_map('to_array', $array);

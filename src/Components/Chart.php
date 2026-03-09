@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-class Chart implements Component
+final class Chart implements Component
 {
     use IsConditional;
 
@@ -38,6 +38,7 @@ class Chart implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return array_filter([

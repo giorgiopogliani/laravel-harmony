@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-class Panel implements Component
+final class Panel implements Component
 {
     use IsConditional;
 
@@ -41,6 +41,7 @@ class Panel implements Component
         return $this->type;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

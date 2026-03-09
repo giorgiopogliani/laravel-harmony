@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-class FormField implements Component
+final class FormField implements Component
 {
     use IsConditional;
 
@@ -71,6 +71,7 @@ class FormField implements Component
         return [$this->name => ''];
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

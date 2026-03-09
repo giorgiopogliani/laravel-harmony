@@ -10,7 +10,7 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Components\Filters\Filter;
 use Performing\Harmony\Concerns\IsConditional;
 
-class Page implements Component
+final class Page implements Component
 {
     use IsConditional;
 

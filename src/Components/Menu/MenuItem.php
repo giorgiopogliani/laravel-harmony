@@ -7,7 +7,7 @@ namespace Performing\Harmony\Components\Menu;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-class MenuItem implements Component
+final class MenuItem implements Component
 {
     use IsConditional;
 
@@ -46,6 +46,7 @@ class MenuItem implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return array_filter([

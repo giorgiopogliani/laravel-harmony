@@ -8,5 +8,6 @@ use Illuminate\Contracts\Support\Arrayable;
 
 interface Component extends Arrayable
 {
+    #[\Override]
     public function toArray(): array;
 }

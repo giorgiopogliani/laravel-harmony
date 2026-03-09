@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-class TableColumn implements Component
+final class TableColumn implements Component
 {
     use IsConditional;
 
@@ -86,6 +86,7 @@ class TableColumn implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return array_filter([

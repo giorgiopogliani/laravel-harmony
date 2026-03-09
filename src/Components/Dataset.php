@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-class Dataset implements Component
+final class Dataset implements Component
 {
     use IsConditional;
 
@@ -76,6 +76,7 @@ class Dataset implements Component
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

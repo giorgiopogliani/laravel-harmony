@@ -6,7 +6,7 @@ namespace Performing\Harmony\Commands;
 
 use Illuminate\Console\Command;
 
-class HarmonyCommand extends Command
+final class HarmonyCommand extends Command
 {
     public $signature = 'harmony';
 
