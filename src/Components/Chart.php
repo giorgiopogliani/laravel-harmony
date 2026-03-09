@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Chart implements Component
+class Chart implements Component
 {
     use IsConditional;
 

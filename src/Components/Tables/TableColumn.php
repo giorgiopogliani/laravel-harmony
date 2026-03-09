@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-final class TableColumn implements Component
+class TableColumn implements Component
 {
     use IsConditional;
 

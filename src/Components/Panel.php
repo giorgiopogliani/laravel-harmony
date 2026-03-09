@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Panel implements Component
+class Panel implements Component
 {
     use IsConditional;
 

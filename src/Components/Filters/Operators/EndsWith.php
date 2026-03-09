@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components\Filters\Operators;
 
-final class EndsWith extends Operator
+class EndsWith extends Operator
 {
     #[\Override]
     public function key(): string

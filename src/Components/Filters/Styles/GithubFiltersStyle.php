@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components\Filters\Styles;
 
 use Illuminate\Database\Eloquent\Builder;
 
-final class GithubFiltersStyle
+class GithubFiltersStyle
 {
     public function __construct(
         /** @var FilterType[] */

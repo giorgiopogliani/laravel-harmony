@@ -4,7 +4,7 @@ namespace Performing\Harmony\Components;
 
 use Override;
 
-final class ExternalLink implements Component
+class ExternalLink implements Component
 {
     public function __construct(
         private Link $component,

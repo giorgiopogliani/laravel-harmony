@@ -7,7 +7,7 @@ namespace Performing\Harmony\Components\Menu;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Navigation implements Component
+class Navigation implements Component
 {
     use IsConditional;
 

@@ -12,7 +12,7 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 use Spatie\LaravelData\Data;
 
-final class Table implements Component
+class Table implements Component
 {
     use IsConditional;
 

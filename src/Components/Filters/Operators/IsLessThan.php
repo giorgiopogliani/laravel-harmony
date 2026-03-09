@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components\Filters\Operators;
 
-final class IsLessThan extends Operator
+class IsLessThan extends Operator
 {
     #[\Override]
     public function key(): string

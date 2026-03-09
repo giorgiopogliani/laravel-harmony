@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-final class TableFilter implements Component
+class TableFilter implements Component
 {
     use IsConditional;
 

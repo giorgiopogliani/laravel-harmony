@@ -7,7 +7,7 @@ namespace Performing\Harmony\Components;
 use Override;
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Link implements Component
+class Link implements Component
 {
     use IsConditional;
 

@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Dataset implements Component
+class Dataset implements Component
 {
     use IsConditional;
 

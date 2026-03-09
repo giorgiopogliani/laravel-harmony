@@ -6,7 +6,7 @@ namespace Performing\Harmony\Components;
 
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Widget implements Component
+class Widget implements Component
 {
     use IsConditional;
 

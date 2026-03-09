@@ -7,7 +7,7 @@ namespace Performing\Harmony\Components\Forms;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\IsConditional;
 
-final class Form implements Component
+class Form implements Component
 {
     use IsConditional;
 
