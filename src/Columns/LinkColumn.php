@@ -27,7 +27,7 @@ final class LinkColumn implements Column, Sortable
      * @param  class-string<T>  $base
      */
     public function __construct(
-        public string $base = 'link',
+        public string $base,
         public string $name = 'Link',
         public ?string $key = null,
     ) {}

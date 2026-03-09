@@ -20,11 +20,9 @@ use Performing\Harmony\RenderTypes\ActionsRenderType;
 final class ActionsColumn implements Column
 {
     /**
-     * @param  class-string<T>  $base
-     * @param  Closure(T): array<string, Link> $links
+     * @param Closure(T): array<string, Link> $links
      */
     public function __construct(
-        public string $base,
         public string $name = 'Text',
         public ?string $key = null,
         public Closure $links = [],

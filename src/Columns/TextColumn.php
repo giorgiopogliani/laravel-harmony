@@ -26,7 +26,7 @@ final class TextColumn implements Column, Sortable
      * @param  class-string<T>  $base
      */
     public function __construct(
-        public string $base = 'text',
+        public string $base,
         public string $name = 'Text',
         public ?string $key = null,
     ) {}
