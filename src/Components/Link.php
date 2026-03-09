@@ -18,6 +18,8 @@ class Link implements Component
         protected ?string $route = null,
         protected ?string $icon = null,
         protected ?string $confirm = null,
+        protected ?string $target = null,
+        protected ?string $as = null,
     ) {}
 
     public static function make(?string $title = null): static
@@ -86,6 +88,20 @@ class Link implements Component
         return $this;
     }
 
+    public function target(string $target): static
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    public function as(string $name): static
+    {
+        $this->as = $name;
+
+        return $this;
+    }
+
     #[Override]
     public function toArray(): array
     {
@@ -95,6 +111,8 @@ class Link implements Component
             'method' => $this->method,
             'route' => $this->route,
             'icon' => $this->icon,
+            'target' => $this->target,
+            'as' => $this->as,
             'confirm' => $this->confirm,
         ]);
     }
