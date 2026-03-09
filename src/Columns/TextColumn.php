@@ -10,6 +10,7 @@ use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\RenderTypes\TextRenderType;
 use Illuminate\Support\Str;
 use Override;
+use Performing\Harmony\Concerns\CanMakeColumn;
 
 /**
  * @template T
@@ -19,6 +20,7 @@ use Override;
 final class TextColumn implements Column, Sortable
 {
     use SortsByColumn;
+    use CanMakeColumn;
 
     /**
      * @param  class-string<T>  $base

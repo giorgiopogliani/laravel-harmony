@@ -14,6 +14,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Str;
 use Override;
+use Performing\Harmony\Concerns\CanMakeColumn;
 
 /**
  * @template T
@@ -21,6 +22,8 @@ use Override;
  */
 final class DateColumn implements Column, Sortable
 {
+    use CanMakeColumn;
+
     /**
      * @param  class-string<T>  $base
      */

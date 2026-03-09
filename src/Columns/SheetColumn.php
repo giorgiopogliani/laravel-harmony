@@ -11,6 +11,7 @@ use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\RenderTypes\SheetRenderType;
 use Illuminate\Support\Str;
 use Override;
+use Performing\Harmony\Concerns\CanMakeColumn;
 
 /**
  * @template T of Linkable
@@ -20,6 +21,7 @@ use Override;
 final class SheetColumn implements Column, Sortable
 {
     use SortsByColumn;
+    use CanMakeColumn;
 
     /**
      * @param  class-string<T>  $base
@@ -27,8 +29,8 @@ final class SheetColumn implements Column, Sortable
     public function __construct(
         public string $base,
         public string $name,
-        public string $extraKey,
-        public string $extraLabel,
+        public string $extraKey = '',
+        public string $extraLabel = '',
         public ?string $key = null,
     ) {}
 

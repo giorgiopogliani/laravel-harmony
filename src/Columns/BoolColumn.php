@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace Performing\Harmony\Columns;
 
 use Performing\Harmony\Contracts\Column;
-use Performing\Harmony\Contracts\Linkable;
 use Performing\Harmony\Contracts\RenderType;
 use Performing\Harmony\Contracts\Sortable;
-use Performing\Harmony\RenderTypes\LinkRenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\RenderTypes\BoolRenderType;
 
 /**
- * @template T of Linkable
+ * @template T
  *
  * @implements Column<T>
  */
-final class LinkColumn implements Column, Sortable
+final class BoolColumn implements Column, Sortable
 {
     use SortsByColumn;
     use CanMakeColumn;
@@ -47,14 +46,14 @@ final class LinkColumn implements Column, Sortable
     #[Override]
     public function type(): RenderType
     {
-        return new LinkRenderType;
+        return new BoolRenderType;
     }
 
     #[Override]
     /** @param T $model */
-    public function value(mixed $model): array
+    public function value(mixed $model): mixed
     {
-        return ['name' => data_get($model, $this->key()), 'href' => $model->url()];
+        return data_get($model, $this->key());
     }
 
     #[Override]
