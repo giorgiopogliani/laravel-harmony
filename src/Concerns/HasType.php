@@ -10,10 +10,10 @@ trait HasType
 {
     public function bootHasType(): void
     {
-        $this->type('text');
+        $this->setType('text');
     }
 
-    public function type(string $type): self
+    public function setType(string $type): self
     {
         $this->data['type'] = $type;
 
