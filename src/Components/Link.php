@@ -17,7 +17,7 @@ class Link extends Component
 
     protected ?string $route = null;
 
-    public function route(...$args)
+    public function route(...$args): static
     {
         $this->route = $args[0];
         $this->href = route(...$args);
@@ -25,7 +25,7 @@ class Link extends Component
         return $this;
     }
 
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): static
     {
         if (in_array($name, ['asDelete', 'asPost', 'asPut', 'asPatch'])) {
             $this->method = Str::replace('as', '', strtolower($name));

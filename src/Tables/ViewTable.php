@@ -14,27 +14,28 @@ use Performing\Harmony\Contracts\View;
 
 /**
  * @template T
- *
+ * @template B
  * @implements DataTable<T>
  */
 final class ViewTable implements DataTable
 {
     /**
-     * @param  Collection<int, Column<T>>  $columns
+     * @param  DataSource<T, B>  $source
+     * @param  Collection<int, Column<B>>  $columns
      */
     public function __construct(
         private readonly View $view,
-        private readonly DataSource $record,
+        public readonly DataSource $source,
         private Collection $columns = new Collection(),
     ) {}
 
-    /** @param Column<T> $column */
+    /** @param Column<B> $column */
     public function add(Column $column): void
     {
         $this->columns = $this->columns->add($column);
     }
 
-    /** @return array<Column<T>> */
+    /** @return array<Column<B>> */
     #[Override]
     public function attributes(): array
     {
@@ -42,7 +43,7 @@ final class ViewTable implements DataTable
     }
 
     #[Override]
-    /** @return array<Column<T>> */
+    /** @return array<Column<B>> */
     public function columns(): array
     {
         $viewColumns = $this->view->columns();
@@ -66,6 +67,12 @@ final class ViewTable implements DataTable
     }
 
     #[Override]
+    public function filters(): array
+    {
+        return [];
+    }
+
+    #[Override]
     public function additional(): array
     {
         return [
@@ -77,6 +84,6 @@ final class ViewTable implements DataTable
     #[Override]
     public function render(): ResourceCollection
     {
-        return $this->record->present($this);
+        return $this->source->present($this);
     }
 }

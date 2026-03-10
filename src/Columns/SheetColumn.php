@@ -21,14 +21,10 @@ use Performing\Harmony\Contracts\Record;
  */
 final class SheetColumn implements Column, Sortable
 {
-    use SortsByColumn;
     use CanMakeColumn;
+    use IsKeySortable;
 
-    /**
-     * @param  class-string<T>  $base
-     */
     public function __construct(
-        public string $base,
         public string $name,
         public string $extraKey = '',
         public string $extraLabel = '',

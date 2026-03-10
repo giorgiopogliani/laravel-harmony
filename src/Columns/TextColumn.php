@@ -20,14 +20,13 @@ use Performing\Harmony\Contracts\Record;
  */
 final class TextColumn implements Column, Sortable
 {
-    use SortsByColumn;
     use CanMakeColumn;
+    use IsKeySortable;
 
     /**
      * @param  class-string<T>  $base
      */
     public function __construct(
-        public string $base,
         public string $name = 'Text',
         public ?string $key = null,
     ) {}
@@ -64,6 +63,7 @@ final class TextColumn implements Column, Sortable
             'key' => $this->key(),
             'title' => $this->label(),
             'type' => $this->type()->value(),
+            'sortable' => $this->sortable(),
         ];
     }
 }

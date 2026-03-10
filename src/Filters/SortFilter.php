@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Filters;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Override;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\FilterSource;
 use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\Enums\SortDirection;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Override;
 
 final readonly class SortFilter implements Filter
 {
-    /** @var array<string, Column> */
+    /** @var array<string, Sortable&Column> */
     private array $columns;
 
     /**
@@ -26,7 +26,9 @@ final readonly class SortFilter implements Filter
     ) {
         $indexed = [];
         foreach ($columns as $column) {
-            $indexed[$column->key()] = $column;
+            if ($column instanceof Sortable) {
+                $indexed[$column->key()] = $column;
+            }
         }
         $this->columns = $indexed;
     }
@@ -82,9 +84,11 @@ final readonly class SortFilter implements Filter
 
             $column = $this->columns[$key] ?? null;
 
-            if ($column instanceof Sortable) {
-                $column->sort($query, $direction);
+            if ($column === null) {
+                continue;
             }
+
+            $column->sortable()->apply($query, $direction);
         }
 
         return $query;
