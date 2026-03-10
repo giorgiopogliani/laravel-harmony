@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Tables;
 
-use Performing\Harmony\Contracts\Column;
-use Performing\Harmony\Contracts\DataTable;
-use Performing\Harmony\Contracts\View;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
 use Override;
+use Performing\Harmony\Contracts\Column;
+use Performing\Harmony\Contracts\DataSource;
+use Performing\Harmony\Contracts\DataTable;
+use Performing\Harmony\Contracts\View;
 
 /**
  * @template T
@@ -20,15 +19,12 @@ use Override;
  */
 final class ViewTable implements DataTable
 {
-    use HasPaginatedQuery;
-
     /**
      * @param  Collection<int, Column<T>>  $columns
-     * @param  Builder<T>  $query
      */
     public function __construct(
         private readonly View $view,
-        private readonly Builder $query,
+        private readonly DataSource $record,
         private Collection $columns = new Collection(),
     ) {}
 
@@ -43,12 +39,6 @@ final class ViewTable implements DataTable
     public function attributes(): array
     {
         return $this->columns->all();
-    }
-
-    #[Override]
-    public function query(): Builder
-    {
-        return $this->query;
     }
 
     #[Override]
@@ -85,8 +75,8 @@ final class ViewTable implements DataTable
     }
 
     #[Override]
-    public function render(): AnonymousResourceCollection
+    public function render(): ResourceCollection
     {
-        return JsonResource::collection($this->rows())->additional($this->additional());
+        return $this->record->present($this);
     }
 }

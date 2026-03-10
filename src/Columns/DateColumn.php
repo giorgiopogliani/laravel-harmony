@@ -15,9 +15,10 @@ use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Contracts\Record;
 
 /**
- * @template T
+ * @template T of Record
  * @implements Column<T>
  */
 final class DateColumn implements Column, Sortable
@@ -52,11 +53,11 @@ final class DateColumn implements Column, Sortable
         return new TextRenderType;
     }
 
+    /** @param T $record */
     #[Override]
-    /** @param T $model */
-    public function value(mixed $model): mixed
+    public function value(Record $record): mixed
     {
-        $value = data_get($model, $this->key());
+        $value = data_get($record->model(), $this->key());
 
         if ($value instanceof CarbonInterface) {
             return $value->format($this->format);

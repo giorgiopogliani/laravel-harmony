@@ -12,9 +12,10 @@ use Performing\Harmony\RenderTypes\SheetRenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Contracts\Record;
 
 /**
- * @template T of Linkable
+ * @template T of Linkable&Record
  *
  * @implements Column<T>
  */
@@ -52,16 +53,16 @@ final class SheetColumn implements Column, Sortable
         return new SheetRenderType;
     }
 
+    /** @param T $record */
     #[Override]
-    /** @param T $model */
-    public function value(mixed $model): array
+    public function value(Record $record): array
     {
         return [
-            'name' => data_get($model, $this->key()),
-            'href' => $model->url(),
+            'name' => data_get($record->model(), $this->key()),
+            'href' => $record->model()->url(),
             'extra' => [
                 'label' => $this->extraLabel,
-                'value' => data_get($model, $this->extraKey),
+                'value' => data_get($record->model(), $this->extraKey),
             ],
         ];
     }

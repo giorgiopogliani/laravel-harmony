@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
-final class ConditionalComponent implements Component
+final class ConditionalComponent extends Component
 {
     public function __construct(
         protected Component $component,

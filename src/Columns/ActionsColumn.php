@@ -10,10 +10,11 @@ use Performing\Harmony\Contracts\RenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Components\Link;
+use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\RenderTypes\ActionsRenderType;
 
 /**
- * @template T
+ * @template T of Record
  *
  * @implements Column<T>
  */
@@ -46,11 +47,11 @@ final class ActionsColumn implements Column
         return new ActionsRenderType;
     }
 
+    /** @param T $record */
     #[Override]
-    /** @param T $model */
-    public function value(mixed $model): mixed
+    public function value(Record $record): mixed
     {
-        return collect(call_user_func($this->links, $model))->toArray();
+        return collect(call_user_func($this->links, $record->model()))->toArray();
     }
 
     #[Override]

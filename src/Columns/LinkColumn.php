@@ -12,9 +12,10 @@ use Performing\Harmony\RenderTypes\LinkRenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Contracts\Record;
 
 /**
- * @template T of Linkable
+ * @template T of Linkable&Record
  *
  * @implements Column<T>
  */
@@ -50,11 +51,11 @@ final class LinkColumn implements Column, Sortable
         return new LinkRenderType;
     }
 
+    /** @param T $record */
     #[Override]
-    /** @param T $model */
-    public function value(mixed $model): array
+    public function value(Record $record): array
     {
-        return ['name' => data_get($model, $this->key()), 'href' => $model->url()];
+        return ['name' => data_get($record->model(), $this->key()), 'href' => $record->model()->url()];
     }
 
     #[Override]

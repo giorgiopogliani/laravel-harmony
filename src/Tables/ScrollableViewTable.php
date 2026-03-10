@@ -4,24 +4,22 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Tables;
 
-use Performing\Harmony\Contracts\DataTable;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Inertia\Inertia;
 use Inertia\ScrollProp;
 use Override;
+use Performing\Harmony\Contracts\DataTable;
 
 /**
  * @template T
+ *
  * @implements DataTable<T>
  */
 final class ScrollableViewTable implements DataTable
 {
-    use HasPaginatedQuery;
-
     /** @param DataTable<T> $table */
     public function __construct(
-        private DataTable $table,
+        private readonly DataTable $table,
     ) {}
 
     #[Override]
@@ -37,12 +35,6 @@ final class ScrollableViewTable implements DataTable
     }
 
     #[Override]
-    public function query(): Builder
-    {
-        return $this->table->query();
-    }
-
-    #[Override]
     public function additional(): array
     {
         return [
@@ -54,8 +46,6 @@ final class ScrollableViewTable implements DataTable
     #[Override]
     public function render(): ScrollProp
     {
-        return Inertia::scroll(
-            JsonResource::collection($this->rows())->additional($this->additional()),
-        );
+        return Inertia::scroll($this->table->render()->additional($this->additional()));
     }
 }

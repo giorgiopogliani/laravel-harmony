@@ -7,7 +7,7 @@ namespace Performing\Harmony\Contracts;
 use JsonSerializable;
 
 /**
- * @template T
+ * @template T of Record
  */
 interface Column extends JsonSerializable
 {
@@ -15,8 +15,8 @@ interface Column extends JsonSerializable
 
     public function label(): string;
 
-    /** @param T $model */
-    public function value(mixed $model): mixed;
+    /** @param T $record */
+    public function value(Record $record): mixed;
 
     public function type(): RenderType;
 }

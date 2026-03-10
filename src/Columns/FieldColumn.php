@@ -9,12 +9,13 @@ use Override;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\Contentable;
 use Performing\Harmony\Contracts\Field;
+use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\Contracts\RenderType;
 use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\Enums\SortDirection;
 
 /**
- * @template T of Contentable
+ * @template T of Contentable&Record
  *
  * @implements Column<T>
  */
@@ -46,11 +47,11 @@ final class FieldColumn implements Column, Sortable
         return $this->field->identity->type;
     }
 
-    /** @param T $model */
+    /** @param T $record */
     #[Override]
-    public function value(mixed $model): mixed
+    public function value(Record $record): mixed
     {
-        return $model->getFieldValue($this->field)?->toContent();
+        return $record->model()->getFieldValue($this->field)?->toContent();
     }
 
     #[Override]

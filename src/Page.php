@@ -26,7 +26,7 @@ class Page extends Component
     protected array $filters = [];
 
     /** @var array<string, mixed> */
-    protected array $additional = [];
+    protected array $data = [];
 
     public function __construct(?string $title = null)
     {
@@ -88,7 +88,14 @@ class Page extends Component
 
     public function __call($name, $arguments)
     {
-        $this->additional[$name] = $arguments[0];
+        $this->data[$name] = $arguments[0];
+
+        return $this;
+    }
+
+    public function additional(mixed $value): static
+    {
+        $this->data = array_merge($this->data, $value);
 
         return $this;
     }
@@ -96,11 +103,12 @@ class Page extends Component
     #[\Override]
     public function toArray(): array
     {
-        return array_merge([
+        return array_filter([
             'title' => $this->title,
             'breadcrumbs' => $this->breadcrumbs,
             'actions' => $this->actions,
             'filters' => $this->filters,
-        ], $this->additional);
+            ...$this->data,
+        ]);
     }
 }

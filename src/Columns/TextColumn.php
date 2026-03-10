@@ -11,9 +11,10 @@ use Performing\Harmony\RenderTypes\TextRenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Contracts\Record;
 
 /**
- * @template T
+ * @template T of Record
  *
  * @implements Column<T>
  */
@@ -49,11 +50,11 @@ final class TextColumn implements Column, Sortable
         return new TextRenderType;
     }
 
+    /** @param T $record */
     #[Override]
-    /** @param T $model */
-    public function value(mixed $model): mixed
+    public function value(Record $record): mixed
     {
-        return data_get($model, $this->key());
+        return data_get($record->model(), $this->key());
     }
 
     #[Override]

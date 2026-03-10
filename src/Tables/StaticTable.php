@@ -4,37 +4,31 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Tables;
 
-use Performing\Harmony\Contracts\Column;
-use Performing\Harmony\Contracts\DataTable;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
 use Override;
+use Performing\Harmony\Contracts\Column;
+use Performing\Harmony\Contracts\DataSource;
+use Performing\Harmony\Contracts\DataTable;
+use Performing\Harmony\Contracts\Record;
 
 /**
  * @template T
+ * @template B of Record
  * @implements DataTable<T>
  */
 final class StaticTable implements DataTable
 {
-    use HasPaginatedQuery;
-
     /**
-     * @param  Builder<T>  $query
-     * @param  Collection<int, Column<T>>  $columns
+     * @param  DataSource<T>  $record
+     * @param  Collection<int, Column<B>>  $columns
      */
     public function __construct(
-        private Builder $query,
+        private readonly DataSource $record,
         private Collection $columns = new Collection(),
     ) {}
 
-    #[Override]
-    public function query(): Builder
-    {
-        return $this->query;
-    }
-
-    /** @param Column<T> $column */
+    /** @param Column<B> $column */
     public function add(Column $column): void
     {
         $this->columns = $this->columns->add($column);
@@ -85,8 +79,8 @@ final class StaticTable implements DataTable
     }
 
     #[Override]
-    public function render(): mixed
+    public function render(): ResourceCollection
     {
-        return JsonResource::collection($this->rows())->additional($this->additional());
+        return $this->record->present($this);
     }
 }
