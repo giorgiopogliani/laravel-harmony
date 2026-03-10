@@ -17,7 +17,7 @@ class MenuItem implements Component
 
     protected ?string $icon = null;
 
-    protected ?string $badge = null;
+    protected string|int|null $badge = null;
 
     protected array $data = [];
 
@@ -50,7 +50,7 @@ class MenuItem implements Component
         return $this;
     }
 
-    public function badge(string $badge): static
+    public function badge(int|string $badge): static
     {
         $this->badge = $badge;
 
