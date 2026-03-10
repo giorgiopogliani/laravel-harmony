@@ -19,6 +19,8 @@ class MenuItem implements Component
 
     protected ?string $badge = null;
 
+    protected array $data = [];
+
     public function __construct(?string $title = null)
     {
         $this->title = $title;

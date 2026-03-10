@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
-use Closure;
 use Override;
 use Performing\Harmony\Concerns\IsConditional;
 
 class Link implements Component
 {
     use IsConditional;
+
+    protected array $data = [];
 
     public function __construct(
         protected ?string $title = null,
@@ -22,6 +23,7 @@ class Link implements Component
         protected ?string $target = null,
         protected ?string $as = null,
         protected ?string $variant = null,
+        protected bool $download = false,
     ) {}
 
     public static function make(?string $title = null): static
@@ -130,10 +132,24 @@ class Link implements Component
         return $this;
     }
 
+    public function download(bool $name = true): static
+    {
+        $this->download = $name;
+
+        return $this;
+    }
+
+    public function __call($name, $arguments)
+    {
+        $this->data[$name] = $arguments[0];
+
+        return $this;
+    }
+
     #[Override]
     public function toArray(): array
     {
-        if (method_exists($this, 'boot')){
+        if (method_exists($this, 'boot')) {
             $this->boot();
         }
 
@@ -147,6 +163,8 @@ class Link implements Component
             'as' => $this->as,
             'confirm' => $this->confirm,
             'variant' => $this->variant,
+            'download' => $this->download,
+            ...$this->data,
         ]);
     }
 }
