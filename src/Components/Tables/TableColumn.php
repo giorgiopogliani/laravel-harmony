@@ -75,8 +75,8 @@ class TableColumn extends Component implements Column, JsonSerializable
         if ($this->format instanceof Closure) {
             $value = call_user_func($this->format, $record->model(), $this);
 
-            if ($value instanceof \Illuminate\Contracts\Support\Arrayable) {
-                return $value->toArray();
+            if ($value instanceof \Illuminate\Contracts\Support\Arrayable || is_array($value)) {
+                return collect($value)->toArray();
             }
 
             return $value;
