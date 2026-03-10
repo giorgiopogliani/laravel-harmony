@@ -15,7 +15,7 @@ use Performing\Harmony\Tables\ScrollableViewTable;
 use Performing\Harmony\Tables\StaticTable;
 use Spatie\LaravelData\Data;
 
-#[Deprecated]
+/** @deprecated */
 class Table extends Component
 {
     use HasMake;
