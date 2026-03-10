@@ -22,4 +22,9 @@ final class EloquentRecord implements Record
     {
         return $this->model;
     }
+
+    public function data(): array
+    {
+        return $this->model->toArray();
+    }
 }

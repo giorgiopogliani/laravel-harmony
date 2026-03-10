@@ -8,7 +8,6 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\DataRecords\TableDataSource;
-use Performing\Harmony\Records\EloquentRecord;
 use Performing\Harmony\Tables\FilterableViewTable;
 use Performing\Harmony\Tables\ScrollableViewTable;
 use Performing\Harmony\Tables\StaticTable;
@@ -91,9 +90,9 @@ class Table extends Component
 
         $source = new TableDataSource(
             query: $this->rows,
-            record: fn (mixed $model) => new EloquentRecord($model),
             sorters: $this->sorters,
             perPage: $this->getPerPage(),
+            resource: $this->resource,
             metadata: [
                 'key' => $this->filtersKey,
                 'endpoint' => request()->url(),

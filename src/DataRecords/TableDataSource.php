@@ -12,19 +12,26 @@ use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Records\EloquentRecord;
+use Performing\Harmony\Records\ResourceRecord;
 
 /**
  * @implements DataSource<mixed, mixed>
  */
 final class TableDataSource implements DataSource
 {
+    public readonly Closure $record;
+
     public function __construct(
         private readonly Builder $query,
-        public readonly Closure $record,
         private readonly array $sorters,
         private readonly int $perPage,
+        private readonly ?string $resource = null,
         private readonly array $metadata = [],
-    ) {}
+    ) {
+        $this->record = $resource
+            ? static fn (mixed $model) => new ResourceRecord($model, $resource)
+            : static fn (mixed $model) => new EloquentRecord($model);
+    }
 
     public function present(DataTable $table): ResourceCollection
     {
@@ -41,7 +48,11 @@ final class TableDataSource implements DataSource
             ->withQueryString()
             ->through(function (mixed $model) use ($table) {
                 $record = ($this->record)($model);
-                $row = ['id' => $record->model()->getKey()];
+
+                $row = [
+                    'id' => $record->model()->getKey(),
+                    ...$record->data(),
+                ];
 
                 foreach ($table->columns() as $column) {
                     $row[$column->key()] = $column->value($record);
