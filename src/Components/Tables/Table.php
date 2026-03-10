@@ -183,7 +183,7 @@ class Table extends Component
 
         foreach ($this->columns as $column) {
             if ($column instanceof Column) {
-                $data[$column->key()] = $column->value($item) ?? null;
+                $data[$column->key()] = $column->value($data) ?? null;
             } else {
                 if ($column->format instanceof \Closure) {
                     $data[$column->getKey()] = call_user_func($column->format, $item, $column);
