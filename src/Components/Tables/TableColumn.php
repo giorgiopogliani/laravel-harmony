@@ -17,8 +17,6 @@ class TableColumn extends Component
 
     public ?Closure $format = null;
 
-    public ?Closure $groupAs = null;
-
     public function __construct(string $title, ?string $key = null)
     {
         $this->data['type'] = 'text';
@@ -46,13 +44,6 @@ class TableColumn extends Component
     public function format(Closure $format): self
     {
         $this->format = $format;
-
-        return $this;
-    }
-
-    public function groupAs(Closure $groupAs): self
-    {
-        $this->groupAs = $groupAs;
 
         return $this;
     }

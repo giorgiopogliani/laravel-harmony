@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components\Tables;
 
-use Illuminate\Database\Eloquent\Builder;
+use Deprecated;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Collection;
-use Inertia\Inertia;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Contracts\Column;
-use Performing\Harmony\Http\Resources\TableResource;
-use Performing\Harmony\Http\TableScrollMetadata;
+use Performing\Harmony\DataRecords\TableDataSource;
+use Performing\Harmony\Tables\FilterableViewTable;
+use Performing\Harmony\Tables\ScrollableViewTable;
+use Performing\Harmony\Tables\StaticTable;
 use Spatie\LaravelData\Data;
 
+#[Deprecated]
 class Table extends Component
 {
     use HasMake;
@@ -38,8 +38,6 @@ class Table extends Component
     protected string $filtersKey = '';
 
     protected bool $scrollable = false;
-
-    protected ?string $group = null;
 
     public function columns(array $columns): self
     {
@@ -88,113 +86,50 @@ class Table extends Component
         return $this;
     }
 
-    public function group(string $column): self
-    {
-        $this->group = $column;
-
-        return $this;
-    }
-
     public function toArray(): array|\Inertia\ScrollProp
     {
-        $this->applyFilters();
-        $this->applySorting();
-
-        $extra = [
-            'key' => $this->filtersKey,
-            'endpoint' => request()->url(),
-            'columns' => collect($this->columns),
-            'filters' => collect($this->filters),
-            'query' => $this->getQuery(),
-            'group' => $this->group,
-        ];
-
-        if ($this->group) {
-            $models = $this->rows->get();
-            return [
-                'rows' => $this->applyGrouping($models),
-                ...$extra,
-            ];
+        if (is_null($this->rows)) {
+            return [];
         }
 
-        $this->applyPaginate();
+        $source = new TableDataSource(
+            query: $this->rows,
+            record: fn (mixed $model) => $this->transformRowItem($model),
+            sorters: $this->sorters,
+            perPage: $this->getPerPage(),
+        );
+
+        $table = new StaticTable($source);
+
+        $filtered = new FilterableViewTable($table);
+
+        foreach ($this->filters as $filter) {
+            $filtered->add($filter);
+        }
 
         if ($this->scrollable) {
-            return Inertia::scroll(TableResource::collection($this->rows)->additional($extra));
+            return (new ScrollableViewTable($filtered))->render();
         }
 
-        return [
-            'rows' => $this->rows,
-            ...$extra,
-        ];
+        return $filtered->render();
     }
 
-    protected function applyFilters(): void
-    {
-        if (is_null($this->rows)) {
-            return;
-        }
-
-        $this->rows = app(Pipeline::class)
-            ->send($this->rows)
-            ->through($this->filters)
-            ->thenReturn();
-    }
-
-    protected function applyPaginate(): void
-    {
-        if (is_null($this->rows)) {
-            return;
-        }
-
-        $this->rows = $this->rows
-            ->paginate($this->getPerPage(), ['*'], 'page')
-            ->withQueryString();
-
-        $this->rows->through(fn($item) => $this->transformRowItem($item));
-    }
-
-    public function applyGrouping(Collection $models): Collection
-    {
-        $column = collect($this->columns)->first(fn (TableColumn $col) => $col->getKey() === $this->group);
-        $groupAsClosure = $column?->groupAs;
-
-        $group = [];
-
-        foreach ($models as $model) {
-            $row = $this->transformRowItem($model);
-
-            if ($groupAsClosure) {
-                $groupKey = $groupAsClosure($model) ?? '__nogroup__';
-            } else {
-                $groupKey = $row[$this->group] ?? '__nogroup__';
-            }
-
-            $group[$groupKey] ??= [];
-            $group[$groupKey][] = $row;
-        }
-
-        return collect($group);
-    }
-
-    protected function transformRowItem($item): array
+    protected function transformRowItem(mixed $item): array
     {
         $data = $this->resolveItemData($item);
 
         foreach ($this->columns as $column) {
             if ($column instanceof Column) {
                 $data[$column->key()] = $column->value($data) ?? null;
-            } else {
-                if ($column->format instanceof \Closure) {
-                    $data[$column->getKey()] = call_user_func($column->format, $item, $column);
-                }
+            } elseif ($column->format instanceof \Closure) {
+                $data[$column->getKey()] = call_user_func($column->format, $item, $column);
             }
         }
 
         return $data;
     }
 
-    protected function resolveItemData($item): array
+    protected function resolveItemData(mixed $item): array
     {
         $class = $this->resource;
 
@@ -213,28 +148,11 @@ class Table extends Component
         return $item->toArray();
     }
 
-    protected function applySorting(): void
-    {
-        if (!request()->has('sort') || is_null($this->rows)) {
-            return;
-        }
-
-        $sortParam = request()->input('sort');
-        $column = str_replace('-', '', $sortParam);
-        $direction = str_starts_with($sortParam, '-') ? 'desc' : 'asc';
-
-        if (array_key_exists($column, $this->sorters)) {
-            $this->sorters[$column]($this->rows, $direction);
-        } else {
-            $this->rows->orderBy($column, $direction);
-        }
-    }
-
     protected function getQuery(): array
     {
         return collect($this->filters)
             ->mapWithKeys(fn (TableFilter $filter) => [
-                $filter->getKey() => $this->getInput($filter->getkey()),
+                $filter->getKey() => $this->getInput($filter->getKey()),
             ])
             ->merge([
                 'search' => $this->getInput('search'),
@@ -246,7 +164,8 @@ class Table extends Component
             ->toArray();
     }
 
-    public function getInput(string $key, mixed $default = null) {
+    public function getInput(string $key, mixed $default = null)
+    {
         if (strlen($this->filtersKey) == 0) {
             return request()->input($key, $default);
         }
