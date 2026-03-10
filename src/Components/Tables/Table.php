@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
+use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Http\Resources\TableResource;
 use Performing\Harmony\Http\TableScrollMetadata;
 use Spatie\LaravelData\Data;
@@ -181,8 +182,12 @@ class Table extends Component
         $data = $this->resolveItemData($item);
 
         foreach ($this->columns as $column) {
-            if ($column->format instanceof \Closure) {
-                $data[$column->getKey()] = call_user_func($column->format, $item, $column);
+            if ($column instanceof Column) {
+                $data[$column->key()] = $column->value($item)?->toContent() ?? null;
+            } else {
+                if ($column->format instanceof \Closure) {
+                    $data[$column->getKey()] = call_user_func($column->format, $item, $column);
+                }
             }
         }
 
