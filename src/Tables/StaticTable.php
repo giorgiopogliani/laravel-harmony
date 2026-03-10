@@ -20,11 +20,11 @@ use Performing\Harmony\Contracts\Record;
 final class StaticTable implements DataTable
 {
     /**
-     * @param  DataSource<T>  $record
+     * @param  DataSource<T, B>  $source
      * @param  Collection<int, Column<B>>  $columns
      */
     public function __construct(
-        private readonly DataSource $record,
+        public readonly DataSource $source,
         private Collection $columns = new Collection(),
     ) {}
 
@@ -34,7 +34,7 @@ final class StaticTable implements DataTable
         $this->columns = $this->columns->add($column);
     }
 
-    /** @return array<Column<T>> */
+    /** @return array<Column<B>> */
     #[Override]
     public function attributes(): array
     {
@@ -42,7 +42,7 @@ final class StaticTable implements DataTable
     }
 
     #[Override]
-    /** @return array<Column<T>> */
+    /** @return array<Column<B>> */
     public function columns(): array
     {
         return once(function () {
@@ -70,6 +70,12 @@ final class StaticTable implements DataTable
     }
 
     #[Override]
+    public function filters(): array
+    {
+        return [];
+    }
+
+    #[Override]
     public function additional(): array
     {
         return [
@@ -81,6 +87,6 @@ final class StaticTable implements DataTable
     #[Override]
     public function render(): ResourceCollection
     {
-        return $this->record->present($this);
+        return $this->source->present($this);
     }
 }

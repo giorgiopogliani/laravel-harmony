@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Tables;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Inertia\Inertia;
 use Inertia\ScrollProp;
 use Override;
+use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 
 /**
@@ -22,6 +22,10 @@ final class ScrollableViewTable implements DataTable
         private readonly DataTable $table,
     ) {}
 
+    public DataSource $source {
+        get => $this->table->source;
+    }
+
     #[Override]
     public function attributes(): array
     {
@@ -32,6 +36,12 @@ final class ScrollableViewTable implements DataTable
     public function columns(): array
     {
         return $this->table->columns();
+    }
+
+    #[Override]
+    public function filters(): array
+    {
+        return $this->table->filters();
     }
 
     #[Override]

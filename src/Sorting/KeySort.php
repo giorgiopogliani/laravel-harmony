@@ -2,39 +2,39 @@
 
 declare(strict_types=1);
 
-namespace Performing\Harmony\Columns;
+namespace Performing\Harmony\Sorting;
 
-use Performing\Harmony\Enums\SortDirection;
-use Performing\Harmony\Contracts\Column;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Performing\Harmony\Contracts\SortStrategy;
+use Performing\Harmony\Enums\SortDirection;
 
-/** @require-implements Column */
-trait SortsByColumn
+final readonly class KeySort implements SortStrategy
 {
-    public function sort(Builder $query, SortDirection $direction): QueryBuilder
-    {
-        $key = $this->key();
+    public function __construct(
+        private string $key,
+    ) {}
 
-        if (! str_contains($key, '.')) {
-            // @mago-expect analysis:non-documented-method
-            // @mago-expect analysis:mixed-return-statement
-            return $query->orderBy($key, $direction->value);
+    public function apply(Builder $query, SortDirection $direction): void
+    {
+        if (! str_contains($this->key, '.')) {
+            $query->orderBy($this->key, $direction->value);
+
+            return;
         }
 
-        [$relation, $field] = explode('.', $key, 2);
+        [$relation, $field] = explode('.', $this->key, 2);
         $model = $query->getModel();
         $relationship = $model->{$relation}();
 
         if ($relationship instanceof MorphTo) {
-            return $this->sortByMorphTo($query, $relationship, $field, $direction);
+            $this->sortByMorphTo($query, $relationship, $field, $direction);
+
+            return;
         }
 
-        // @mago-expect analysis:non-documented-method
-        // @mago-expect analysis:mixed-return-statement
-        return $query->orderBy(
+        $query->orderBy(
             $relationship->getRelated()->newQuery()
                 ->select($field)
                 ->whereColumn(
@@ -46,7 +46,7 @@ trait SortsByColumn
         );
     }
 
-    private function sortByMorphTo(Builder $query, MorphTo $relationship, string $field, SortDirection $direction): Builder
+    private function sortByMorphTo(Builder $query, MorphTo $relationship, string $field, SortDirection $direction): void
     {
         $model = $query->getModel();
         $morphType = $relationship->getMorphType();
@@ -55,16 +55,14 @@ trait SortsByColumn
         $alias = (clone $query)->value($morphType);
 
         if (! $alias) {
-            return $query;
+            return;
         }
 
         $morphMap = Relation::morphMap();
         $class = $morphMap[$alias] ?? $alias;
         $related = new $class;
 
-        // @mago-expect analysis:non-documented-method
-        // @mago-expect analysis:mixed-return-statement
-        return $query->orderBy(
+        $query->orderBy(
             $related->newQuery()
                 ->select($field)
                 ->whereColumn(

@@ -20,14 +20,10 @@ use Performing\Harmony\RenderTypes\BoolRenderType;
  */
 final class BoolColumn implements Column, Sortable
 {
-    use SortsByColumn;
     use CanMakeColumn;
+    use IsKeySortable;
 
-    /**
-     * @param  class-string<T>  $base
-     */
     public function __construct(
-        public string $base,
         public string $name = 'Bool',
         public ?string $key = null,
     ) {}
