@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use Performing\Harmony\Components\Operators\IsEqual;
 use Performing\Harmony\Factories\OperatorFactory;
+use Performing\Harmony\Components\Operators\IsEqual;
 
 trait FilterScope
 {
@@ -36,7 +36,7 @@ trait FilterScope
     public function getSqlOperator(): string
     {
         if (! $this->operator) {
-            return new IsEqual()->toSql();
+            return (new IsEqual())->toSql();
         }
 
         return $this->operator->toSql();

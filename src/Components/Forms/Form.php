@@ -5,40 +5,35 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Forms;
 
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\IsConditional;
 
-class Form implements Component
+class Form extends Component
 {
-    use IsConditional;
-
     protected array $fields = [];
 
-    protected array $formData = [];
+    protected array $data = [];
 
     protected string $action = '';
 
-    public function __construct() {}
-
-    public static function make(): static
+    public static function make()
     {
         return new static();
     }
 
-    public function data(array $data): static
+    public function data($data)
     {
-        $this->formData = $data;
+        $this->data = $data;
 
         return $this;
     }
 
-    public function fields(array $fields): static
+    public function fields($fields)
     {
         $this->fields = $fields;
 
         return $this;
     }
 
-    public function action(string $action): static
+    public function action($action)
     {
         $this->action = $action;
 
@@ -49,7 +44,7 @@ class Form implements Component
     {
         return [
             'fields' => $this->fields,
-            'data' => $this->formData,
+            'data' => $this->data,
             'action' => $this->action,
         ];
     }

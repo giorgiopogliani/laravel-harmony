@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components\Tables;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
+use Inertia\Inertia;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\IsConditional;
+use Performing\Harmony\Concerns\HasMake;
+use Performing\Harmony\Http\Resources\TableResource;
+use Performing\Harmony\Http\TableScrollMetadata;
 use Spatie\LaravelData\Data;
 
-class Table implements Component
+class Table extends Component
 {
-    use IsConditional;
+    use HasMake;
 
     /** @var TableColumn[] */
     protected array $columns = [];
@@ -25,7 +28,7 @@ class Table implements Component
     /** @var array<string, callable> */
     protected array $sorters = [];
 
-    protected mixed $rows = null;
+    protected $rows = null;
 
     protected ?string $resource = null;
 
@@ -37,47 +40,39 @@ class Table implements Component
 
     protected ?string $group = null;
 
-    protected Request $request;
-
-    public function __construct(?Request $request = null)
-    {
-        $this->request = $request ?? app('request');
-    }
-
-    public static function make(?Request $request = null): static
-    {
-        return new static($request);
-    }
-
-    public function columns(array $columns): static
+    public function columns(array $columns): self
     {
         $this->columns = $columns;
 
         return $this;
     }
 
-    public function filters(array $filters): static
+    public function filters(array $filters): self
     {
         $this->filters = array_merge($this->filters, $filters);
+
+        foreach ($this->filters as $filter) {
+            $filter->setFiltersKey($this->filtersKey);
+        }
 
         return $this;
     }
 
-    public function filtersKey(string $key): static
+    public function filtersKey(string $key): self
     {
         $this->filtersKey = $key;
 
         return $this;
     }
 
-    public function sorters(array $sorters): static
+    public function sorters(array $sorters): self
     {
         $this->sorters = array_merge($this->sorters, $sorters);
 
         return $this;
     }
 
-    public function rows(mixed $data, ?string $class = null): static
+    public function rows($data, ?string $class = null): self
     {
         $this->rows = $data;
         $this->resource = $class;
@@ -85,29 +80,28 @@ class Table implements Component
         return $this;
     }
 
-    public function scrollable(): static
+    public function scrollable(): self
     {
         $this->scrollable = true;
 
         return $this;
     }
 
-    public function group(string $column): static
+    public function group(string $column): self
     {
         $this->group = $column;
 
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray(): array|\Inertia\ScrollProp
     {
-        $this->resolveFilters();
         $this->applyFilters();
         $this->applySorting();
 
         $extra = [
             'key' => $this->filtersKey,
-            'endpoint' => $this->request->url(),
+            'endpoint' => request()->url(),
             'columns' => collect($this->columns),
             'filters' => collect($this->filters),
             'query' => $this->getQuery(),
@@ -116,7 +110,6 @@ class Table implements Component
 
         if ($this->group) {
             $models = $this->rows->get();
-
             return [
                 'rows' => $this->applyGrouping($models),
                 ...$extra,
@@ -125,20 +118,14 @@ class Table implements Component
 
         $this->applyPaginate();
 
+        if ($this->scrollable) {
+            return Inertia::scroll(TableResource::collection($this->rows)->additional($extra));
+        }
+
         return [
             'rows' => $this->rows,
             ...$extra,
         ];
-    }
-
-    protected function resolveFilters(): void
-    {
-        foreach ($this->filters as $filter) {
-            $key = $filter->getKey();
-            $value = $this->getInput($key, $filter->getDefault());
-            $active = $this->hasInput($key);
-            $filter->resolve($value, $active);
-        }
     }
 
     protected function applyFilters(): void
@@ -163,7 +150,7 @@ class Table implements Component
             ->paginate($this->getPerPage(), ['*'], 'page')
             ->withQueryString();
 
-        $this->rows->through(fn ($item) => $this->transformRowItem($item));
+        $this->rows->through(fn($item) => $this->transformRowItem($item));
     }
 
     public function applyGrouping(Collection $models): Collection
@@ -223,11 +210,11 @@ class Table implements Component
 
     protected function applySorting(): void
     {
-        if (! $this->request->has('sort') || is_null($this->rows)) {
+        if (!request()->has('sort') || is_null($this->rows)) {
             return;
         }
 
-        $sortParam = $this->request->input('sort');
+        $sortParam = request()->input('sort');
         $column = str_replace('-', '', $sortParam);
         $direction = str_starts_with($sortParam, '-') ? 'desc' : 'asc';
 
@@ -242,7 +229,7 @@ class Table implements Component
     {
         return collect($this->filters)
             ->mapWithKeys(fn (TableFilter $filter) => [
-                $filter->getKey() => $this->getInput($filter->getKey()),
+                $filter->getKey() => $this->getInput($filter->getkey()),
             ])
             ->merge([
                 'search' => $this->getInput('search'),
@@ -254,22 +241,12 @@ class Table implements Component
             ->toArray();
     }
 
-    public function getInput(string $key, mixed $default = null): mixed
-    {
+    public function getInput(string $key, mixed $default = null) {
         if (strlen($this->filtersKey) == 0) {
-            return $this->request->input($key, $default);
+            return request()->input($key, $default);
         }
 
-        return $this->request->input($this->filtersKey . '.' . $key, $default);
-    }
-
-    public function hasInput(string $key): bool
-    {
-        if (strlen($this->filtersKey) == 0) {
-            return $this->request->has($key);
-        }
-
-        return $this->request->has($this->filtersKey . '.' . $key);
+        return request()->input($this->filtersKey . '.' . $key, $default);
     }
 
     public function getPerPage(): int

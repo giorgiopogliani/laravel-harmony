@@ -7,21 +7,13 @@ namespace Performing\Harmony\Components\Tables;
 use Closure;
 use Illuminate\Support\Str;
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\IsConditional;
+use Performing\Harmony\Concerns\HasKey;
+use Performing\Harmony\Concerns\HasType;
 
-class TableColumn implements Component
+class TableColumn extends Component
 {
-    use IsConditional;
-
-    protected string $title;
-
-    protected string $key;
-
-    protected string $type = 'text';
-
-    protected bool $sortable = false;
-
-    protected bool $hidden = false;
+    use HasType;
+    use HasKey;
 
     public ?Closure $format = null;
 
@@ -29,71 +21,46 @@ class TableColumn implements Component
 
     public function __construct(string $title, ?string $key = null)
     {
-        $this->title = $title;
-        $this->key = $key ?? Str::of($title)
+        $this->data['type'] = 'text';
+        parent::__construct();
+
+        $this->data['title'] = $title;
+        $this->data['key'] = $key ?? Str::of($title)
             ->lower()
             ->slug('_')
             ->toString();
     }
 
-    public static function make(string $title, ?string $key = null): static
+    public static function make(string $title, ?string $key = null)
     {
         return new static($title, $key);
     }
 
-    public function getKey(): string
+    public function sortable(): self
     {
-        return $this->key;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function type(string $type): static
-    {
-        $this->type = $type;
+        $this->data['sortable'] = true;
 
         return $this;
     }
 
-    public function sortable(): static
-    {
-        $this->sortable = true;
-
-        return $this;
-    }
-
-    public function hidden(): static
-    {
-        $this->hidden = true;
-
-        return $this;
-    }
-
-    public function format(Closure $format): static
+    public function format(Closure $format): self
     {
         $this->format = $format;
 
         return $this;
     }
 
-    public function groupAs(Closure $groupAs): static
+    public function groupAs(Closure $groupAs): self
     {
         $this->groupAs = $groupAs;
 
         return $this;
     }
 
-    public function toArray(): array
+    public function hidden(): self
     {
-        return array_filter([
-            'title' => $this->title,
-            'key' => $this->key,
-            'type' => $this->type,
-            'sortable' => $this->sortable ?: null,
-            'hidden' => $this->hidden ?: null,
-        ]);
+        $this->data['hidden'] = true;
+
+        return $this;
     }
 }

@@ -5,49 +5,11 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Menu;
 
 use Performing\Harmony\Components\Component;
-use Performing\Harmony\Concerns\IsConditional;
+use Performing\Harmony\Concerns\HasChildren;
+use Performing\Harmony\Concerns\HasTitle;
 
-class Menu implements Component
+class Menu extends Component
 {
-    use IsConditional;
-
-    protected ?string $title = null;
-
-    /** @var Component[] */
-    protected array $children = [];
-
-    public function __construct(?string $title = null)
-    {
-        $this->title = $title;
-    }
-
-    public static function make(?string $title = null): static
-    {
-        return new static($title);
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function children(Component ...$children): static
-    {
-        $this->children = array_values($children);
-
-        return $this;
-    }
-
-    public function getChildren(): array
-    {
-        return $this->children;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'title' => $this->title,
-            'children' => array_map(fn (Component $c) => $c->toArray(), $this->children),
-        ];
-    }
+    use HasTitle;
+    use HasChildren;
 }

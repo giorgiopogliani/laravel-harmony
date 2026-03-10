@@ -4,45 +4,25 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
-use Performing\Harmony\Concerns\IsConditional;
+use Performing\Harmony\Concerns\HasMake;
 
-class Chart implements Component
+class Chart extends Component
 {
-    use IsConditional;
+    use HasMake;
 
-    protected ?array $layout = null;
-
-    /** @var Dataset[] */
-    protected array $datasets = [];
-
-    public function __construct() {}
-
-    public static function make(): static
+    public function title(string $title)
     {
-        return new static();
-    }
-
-    public function title(string $title): static
-    {
-        $this->layout = [
-            'title' => ['text' => $title],
+        $this->data['layout'] = [
+            'title' => ['text' => $title]
         ];
 
         return $this;
     }
 
-    public function datasets(array $datasets): static
+    public function datasets($array)
     {
-        $this->datasets = $datasets;
+        $this->data['dataset'] = $array;
 
         return $this;
-    }
-
-    public function toArray(): array
-    {
-        return array_filter([
-            'layout' => $this->layout,
-            'dataset' => $this->datasets,
-        ]);
     }
 }

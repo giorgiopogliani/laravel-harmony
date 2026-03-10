@@ -4,88 +4,34 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components;
 
-use Performing\Harmony\Concerns\IsConditional;
+use Performing\Harmony\Concerns\HasType;
 
-class Dataset implements Component
+class Dataset extends Component
 {
-    use IsConditional;
+    use HasType;
 
-    protected string $name = '';
-
-    protected string $type = 'scatter';
-
-    protected string $mode = 'line';
-
-    protected bool $showlegend = true;
-
-    protected string $hovertemplate = '';
-
-    protected array $x = [];
-
-    protected array $y = [];
-
-    public function __construct() {}
+    protected array $data = [
+        "showlegend" => true,
+        "type" => "scatter",
+        "mode" => "line"
+    ];
 
     public static function make(string $name): static
     {
         $dataset = new static();
-
         return $dataset->name($name);
     }
 
-    public function name(string $name): static
+    public function name(string $name)
     {
-        $this->name = $name;
-        $this->hovertemplate = "Name=$name";
-
+        $this->data['name'] = $name;
+        $this->data["hovertemplate"] = "Name=$name";
         return $this;
     }
 
-    public function type(string $type): static
+    public function type(string $type)
     {
-        $this->type = $type;
-
+        $this->data['type'] = $type;
         return $this;
-    }
-
-    public function mode(string $mode): static
-    {
-        $this->mode = $mode;
-
-        return $this;
-    }
-
-    public function showlegend(bool $showlegend): static
-    {
-        $this->showlegend = $showlegend;
-
-        return $this;
-    }
-
-    public function x(array $x): static
-    {
-        $this->x = $x;
-
-        return $this;
-    }
-
-    public function y(array $y): static
-    {
-        $this->y = $y;
-
-        return $this;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'name' => $this->name,
-            'type' => $this->type,
-            'mode' => $this->mode,
-            'showlegend' => $this->showlegend,
-            'hovertemplate' => $this->hovertemplate,
-            'x' => $this->x,
-            'y' => $this->y,
-        ];
     }
 }
