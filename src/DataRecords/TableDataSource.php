@@ -11,6 +11,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 use Performing\Harmony\Contracts\Filter;
+use Performing\Harmony\Records\EloquentRecord;
 
 /**
  * @implements DataSource<mixed, mixed>
@@ -22,6 +23,7 @@ final class TableDataSource implements DataSource
         public readonly Closure $record,
         private readonly array $sorters,
         private readonly int $perPage,
+        private readonly array $metadata = [],
     ) {}
 
     public function present(DataTable $table): ResourceCollection
@@ -37,10 +39,19 @@ final class TableDataSource implements DataSource
         $data = $query
             ->paginate($this->perPage, ['*'], 'page')
             ->withQueryString()
-            ->through(fn (mixed $model) => ($this->record)($model));
+            ->through(function (mixed $model) use ($table) {
+                $record = ($this->record)($model);
+                $row = ['id' => $record->model()->getKey()];
+
+                foreach ($table->columns() as $column) {
+                    $row[$column->key()] = $column->value($record);
+                }
+
+                return $row;
+            });
 
         return JsonResource::collection($data)
-            ->additional($table->additional());
+            ->additional([...$table->additional(), ...$this->metadata]);
     }
 
     private function applySorting(Builder $query): void

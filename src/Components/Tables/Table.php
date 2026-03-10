@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Components\Tables;
 
-use Deprecated;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\DataRecords\TableDataSource;
+use Performing\Harmony\Records\EloquentRecord;
 use Performing\Harmony\Tables\FilterableViewTable;
 use Performing\Harmony\Tables\ScrollableViewTable;
 use Performing\Harmony\Tables\StaticTable;
-use Spatie\LaravelData\Data;
 
-/** @deprecated */
 class Table extends Component
 {
     use HasMake;
@@ -94,12 +91,23 @@ class Table extends Component
 
         $source = new TableDataSource(
             query: $this->rows,
-            record: fn (mixed $model) => $this->transformRowItem($model),
+            record: fn (mixed $model) => new EloquentRecord($model),
             sorters: $this->sorters,
             perPage: $this->getPerPage(),
+            metadata: [
+                'key' => $this->filtersKey,
+                'endpoint' => request()->url(),
+                'query' => $this->getQuery(),
+            ],
         );
 
         $table = new StaticTable($source);
+
+        foreach ($this->columns as $column) {
+            if ($column instanceof Column) {
+                $table->add($column);
+            }
+        }
 
         $filtered = new FilterableViewTable($table);
 
@@ -112,40 +120,6 @@ class Table extends Component
         }
 
         return $filtered->render();
-    }
-
-    protected function transformRowItem(mixed $item): array
-    {
-        $data = $this->resolveItemData($item);
-
-        foreach ($this->columns as $column) {
-            if ($column instanceof Column) {
-                $data[$column->key()] = $column->value($data) ?? null;
-            } elseif ($column->format instanceof \Closure) {
-                $data[$column->getKey()] = call_user_func($column->format, $item, $column);
-            }
-        }
-
-        return $data;
-    }
-
-    protected function resolveItemData(mixed $item): array
-    {
-        $class = $this->resource;
-
-        if (is_null($class)) {
-            return $item->toArray();
-        }
-
-        if (is_a($class, JsonResource::class, true)) {
-            return $class::make($item)->resolve();
-        }
-
-        if (is_a($class, Data::class, true)) {
-            return $class::from($item)->toArray();
-        }
-
-        return $item->toArray();
     }
 
     protected function getQuery(): array

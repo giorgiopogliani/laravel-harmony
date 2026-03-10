@@ -6,11 +6,16 @@ namespace Performing\Harmony\Components\Tables;
 
 use Closure;
 use Illuminate\Support\Str;
+use JsonSerializable;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Contracts\Column;
+use Performing\Harmony\Contracts\Record;
+use Performing\Harmony\Contracts\RenderType;
+use Performing\Harmony\RenderTypes\TextRenderType;
 
-class TableColumn extends Component
+class TableColumn extends Component implements Column, JsonSerializable
 {
     use HasType;
     use HasKey;
@@ -53,5 +58,34 @@ class TableColumn extends Component
         $this->data['hidden'] = true;
 
         return $this;
+    }
+
+    public function key(): string
+    {
+        return $this->getKey();
+    }
+
+    public function label(): string
+    {
+        return $this->data['title'];
+    }
+
+    public function value(Record $record): mixed
+    {
+        if ($this->format instanceof Closure) {
+            return call_user_func($this->format, $record->model(), $this);
+        }
+
+        return data_get($record->model(), $this->key());
+    }
+
+    public function type(): RenderType
+    {
+        return new TextRenderType;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->toArray();
     }
 }
