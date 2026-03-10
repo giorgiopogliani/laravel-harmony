@@ -36,7 +36,7 @@ class Dataset implements Component
     public function name(string $name): static
     {
         $this->name = $name;
-        $this->hovertemplate = "Name={$name}";
+        $this->hovertemplate = "Name=$name";
 
         return $this;
     }
@@ -76,7 +76,6 @@ class Dataset implements Component
         return $this;
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return [

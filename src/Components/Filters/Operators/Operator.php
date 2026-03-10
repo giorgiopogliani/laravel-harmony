@@ -19,12 +19,11 @@ abstract class Operator implements Arrayable
         return false;
     }
 
-    public function transform(mixed $value): ?string
+    public function transform($value): ?string
     {
         return $value;
     }
 
-    #[\Override]
     public function toArray()
     {
         return [

@@ -99,7 +99,6 @@ class Table implements Component
         return $this;
     }
 
-    #[\Override]
     public function toArray(): array
     {
         $this->resolveFilters();
@@ -190,22 +189,20 @@ class Table implements Component
         return collect($group);
     }
 
-    protected function transformRowItem(mixed $item): array
+    protected function transformRowItem($item): array
     {
         $data = $this->resolveItemData($item);
 
         foreach ($this->columns as $column) {
-            if (! $column->format instanceof \Closure) {
-                continue;
+            if ($column->format instanceof \Closure) {
+                $data[$column->getKey()] = call_user_func($column->format, $item, $column);
             }
-
-            $data[$column->getKey()] = call_user_func($column->format, $item, $column);
         }
 
         return $data;
     }
 
-    protected function resolveItemData(mixed $item): array
+    protected function resolveItemData($item): array
     {
         $class = $this->resource;
 

@@ -10,19 +10,16 @@ abstract class FilterType implements Arrayable, FilterableType
 {
     use FilterScope;
 
-    #[\Override]
     public function name(): string
     {
         return str($this->label())->slug('_')->toString();
     }
 
-    #[\Override]
     public function type(): string
     {
         return 'text';
     }
 
-    #[\Override]
     public function props(): array
     {
         $props = [];
@@ -40,7 +37,6 @@ abstract class FilterType implements Arrayable, FilterableType
         return $props;
     }
 
-    #[\Override]
     public function toArray()
     {
         return [

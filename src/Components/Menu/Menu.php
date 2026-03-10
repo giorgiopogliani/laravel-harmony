@@ -43,12 +43,11 @@ class Menu implements Component
         return $this->children;
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return [
             'title' => $this->title,
-            'children' => array_map(static fn (Component $c) => $c->toArray(), $this->children),
+            'children' => array_map(fn (Component $c) => $c->toArray(), $this->children),
         ];
     }
 }

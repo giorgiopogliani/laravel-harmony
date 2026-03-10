@@ -38,7 +38,6 @@ class Chart implements Component
         return $this;
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return array_filter([

@@ -30,8 +30,6 @@ class TableFilter implements Component
 
     protected bool $active = false;
 
-    protected array $data = [];
-
     public function __construct(string $title, ?string $key = null)
     {
         $this->title = $title;
@@ -106,14 +104,6 @@ class TableFilter implements Component
         return $next($builder);
     }
 
-    public function __call($name, $arguments)
-    {
-        $this->data[$name] = $arguments[0];
-
-        return $this;
-    }
-
-    #[\Override]
     public function toArray(): array
     {
         return array_filter([
@@ -123,7 +113,6 @@ class TableFilter implements Component
             'options' => $this->options ?: null,
             'value' => $this->value,
             'active' => $this->active ?: null,
-            ...$this->data,
         ]);
     }
 }

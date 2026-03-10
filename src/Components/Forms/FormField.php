@@ -71,7 +71,6 @@ class FormField implements Component
         return [$this->name => ''];
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return [

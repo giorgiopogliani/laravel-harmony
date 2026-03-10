@@ -41,7 +41,6 @@ class Panel implements Component
         return $this->type;
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return [
