@@ -86,7 +86,7 @@ class Table extends Component
         return $this;
     }
 
-    public function toArray(): array|\Inertia\ScrollProp
+    public function toArray(): mixed
     {
         if (is_null($this->rows)) {
             return [];
