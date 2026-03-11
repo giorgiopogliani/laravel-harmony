@@ -33,6 +33,14 @@ final class TableDataSource implements DataSource
             : static fn (mixed $model) => new EloquentRecord($model);
     }
 
+    public function additional(): array
+    {
+        return [
+            'query' => ['per_page' => $this->perPage],
+            ...$this->metadata,
+        ];
+    }
+
     public function present(DataTable $table): ResourceCollection
     {
         $query = array_reduce(
@@ -62,7 +70,7 @@ final class TableDataSource implements DataSource
             });
 
         return JsonResource::collection($data)
-            ->additional([...$table->additional(), ...$this->metadata]);
+            ->additional($table->additional());
     }
 
     private function applySorting(Builder $query): void

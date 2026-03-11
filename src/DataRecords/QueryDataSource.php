@@ -27,7 +27,15 @@ final class QueryDataSource implements DataSource
     public function __construct(
         private readonly Builder $query,
         public readonly Closure $record,
+        private readonly int $perPage = 15,
     ) {}
+
+    public function additional(): array
+    {
+        return [
+            'query' => ['per_page' => $this->perPage],
+        ];
+    }
 
     public function present(DataTable $table): ResourceCollection
     {
@@ -38,7 +46,7 @@ final class QueryDataSource implements DataSource
         );
 
         $data = $query
-                ->paginate()
+                ->paginate($this->perPage)
                 ->withQueryString()
                 ->through(function (mixed $model) use ($table) {
                     $record = ($this->record)($model);

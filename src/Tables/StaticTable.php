@@ -79,6 +79,7 @@ final class StaticTable implements DataTable
     public function additional(): array
     {
         return [
+            ...$this->source->additional(),
             'columns' => $this->columns(),
             'attributes' => $this->attributes(),
         ];

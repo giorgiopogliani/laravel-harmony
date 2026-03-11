@@ -16,6 +16,9 @@ interface DataSource
     /** @var Closure(T): B */
     public Closure $record { get; }
 
+    /** @return array<string, mixed> */
+    public function additional(): array;
+
     /** @param DataTable<T> $table */
     public function present(DataTable $table): ResourceCollection;
 }
