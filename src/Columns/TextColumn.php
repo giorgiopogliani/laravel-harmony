@@ -23,9 +23,6 @@ final class TextColumn implements Column, Sortable
     use CanMakeColumn;
     use IsKeySortable;
 
-    /**
-     * @param  class-string<T>  $base
-     */
     public function __construct(
         public string $name = 'Text',
         public ?string $key = null,

@@ -14,7 +14,7 @@ use Performing\Harmony\Contracts\View;
 
 /**
  * @template T
- * @template B
+ * @template B of T
  * @implements DataTable<T>
  */
 final class ViewTable implements DataTable

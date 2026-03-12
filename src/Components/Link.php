@@ -25,6 +25,13 @@ class Link extends Component
         return $this;
     }
 
+    public function icon(string $icon): static
+    {
+        $this->data['icon'] = $icon;
+
+        return $this;
+    }
+
     public function __call($name, $arguments): static
     {
         if (in_array($name, ['asDelete', 'asPost', 'asPut', 'asPatch'])) {

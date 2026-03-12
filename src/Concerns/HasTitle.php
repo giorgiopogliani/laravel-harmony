@@ -13,7 +13,7 @@ trait HasTitle
         parent::__construct();
     }
 
-    public static function make(?string $title = null)
+    public static function make(?string $title = null): static
     {
         return new static($title);
     }

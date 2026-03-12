@@ -24,9 +24,6 @@ final class LinkColumn implements Column, Sortable
     use CanMakeColumn;
     use IsKeySortable;
 
-    /**
-     * @param  class-string<T>  $base
-     */
     public function __construct(
         public string $name = 'Link',
         public ?string $key = null,
