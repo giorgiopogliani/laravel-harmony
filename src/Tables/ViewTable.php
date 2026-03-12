@@ -10,6 +10,7 @@ use Override;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
+use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\View;
 
 /**
@@ -27,12 +28,18 @@ final class ViewTable implements DataTable
         private readonly View $view,
         public readonly DataSource $source,
         private Collection $columns = new Collection(),
+        private Collection $filters = new Collection(),
     ) {}
 
     /** @param Column<B> $column */
     public function add(Column $column): void
     {
         $this->columns = $this->columns->add($column);
+    }
+
+    public function addFilter(Filter $filter): void
+    {
+        $this->filters->push($filter);
     }
 
     /** @return array<Column<B>> */
@@ -69,7 +76,7 @@ final class ViewTable implements DataTable
     #[Override]
     public function filters(): array
     {
-        return [];
+        return $this->filters->all();
     }
 
     #[Override]
@@ -79,6 +86,7 @@ final class ViewTable implements DataTable
             ...$this->source->additional(),
             'columns' => $this->columns(),
             'attributes' => $this->attributes(),
+            'filters' => $this->filters->all(),
         ];
     }
 

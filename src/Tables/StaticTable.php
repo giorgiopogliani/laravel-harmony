@@ -10,6 +10,7 @@ use Override;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
+use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\Record;
 
 /**
@@ -22,16 +23,23 @@ final class StaticTable implements DataTable
     /**
      * @param  DataSource<T, B>  $source
      * @param  Collection<int, Column<B>>  $columns
+     * @param  Collection<int, Filter>  $filters
      */
     public function __construct(
         public readonly DataSource $source,
         private Collection $columns = new Collection(),
+        private Collection $filters = new Collection(),
     ) {}
 
     /** @param Column<B> $column */
     public function add(Column $column): void
     {
         $this->columns = $this->columns->add($column);
+    }
+
+    public function addFilter(Filter $filter): void
+    {
+        $this->filters->push($filter);
     }
 
     /** @return array<Column<B>> */
@@ -72,7 +80,7 @@ final class StaticTable implements DataTable
     #[Override]
     public function filters(): array
     {
-        return [];
+        return $this->filters->all();
     }
 
     #[Override]
@@ -82,6 +90,7 @@ final class StaticTable implements DataTable
             ...$this->source->additional(),
             'columns' => $this->columns(),
             'attributes' => $this->attributes(),
+            'filters' => $this->filters->all(),
         ];
     }
 
