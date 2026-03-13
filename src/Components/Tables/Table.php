@@ -7,8 +7,8 @@ namespace Performing\Harmony\Components\Tables;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Contracts\Column;
+use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\DataRecords\TableDataSource;
-use Performing\Harmony\Tables\FilterableViewTable;
 use Performing\Harmony\Tables\ScrollableViewTable;
 use Performing\Harmony\Tables\StaticTable;
 
@@ -108,17 +108,17 @@ class Table extends Component
             }
         }
 
-        $filtered = new FilterableViewTable($table);
-
         foreach ($this->filters as $filter) {
-            $filtered->add($filter);
+            if ($filter instanceof Filter) {
+                $table->addFilter($filter);
+            }
         }
 
         if ($this->scrollable) {
-            return (new ScrollableViewTable($filtered))->render();
+            return (new ScrollableViewTable($table))->render();
         }
 
-        return $filtered->render();
+        return $table->render();
     }
 
     protected function getQuery(): array
