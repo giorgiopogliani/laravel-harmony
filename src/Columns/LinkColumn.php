@@ -51,7 +51,7 @@ final class LinkColumn implements Column, Sortable
     #[Override]
     public function value(Record $record): array
     {
-        return ['name' => data_get($record->model(), $this->key()), 'href' => $record->url()];
+        return ['name' => data_get($record, $this->key()), 'href' => $record->url()];
     }
 
     #[Override]

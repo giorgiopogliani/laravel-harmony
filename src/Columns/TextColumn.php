@@ -50,7 +50,7 @@ final class TextColumn implements Column, Sortable
     #[Override]
     public function value(Record $record): mixed
     {
-        return data_get($record->model(), $this->key());
+        return data_get($record, $this->key());
     }
 
     #[Override]

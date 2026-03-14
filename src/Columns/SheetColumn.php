@@ -54,11 +54,11 @@ final class SheetColumn implements Column, Sortable
     public function value(Record $record): array
     {
         return [
-            'name' => data_get($record->model(), $this->key()),
-            'href' => $record->model()->url(),
+            'name' => data_get($record, $this->key()),
+            'href' => $record->url(),
             'extra' => [
                 'label' => $this->extraLabel,
-                'value' => data_get($record->model(), $this->extraKey),
+                'value' => data_get($record, $this->extraKey),
             ],
         ];
     }

@@ -51,7 +51,7 @@ final class DateColumn implements Column, Sortable
     #[Override]
     public function value(Record $record): mixed
     {
-        $value = data_get($record->model(), $this->key());
+        $value = data_get($record, $this->key());
 
         if ($value instanceof CarbonInterface) {
             return $value->format($this->format);

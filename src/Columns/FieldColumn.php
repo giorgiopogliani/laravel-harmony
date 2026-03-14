@@ -47,7 +47,7 @@ final class FieldColumn implements Column, Sortable
     #[Override]
     public function value(Record $record): mixed
     {
-        return $record->model()->getFieldValue($this->field)?->toContent();
+        return $record->getFieldValue($this->field)?->toContent();
     }
 
     #[Override]

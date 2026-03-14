@@ -11,8 +11,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 use Performing\Harmony\Contracts\Filter;
-use Performing\Harmony\Records\EloquentRecord;
-use Performing\Harmony\Records\ResourceRecord;
 
 /**
  * @implements DataSource<mixed, mixed>
@@ -25,12 +23,10 @@ final class TableDataSource implements DataSource
         private readonly Builder $query,
         private readonly array $sorters,
         private readonly int $perPage,
-        private readonly ?string $resource = null,
+        ?Closure $record = null,
         private readonly array $metadata = [],
     ) {
-        $this->record = $resource
-            ? static fn (mixed $model) => new ResourceRecord($model, $resource)
-            : static fn (mixed $model) => new EloquentRecord($model);
+        $this->record = $record ?? static fn (mixed $model) => $model;
     }
 
     public function additional(): array
@@ -58,8 +54,7 @@ final class TableDataSource implements DataSource
                 $record = ($this->record)($model);
 
                 $row = [
-                    'id' => $record->model()->getKey(),
-                    ...$record->data(),
+                    'id' => $record->getKey(),
                 ];
 
                 foreach ($table->columns() as $column) {

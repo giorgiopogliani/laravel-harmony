@@ -73,7 +73,7 @@ class TableColumn extends Component implements Column, JsonSerializable
     public function value(Record $record): mixed
     {
         if ($this->format instanceof Closure) {
-            $value = call_user_func($this->format, $record->model(), $this);
+            $value = call_user_func($this->format, $record, $this);
 
             if ($value instanceof \Illuminate\Contracts\Support\Arrayable || is_array($value)) {
                 return collect($value)->toArray();
@@ -82,7 +82,7 @@ class TableColumn extends Component implements Column, JsonSerializable
             return $value;
         }
 
-        return data_get($record->model(), $this->key());
+        return data_get($record, $this->key());
     }
 
     public function type(): RenderType
