@@ -15,13 +15,12 @@ use Performing\Harmony\RenderTypes\ActionsRenderType;
 
 /**
  * @template T of Record
- *
  * @implements Column<T>
  */
 final class ActionsColumn implements Column
 {
     /**
-     * @param Closure(T): array<string, Link> $links
+     * @param Closure(T): list<Link> $links
      */
     public function __construct(
         public string $name,
@@ -51,7 +50,8 @@ final class ActionsColumn implements Column
     #[Override]
     public function value(Record $record): mixed
     {
-        return collect(call_user_func($this->links, $record->model()))->toArray();
+        // @mago-expect analysis:mixed-argument
+        return collect(call_user_func($this->links, $record))->values()->toArray();
     }
 
     #[Override]
