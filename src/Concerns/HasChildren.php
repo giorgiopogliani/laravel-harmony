@@ -7,6 +7,7 @@ namespace Performing\Harmony\Concerns;
 use Closure;
 use Performing\Harmony\Components\Component;
 
+/** @deprecated */
 trait HasChildren
 {
     public function children(Component|Closure ...$children)

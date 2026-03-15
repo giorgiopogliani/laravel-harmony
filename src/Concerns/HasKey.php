@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Concerns;
 
+/** @deprecated */
 trait HasKey
 {
     public function key(string $key): self

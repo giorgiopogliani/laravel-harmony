@@ -92,7 +92,7 @@ class Table extends Component
             query: $this->rows,
             sorters: $this->sorters,
             perPage: $this->getPerPage(),
-            resource: $this->resource,
+            record: $this->resource ? fn (mixed $model) => new ($this->resource)($model) : null,
             metadata: [
                 'key' => $this->filtersKey,
                 'endpoint' => request()->url(),

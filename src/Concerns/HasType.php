@@ -6,6 +6,7 @@ namespace Performing\Harmony\Concerns;
 
 use Performing\Harmony\Prop;
 
+/** @deprecated */
 trait HasType
 {
     public function bootHasType(): void

@@ -8,6 +8,7 @@ use Deprecated;
 
 /**
  * @require-implement Column
+ * @deprecated
  */
 trait CanMakeColumn
 {

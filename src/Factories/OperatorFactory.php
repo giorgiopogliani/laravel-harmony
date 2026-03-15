@@ -16,6 +16,7 @@ use Performing\Harmony\Components\Filters\Operators\IsOneOfAny;
 use Performing\Harmony\Components\Filters\Operators\NotContains;
 use Performing\Harmony\Components\Filters\Operators\StartsWith;
 
+/** @deprecated */
 final class OperatorFactory
 {
     public static function getOperator(string $name)
