@@ -12,10 +12,9 @@ use Performing\Harmony\RenderTypes\SheetRenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
-use Performing\Harmony\Contracts\Record;
 
 /**
- * @template T of Linkable&Record
+ * @template T of Linkable
  *
  * @implements Column<T>
  */
@@ -51,7 +50,7 @@ final class SheetColumn implements Column, Sortable
 
     /** @param T $record */
     #[Override]
-    public function value(Record $record): array
+    public function value(object $record): array
     {
         return [
             'name' => data_get($record, $this->key()),

@@ -8,21 +8,15 @@ use Illuminate\Support\Facades\Schema;
 use Performing\Harmony\Columns\BoolColumn;
 use Performing\Harmony\Columns\TextColumn;
 use Performing\Harmony\Contracts\DataTable;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\Tables\QueryRecord;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
-class FakeProject extends Model implements Record
+class FakeProject extends Model
 {
     protected $table = 'fake_projects';
 
     protected $guarded = [];
-
-    public function model(): mixed
-    {
-        return $this;
-    }
 }
 
 class FakeTable implements DataTable

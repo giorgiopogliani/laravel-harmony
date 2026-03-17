@@ -10,11 +10,10 @@ use Performing\Harmony\Contracts\Sortable;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\RenderTypes\BoolRenderType;
 
 /**
- * @template T of Record
+ * @template T of object
  *
  * @implements Column<T>
  */
@@ -48,7 +47,7 @@ final class BoolColumn implements Column, Sortable
 
     /** @param T $record */
     #[Override]
-    public function value(Record $record): mixed
+    public function value(object $record): mixed
     {
         return data_get($record, $this->key());
     }

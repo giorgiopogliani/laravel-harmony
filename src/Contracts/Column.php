@@ -12,7 +12,7 @@ interface Column extends JsonSerializable
 
     public function label(): string;
 
-    public function value(Record $record): mixed;
+    public function value(object $record): mixed;
 
     public function type(): RenderType;
 }

@@ -11,7 +11,6 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasType;
 use Performing\Harmony\Contracts\Column;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\Contracts\RenderType;
 use Performing\Harmony\RenderTypes\TextRenderType;
 
@@ -70,7 +69,7 @@ class TableColumn extends Component implements Column, JsonSerializable
         return $this->data['title'];
     }
 
-    public function value(Record $record): mixed
+    public function value(object $record): mixed
     {
         if ($this->format instanceof Closure) {
             $value = call_user_func($this->format, $record, $this);

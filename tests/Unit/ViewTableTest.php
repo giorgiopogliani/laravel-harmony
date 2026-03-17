@@ -5,22 +5,16 @@ declare(strict_types=1);
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Performing\Harmony\Columns\TextColumn;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\Contracts\View;
 use Performing\Harmony\Tables\ViewTable;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
-class ViewFakeProject extends \Illuminate\Database\Eloquent\Model implements Record
+class ViewFakeProject extends \Illuminate\Database\Eloquent\Model
 {
     protected $table = 'view_fake_projects';
 
     protected $guarded = [];
-
-    public function model(): mixed
-    {
-        return $this;
-    }
 }
 
 class FakeView implements View

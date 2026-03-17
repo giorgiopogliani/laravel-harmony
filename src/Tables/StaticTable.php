@@ -11,11 +11,10 @@ use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 use Performing\Harmony\Contracts\Filter;
-use Performing\Harmony\Contracts\Record;
 
 /**
  * @template T
- * @template B of Record
+ * @template B of object
  * @implements DataTable<T>
  */
 final class StaticTable implements DataTable

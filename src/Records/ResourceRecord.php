@@ -6,15 +6,12 @@ namespace Performing\Harmony\Records;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Performing\Harmony\Contracts\Record;
 use Spatie\LaravelData\Data;
 
 /**
  * @template T of Model
- *
- * @implements Record<T>
  */
-final class ResourceRecord implements Record
+final class ResourceRecord
 {
     private readonly array $data;
 

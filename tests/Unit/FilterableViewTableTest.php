@@ -7,22 +7,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Performing\Harmony\Columns\TextColumn;
 use Performing\Harmony\Contracts\Filter;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\Tables\FilterableViewTable;
 use Performing\Harmony\Tables\ViewTable;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
-class FilterFakeProject extends \Illuminate\Database\Eloquent\Model implements Record
+class FilterFakeProject extends \Illuminate\Database\Eloquent\Model
 {
     protected $table = 'filter_fake_projects';
 
     protected $guarded = [];
-
-    public function model(): mixed
-    {
-        return $this;
-    }
 }
 
 class FakeFilter implements Filter

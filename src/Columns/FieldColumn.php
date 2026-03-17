@@ -8,14 +8,13 @@ use Override;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\Contentable;
 use Performing\Harmony\Contracts\Field;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\Contracts\RenderType;
 use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\Contracts\SortStrategy;
 use Performing\Harmony\Sorting\FieldSort;
 
 /**
- * @template T of Contentable&Record
+ * @template T of Contentable
  *
  * @implements Column<T>
  */
@@ -45,7 +44,7 @@ final class FieldColumn implements Column, Sortable
 
     /** @param T $record */
     #[Override]
-    public function value(Record $record): mixed
+    public function value(object $record): mixed
     {
         return $record->getFieldValue($this->field)?->toContent();
     }

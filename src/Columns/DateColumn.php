@@ -12,10 +12,9 @@ use Carbon\CarbonInterface;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
-use Performing\Harmony\Contracts\Record;
 
 /**
- * @template T of Record
+ * @template T of object
  * @implements Column<T>
  */
 final class DateColumn implements Column, Sortable
@@ -49,7 +48,7 @@ final class DateColumn implements Column, Sortable
 
     /** @param T $record */
     #[Override]
-    public function value(Record $record): mixed
+    public function value(object $record): mixed
     {
         $value = data_get($record, $this->key());
 

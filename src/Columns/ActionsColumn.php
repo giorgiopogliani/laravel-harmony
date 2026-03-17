@@ -10,11 +10,10 @@ use Performing\Harmony\Contracts\RenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Components\Link;
-use Performing\Harmony\Contracts\Record;
 use Performing\Harmony\RenderTypes\ActionsRenderType;
 
 /**
- * @template T of Record
+ * @template T of object
  * @implements Column<T>
  */
 final class ActionsColumn implements Column
@@ -48,7 +47,7 @@ final class ActionsColumn implements Column
 
     /** @param T $record */
     #[Override]
-    public function value(Record $record): mixed
+    public function value(object $record): mixed
     {
         // @mago-expect analysis:mixed-argument
         return collect(call_user_func($this->links, $record))->values()->toArray();

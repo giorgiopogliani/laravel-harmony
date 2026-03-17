@@ -11,11 +11,10 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 use Performing\Harmony\Contracts\Filter;
-use Performing\Harmony\Contracts\Record;
 
 /**
  * @template T
- * @template B of Record
+ * @template B of object
  * @implements DataSource<T, B>
  */
 final class QueryDataSource implements DataSource
