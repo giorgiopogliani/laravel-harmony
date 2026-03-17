@@ -8,7 +8,9 @@ use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\Filter;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Performing\Harmony\DataRecords\TableDataSource;
+use Spatie\LaravelData\Data;
 use Performing\Harmony\Tables\ScrollableViewTable;
 use Performing\Harmony\Tables\StaticTable;
 
@@ -92,7 +94,7 @@ class Table extends Component
             query: $this->rows,
             sorters: $this->sorters,
             perPage: $this->getPerPage(),
-            record: $this->resource ? fn (mixed $model) => new ($this->resource)($model) : null,
+            record: $this->resource ? $this->makeRecordClosure() : null,
             metadata: [
                 'key' => $this->filtersKey,
                 'endpoint' => request()->url(),
@@ -149,5 +151,16 @@ class Table extends Component
     public function getPerPage(): int
     {
         return (int) $this->getInput('per_page', $this->query['per_page']);
+    }
+
+    private function makeRecordClosure(): \Closure
+    {
+        $resource = $this->resource;
+
+        return match (true) {
+            is_a($resource, Data::class, true) => static fn (mixed $model) => $resource::from($model),
+            is_a($resource, JsonResource::class, true) => static fn (mixed $model) => $resource::make($model),
+            default => static fn (mixed $model) => $model,
+        };
     }
 }
