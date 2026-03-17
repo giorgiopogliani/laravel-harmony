@@ -58,7 +58,14 @@ final class TableDataSource implements DataSource
                 ];
 
                 foreach ($table->columns() as $column) {
-                    $row[$column->key()] = $column->value($record);
+                    $row[$column->key()] = $column->value($model);
+                }
+
+                if ($record !== $model) {
+                    $row = array_merge(
+                        method_exists($record, 'toArray') ? $record->toArray() : (array) $record,
+                        $row,
+                    );
                 }
 
                 return $row;
