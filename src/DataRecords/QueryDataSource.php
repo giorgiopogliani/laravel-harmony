@@ -53,7 +53,7 @@ final class QueryDataSource implements DataSource
                 ->withQueryString()
                 ->through(function (mixed $model) use ($table) {
                     $record = ($this->record)($model);
-                    $row = ['id' => $record->getKey()];
+                    $row = ['id' => $model->getKey()];
 
                     foreach ($table->columns() as $column) {
                         $row[$column->key()] = $column->value($record);

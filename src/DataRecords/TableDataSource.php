@@ -54,7 +54,7 @@ final class TableDataSource implements DataSource
                 $record = ($this->record)($model);
 
                 $row = [
-                    'id' => $record->getKey(),
+                    'id' => $model->getKey(),
                 ];
 
                 foreach ($table->columns() as $column) {
