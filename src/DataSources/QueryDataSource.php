@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Performing\Harmony\DataRecords;
+namespace Performing\Harmony\DataSources;
 
 use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;

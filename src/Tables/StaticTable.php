@@ -7,6 +7,7 @@ namespace Performing\Harmony\Tables;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
 use Override;
+use Performing\Harmony\Columns\ColumnResource;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
@@ -52,28 +53,7 @@ final class StaticTable implements DataTable
     /** @return array<Column<B>> */
     public function columns(): array
     {
-        return once(function () {
-            $viewColumns = $this->attributes();
-
-            if (empty($viewColumns)) {
-                return $this->columns->all();
-            }
-
-            $columns = [];
-
-            foreach ($viewColumns as $column) {
-                $found = collect($this->columns)
-                    ->first(
-                        static fn (Column $col) => $col->key() === $column->key(),
-                    );
-
-                if ($found !== null) {
-                    $columns[] = $found;
-                }
-            }
-
-            return empty($columns) ? $this->columns->all() : $columns;
-        });
+        return $this->columns->all();
     }
 
     #[Override]
@@ -87,7 +67,7 @@ final class StaticTable implements DataTable
     {
         return [
             ...$this->source->additional(),
-            'columns' => $this->columns(),
+            'columns' => array_map(static fn (Column $column) => new ColumnResource($column), $this->columns()),
             'attributes' => $this->attributes(),
             'filters' => $this->filters->all(),
         ];

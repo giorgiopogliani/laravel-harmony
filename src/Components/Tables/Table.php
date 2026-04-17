@@ -9,7 +9,7 @@ use Performing\Harmony\Concerns\HasMake;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\Filter;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Performing\Harmony\DataRecords\TableDataSource;
+use Performing\Harmony\DataSources\TableDataSource;
 use Spatie\LaravelData\Data;
 use Performing\Harmony\Tables\ScrollableViewTable;
 use Performing\Harmony\Tables\StaticTable;

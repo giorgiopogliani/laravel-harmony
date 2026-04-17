@@ -6,7 +6,7 @@ namespace Performing\Harmony\Contracts;
 
 use JsonSerializable;
 
-interface Column extends JsonSerializable
+interface Column
 {
     public function key(): string;
 
