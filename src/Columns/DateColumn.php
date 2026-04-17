@@ -58,14 +58,4 @@ final class DateColumn implements Column, Sortable
 
         return $value;
     }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'key' => $this->key(),
-            'title' => $this->label(),
-            'type' => $this->type()->value(),
-        ];
-    }
 }

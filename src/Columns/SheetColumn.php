@@ -61,15 +61,4 @@ final class SheetColumn implements Column, Sortable
             ],
         ];
     }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'key' => $this->key(),
-            'title' => $this->label(),
-            'type' => $this->type()->value(),
-            'wrap' => true,
-        ];
-    }
 }

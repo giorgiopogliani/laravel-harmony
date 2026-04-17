@@ -52,14 +52,4 @@ final class ActionsColumn implements Column
         // @mago-expect analysis:mixed-argument
         return collect(call_user_func($this->links, $record))->values()->toArray();
     }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'key' => $this->key(),
-            'title' => $this->label(),
-            'type' => $this->type()->value(),
-        ];
-    }
 }

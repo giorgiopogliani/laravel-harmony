@@ -52,15 +52,4 @@ final class LinkColumn implements Column, Sortable
     {
         return ['name' => data_get($record, $this->key()), 'href' => $record->url()];
     }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'key' => $this->key(),
-            'title' => $this->label(),
-            'type' => $this->type()->value(),
-            'sortable' => $this->sortable(),
-        ];
-    }
 }

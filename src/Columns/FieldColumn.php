@@ -54,14 +54,4 @@ final class FieldColumn implements Column, Sortable
     {
         return new FieldSort($this->field);
     }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'key' => $this->key(),
-            'title' => $this->label(),
-            'type' => $this->type()->value(),
-        ];
-    }
 }

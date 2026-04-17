@@ -51,14 +51,4 @@ final class BoolColumn implements Column, Sortable
     {
         return data_get($record, $this->key());
     }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'key' => $this->key(),
-            'title' => $this->label(),
-            'type' => $this->type()->value(),
-        ];
-    }
 }
