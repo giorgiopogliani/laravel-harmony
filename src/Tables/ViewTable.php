@@ -12,6 +12,7 @@ use Performing\Harmony\Contracts\DataSource;
 use Performing\Harmony\Contracts\DataTable;
 use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\View;
+use Performing\Harmony\Tables\Concerns\WithAdditional;
 
 /**
  * @template T
@@ -20,6 +21,8 @@ use Performing\Harmony\Contracts\View;
  */
 final class ViewTable implements DataTable
 {
+    use WithAdditional;
+
     /**
      * @param  DataSource<T, B>  $source
      * @param  Collection<int, Column<B>>  $columns
@@ -77,17 +80,6 @@ final class ViewTable implements DataTable
     public function filters(): array
     {
         return $this->filters->all();
-    }
-
-    #[Override]
-    public function additional(): array
-    {
-        return [
-            ...$this->source->additional(),
-            'columns' => $this->columns(),
-            'attributes' => $this->attributes(),
-            'filters' => $this->filters->all(),
-        ];
     }
 
     #[Override]
