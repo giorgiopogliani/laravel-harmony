@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Performing\Harmony\Components\Tables;
 
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use JsonSerializable;
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasKey;
 use Performing\Harmony\Concerns\HasProps;
 use Performing\Harmony\Concerns\HasType;
+use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Prop;
 
-class TableFilter extends Component
+class TableFilter extends Component implements Filter, JsonSerializable
 {
     use HasType;
     use HasKey;
@@ -55,6 +58,7 @@ class TableFilter extends Component
     public function options(array $options)
     {
         $this->data['options'] = $options;
+
         return $this;
     }
 
@@ -85,7 +89,27 @@ class TableFilter extends Component
         return request()->has($this->filtersKey . '.' . $this->getKey());
     }
 
-    public function handle($query, Closure $next)
+    public function key(): string
+    {
+        return $this->getKey();
+    }
+
+    public function label(): string
+    {
+        return $this->data['title'];
+    }
+
+    public function type(): string
+    {
+        return $this->data['type'];
+    }
+
+    public function inline(): bool
+    {
+        return false;
+    }
+
+    public function apply(Builder $query): Builder
     {
         $value = $this->getValue();
 
@@ -93,6 +117,18 @@ class TableFilter extends Component
             call_user_func($this->query, $query, $value);
         }
 
+        return $query;
+    }
+
+    public function handle($query, Closure $next)
+    {
+        $this->apply($query);
+
         return $next($query);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->toArray();
     }
 }

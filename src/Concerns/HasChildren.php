@@ -7,6 +7,7 @@ namespace Performing\Harmony\Concerns;
 use Closure;
 use Performing\Harmony\Components\Component;
 
+/** @deprecated */
 trait HasChildren
 {
     public function children(Component|Closure ...$children)
@@ -15,7 +16,7 @@ trait HasChildren
             $children = $children();
         }
 
-        $this->data['children'] = array_values(array_filter($children, fn ($child) => $child->data['when'] ?? true));
+        $this->data['children'] = array_values(array_filter($children, fn ($child) => $child->toArray()));
 
         return $this;
     }

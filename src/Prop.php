@@ -8,7 +8,6 @@ namespace Performing\Harmony;
 class Prop
 {
     public function __construct(
-        public ?string $key = null
-    ) {
-    }
+        public ?string $key = null,
+    ) {}
 }

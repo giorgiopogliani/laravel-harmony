@@ -6,10 +6,12 @@ namespace Performing\Harmony\Components\Menu;
 
 use Performing\Harmony\Components\Component;
 use Performing\Harmony\Concerns\HasTitle;
+use Performing\Harmony\Concerns\IsConditional;
 
 class MenuItem extends Component
 {
     use HasTitle;
+    use IsConditional;
 
     public function route(string $route)
     {
