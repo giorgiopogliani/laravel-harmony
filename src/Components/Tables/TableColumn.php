@@ -69,6 +69,11 @@ class TableColumn extends Component implements Column, JsonSerializable
         return $this->data['title'];
     }
 
+    public function metadata(): array
+    {
+        return [];
+    }
+
     public function value(object $record): mixed
     {
         if ($this->format instanceof Closure) {
