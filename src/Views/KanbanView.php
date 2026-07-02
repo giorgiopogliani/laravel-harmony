@@ -13,10 +13,12 @@ final class KanbanView extends Data implements View
     /**
      * @param list<string> $columns
      * @param array<string, string> $filters
+     * @param list<string> $groups
      */
     public function __construct(
         public array $columns = [],
-        public array $filters = []
+        public array $filters = [],
+        public array $groups = [],
     ) {}
 
     #[Override]
@@ -32,9 +34,9 @@ final class KanbanView extends Data implements View
     }
 
     #[Override]
-    public function grouped(): ?string
+    public function grouped(): array
     {
-        return null;
+        return $this->groups;
     }
 
     #[Override]

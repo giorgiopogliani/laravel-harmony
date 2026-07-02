@@ -49,18 +49,18 @@ final class QueryDataSource implements DataSource
         );
 
         $data = $query
-                ->paginate($this->perPage)
-                ->withQueryString()
-                ->through(function (mixed $model) use ($table) {
-                    $record = ($this->record)($model);
-                    $row = ['id' => $model->getKey()];
+            ->paginate($this->perPage)
+            ->withQueryString()
+            ->through(function (mixed $model) use ($table) {
+                $record = ($this->record)($model);
+                $row = ['id' => $model->getKey()];
 
-                    foreach ($table->columns() as $column) {
-                        $row[$column->key()] = $column->value($record);
-                    }
+                foreach ($table->columns() as $column) {
+                    $row[$column->key()] = $column->value($record);
+                }
 
-                    return $row;
-                });
+                return $row;
+            });
 
         return JsonResource::collection($data)
             ->additional($table->additional());

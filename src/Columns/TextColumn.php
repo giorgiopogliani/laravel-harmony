@@ -10,7 +10,7 @@ use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\RenderTypes\TextRenderType;
 use Illuminate\Support\Str;
 use Override;
-use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Concerns\IsColumn;
 
 /**
  * @template T of object
@@ -19,7 +19,7 @@ use Performing\Harmony\Concerns\CanMakeColumn;
  */
 final class TextColumn implements Column, Sortable
 {
-    use CanMakeColumn;
+    use IsColumn;
     use IsKeySortable;
 
     public function __construct(

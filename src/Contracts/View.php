@@ -21,8 +21,12 @@ interface View
     /**
      * Configure the column to use for group by
      */
-    public function grouped(): ?string;
+    public function grouped(): array;
 
-    /** @return array<string, string> */
+    /**
+     * The active filters for the current view.
+     *
+     * @return array<string, string>
+     */
     public function filters(): array;
 }

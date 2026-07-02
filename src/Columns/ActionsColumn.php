@@ -10,6 +10,7 @@ use Performing\Harmony\Contracts\RenderType;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Components\Link;
+use Performing\Harmony\Concerns\IsColumn;
 use Performing\Harmony\RenderTypes\ActionsRenderType;
 
 /**
@@ -18,6 +19,8 @@ use Performing\Harmony\RenderTypes\ActionsRenderType;
  */
 final class ActionsColumn implements Column
 {
+    use IsColumn;
+
     /**
      * @param Closure(T): list<Link> $links
      */

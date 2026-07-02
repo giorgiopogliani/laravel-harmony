@@ -11,7 +11,7 @@ use Performing\Harmony\Contracts\Sortable;
 use Performing\Harmony\RenderTypes\SheetRenderType;
 use Illuminate\Support\Str;
 use Override;
-use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Concerns\IsColumn;
 
 /**
  * @template T of Linkable
@@ -20,7 +20,7 @@ use Performing\Harmony\Concerns\CanMakeColumn;
  */
 final class SheetColumn implements Column, Sortable
 {
-    use CanMakeColumn;
+    use IsColumn;
     use IsKeySortable;
 
     public function __construct(

@@ -63,6 +63,11 @@ final readonly class MultiselectColumnFilter implements Filter
         };
     }
 
+    public function options(): array
+    {
+        return $this->options;
+    }
+
     #[Override]
     public function jsonSerialize(): array
     {
@@ -71,7 +76,7 @@ final readonly class MultiselectColumnFilter implements Filter
             'title' => $this->label(),
             'type' => $this->type(),
             'inline' => $this->inline(),
-            'options' => $this->options,
+            'options' => $this->options(),
             'value' => $this->source->get($this->key()),
             'encoding' => 'operator',
         ];

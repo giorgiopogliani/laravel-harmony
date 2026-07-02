@@ -17,5 +17,8 @@ interface Filter extends JsonSerializable
 
     public function inline(): bool;
 
+    /** @return array{ label: string, value: string }  */
+    public function options(): array;
+
     public function apply(Builder $query): Builder;
 }

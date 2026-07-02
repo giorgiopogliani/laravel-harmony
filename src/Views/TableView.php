@@ -34,9 +34,9 @@ final class TableView extends Data implements View
     }
 
     #[Override]
-    public function grouped(): ?string
+    public function grouped(): array
     {
-        return null;
+        return [];
     }
 
     #[Override]

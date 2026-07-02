@@ -94,6 +94,14 @@ final readonly class SortFilter implements Filter
         return $query;
     }
 
+    public function options(): array
+    {
+        return array_map(
+            static fn (Column $column) => ['value' => $column->key(), 'label' => $column->label()],
+            array_values($this->columns),
+        );
+    }
+
     #[Override]
     public function jsonSerialize(): array
     {
@@ -104,10 +112,7 @@ final readonly class SortFilter implements Filter
             'inline' => $this->inline(),
             'value' => $this->source->get($this->key()),
             'encoding' => 'plain',
-            'options' => array_map(
-                static fn (Column $column) => ['value' => $column->key(), 'label' => $column->label()],
-                array_values($this->columns),
-            ),
+            'options' => $this->options(),
         ];
     }
 }

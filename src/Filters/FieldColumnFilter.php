@@ -123,22 +123,26 @@ final readonly class FieldColumnFilter implements Filter
         };
     }
 
+    public function options(): array
+    {
+        if ($this->field instanceof HasOptions) {
+            return $this->field->getOptions();
+        }
+
+        return [];
+    }
+
     #[Override]
     public function jsonSerialize(): array
     {
-        $data = [
+        return [
             'key' => $this->key(),
             'title' => $this->label(),
             'type' => $this->type(),
             'inline' => $this->inline(),
+            'options' => $this->options(),
             'value' => $this->source->get($this->key()),
             'encoding' => 'operator',
         ];
-
-        if ($this->field instanceof HasOptions) {
-            $data['options'] = $this->field->getOptions();
-        }
-
-        return $data;
     }
 }

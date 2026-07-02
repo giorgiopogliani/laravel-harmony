@@ -31,7 +31,7 @@ final class ViewTable implements DataTable
         private readonly View $view,
         public readonly DataSource $source,
         private Collection $columns = new Collection(),
-        private Collection $filters = new Collection(),
+        private Collection $filters = new Collection()
     ) {}
 
     /** @param Column<B> $column */

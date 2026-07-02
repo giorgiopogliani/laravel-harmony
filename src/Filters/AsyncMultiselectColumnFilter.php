@@ -63,6 +63,11 @@ final readonly class AsyncMultiselectColumnFilter implements Filter
         };
     }
 
+    public function options(): array
+    {
+        return [];
+    }
+
     #[Override]
     public function jsonSerialize(): array
     {
@@ -72,6 +77,7 @@ final readonly class AsyncMultiselectColumnFilter implements Filter
             'type' => $this->type(),
             'inline' => $this->inline(),
             'searchUrl' => $this->searchUrl,
+            'options' => $this->options(),
             'value' => $this->source->get($this->key()),
             'encoding' => 'operator',
         ];

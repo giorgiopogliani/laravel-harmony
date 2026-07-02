@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Performing\Harmony\Columns;
 
 use Override;
+use Performing\Harmony\Concerns\IsColumn;
 use Performing\Harmony\Contracts\Column;
 use Performing\Harmony\Contracts\Contentable;
 use Performing\Harmony\Contracts\Field;
@@ -20,6 +21,8 @@ use Performing\Harmony\Sorting\FieldSort;
  */
 final class FieldColumn implements Column, Sortable
 {
+    use IsColumn;
+
     public function __construct(
         public Field $field,
     ) {}

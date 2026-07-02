@@ -27,7 +27,8 @@ final class ColumnResource implements JsonSerializable
             'key' => $this->column->key(),
             'title' => $this->column->label(),
             'type' => $this->column->type()->value(),
-            'sortable' => $this->column instanceof Sortable
+            'metadata' => $this->column->metadata(),
+            'sortable' => $this->column instanceof Sortable,
         ];
     }
 }

@@ -10,6 +10,7 @@ use Performing\Harmony\Contracts\Sortable;
 use Illuminate\Support\Str;
 use Override;
 use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Concerns\IsColumn;
 use Performing\Harmony\RenderTypes\BoolRenderType;
 
 /**
@@ -19,7 +20,7 @@ use Performing\Harmony\RenderTypes\BoolRenderType;
  */
 final class BoolColumn implements Column, Sortable
 {
-    use CanMakeColumn;
+    use IsColumn;
     use IsKeySortable;
 
     public function __construct(

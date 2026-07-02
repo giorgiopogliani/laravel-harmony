@@ -11,7 +11,7 @@ use Performing\Harmony\RenderTypes\TextRenderType;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Str;
 use Override;
-use Performing\Harmony\Concerns\CanMakeColumn;
+use Performing\Harmony\Concerns\IsColumn;
 
 /**
  * @template T of object
@@ -19,7 +19,7 @@ use Performing\Harmony\Concerns\CanMakeColumn;
  */
 final class DateColumn implements Column, Sortable
 {
-    use CanMakeColumn;
+    use IsColumn;
     use IsKeySortable;
 
     public function __construct(

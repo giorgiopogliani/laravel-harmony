@@ -6,7 +6,7 @@ namespace Performing\Harmony\Sources;
 
 use Performing\Harmony\Contracts\FilterSource;
 
-final readonly class CompositeFilterSource implements FilterSource
+final class CompositeFilterSource implements FilterSource
 {
     /** @var FilterSource[] */
     private array $sources;
@@ -28,5 +28,15 @@ final readonly class CompositeFilterSource implements FilterSource
         }
 
         return null;
+    }
+
+    public function push(FilterSource $filterSource): void
+    {
+        $this->sources[] = $filterSource;
+    }
+
+    public function pop(): void
+    {
+        array_pop($this->sources);
     }
 }

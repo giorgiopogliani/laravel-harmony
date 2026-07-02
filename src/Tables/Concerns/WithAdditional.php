@@ -17,7 +17,7 @@ trait WithAdditional
         return [
             ...$this->source->additional(),
             'columns' => array_map(static fn (Column $column) => new ColumnResource($column), $this->columns()),
-            'attributes' => $this->attributes(),
+            'attributes' => array_map(static fn (Column $column) => new ColumnResource($column), $this->attributes()),
             'filters' => $this->filters->all(),
         ];
     }
