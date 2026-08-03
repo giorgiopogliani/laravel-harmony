@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Performing\Harmony\Filters;
 
-use Performing\Harmony\Contracts\Filter;
-use Performing\Harmony\Contracts\FilterSource;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Override;
+use Performing\Harmony\Contracts\Filter;
+use Performing\Harmony\Contracts\FilterSource;
 
 final readonly class SelectFilter implements Filter
 {
+    /**
+     * @param list<array{label: string, value: string}> $options
+     */
     public function __construct(
         private FilterSource $source,
         private string $column,
@@ -54,6 +57,24 @@ final readonly class SelectFilter implements Filter
         return $query->where($this->column, $value);
     }
 
+    /** @return list<array{label: string, value: string}> */
+    #[Override]
+    public function options(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @return array{
+     *     key: string,
+     *     title: string,
+     *     type: string,
+     *     inline: bool,
+     *     options: list<array{label: string, value: string}>,
+     *     value: string|null,
+     *     encoding: string
+     * }
+     */
     #[Override]
     public function jsonSerialize(): array
     {
@@ -62,7 +83,7 @@ final readonly class SelectFilter implements Filter
             'title' => $this->label(),
             'type' => $this->type(),
             'inline' => $this->inline(),
-            'options' => $this->options,
+            'options' => $this->options(),
             'value' => $this->source->get($this->key()),
             'encoding' => 'plain',
         ];

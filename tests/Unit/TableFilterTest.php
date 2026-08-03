@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Performing\Harmony\Components\Tables\TableFilter;
+use Performing\Harmony\Contracts\FilterSource;
+use Performing\Harmony\Filters\SelectFilter;
 
 it('can be created with make', function () {
     $filter = TableFilter::make('Status');
@@ -35,10 +37,29 @@ it('can set type', function () {
 });
 
 it('can set options', function () {
-    $options = ['active' => 'Active', 'inactive' => 'Inactive'];
-    $filter = TableFilter::make('Status')->options($options);
+    $options = [
+        ['label' => 'Active', 'value' => 'active'],
+        ['label' => 'Inactive', 'value' => 'inactive'],
+    ];
+    $filter = TableFilter::make('Status')->withOptions($options);
 
-    expect($filter->toArray()['options'])->toBe($options);
+    expect($filter->options())->toBe($options)->and($filter->get('options'))->toBe($options);
+});
+
+it('declares select filter options', function () {
+    $source = new class implements FilterSource {
+        public function get(string $key): ?string
+        {
+            return null;
+        }
+    };
+    $options = [
+        ['label' => 'Active', 'value' => 'active'],
+        ['label' => 'Inactive', 'value' => 'inactive'],
+    ];
+    $filter = new SelectFilter($source, 'status', 'Status', $options);
+
+    expect($filter->options())->toBe($options)->and($filter->jsonSerialize()['options'])->toBe($options);
 });
 
 it('can set a default value', function () {

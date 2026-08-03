@@ -55,11 +55,21 @@ class TableFilter extends Component implements Filter, JsonSerializable
         return $this;
     }
 
-    public function options(array $options)
+    /**
+     * @param list<array{label: string, value: string}> $options
+     */
+    public function withOptions(array $options): static
     {
         $this->data['options'] = $options;
 
         return $this;
+    }
+
+    /** @return list<array{label: string, value: string}> */
+    public function options(): array
+    {
+        /** @var list<array{label: string, value: string}> */
+        return $this->data['options'] ?? [];
     }
 
     public function default(mixed $default): self

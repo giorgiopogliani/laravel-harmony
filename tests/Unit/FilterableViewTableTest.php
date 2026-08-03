@@ -46,6 +46,11 @@ class FakeFilter implements Filter
         return false;
     }
 
+    public function options(): array
+    {
+        return [];
+    }
+
     public function apply(Builder $query): Builder
     {
         return $query->where($this->column, $this->value);
