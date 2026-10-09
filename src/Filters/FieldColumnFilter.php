@@ -11,6 +11,8 @@ use Override;
 use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\Filterable;
+use Performing\Harmony\Contracts\FilterableAdvanced;
+use Performing\Harmony\Contracts\FilterOperator;
 use Performing\Harmony\Contracts\FilterSource;
 use Performing\Harmony\Contracts\HasOptions;
 
@@ -38,6 +40,10 @@ final readonly class FieldColumnFilter implements Filter
     #[Override]
     public function type(): string
     {
+        if ($this->field instanceof FilterableAdvanced) {
+            return $this->field->identity->type->value();
+        }
+
         if ($this->field instanceof Filterable) {
             return $this->field->filterType();
         }
@@ -57,6 +63,10 @@ final readonly class FieldColumnFilter implements Filter
     #[Override]
     public function apply(Builder $query): Builder
     {
+        if ($this->field instanceof FilterableAdvanced) {
+            return $this->applyAdvanced($query);
+        }
+
         $raw = $this->source->get($this->key());
 
         if (empty($raw)) {
@@ -101,6 +111,32 @@ final readonly class FieldColumnFilter implements Filter
         };
     }
 
+    private function applyAdvanced(Builder $query): Builder
+    {
+        $raw = $this->source->get($this->key());
+
+        if ($raw === null || $raw === '') {
+            return $query;
+        }
+
+        [$key, $encoded] = array_pad(explode('__', $raw, 2), 2, null);
+
+        foreach ($this->field->operators() as $operator) {
+            if ($operator->key() !== $key) {
+                continue;
+            }
+
+            $column = 'content->'.$this->field->identity->uuid;
+
+            $value = $encoded === null || $encoded === '' ? null : $encoded;
+
+            return $operator->apply($query, $column, $value);
+        }
+
+        // Reject operators the field does not advertise.
+        return $query;
+    }
+
     private function applyDateFilter(Builder $query, mixed $jsonPath, string $operator, string $preset): Builder
     {
         $today = CarbonImmutable::today();
@@ -135,7 +171,7 @@ final readonly class FieldColumnFilter implements Filter
     #[Override]
     public function jsonSerialize(): array
     {
-        return [
+        $data = [
             'key' => $this->key(),
             'title' => $this->label(),
             'type' => $this->type(),
@@ -144,5 +180,17 @@ final readonly class FieldColumnFilter implements Filter
             'value' => $this->source->get($this->key()),
             'encoding' => 'operator',
         ];
+
+        if ($this->field instanceof FilterableAdvanced) {
+            $data['operators'] = array_map(
+                static fn (FilterOperator $operator): array => [
+                    'key' => $operator->key(),
+                    'label' => $operator->label(),
+                ],
+                $this->field->operators(),
+            );
+        }
+
+        return $data;
     }
 }
