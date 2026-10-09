@@ -8,9 +8,9 @@ use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Performing\Harmony\Contracts\FilterOperator;
-use Performing\Harmony\Filters\Operators\DateEquals;
-use Performing\Harmony\Filters\Operators\DateGreaterThanOrEqual;
-use Performing\Harmony\Filters\Operators\DateLessThanOrEqual;
+use Performing\Harmony\Filters\Operators\Equals;
+use Performing\Harmony\Filters\Operators\GreaterThanOrEqual;
+use Performing\Harmony\Filters\Operators\LessThanOrEqual;
 use Performing\Harmony\Filters\Operators\IsEmpty;
 use Performing\Harmony\Filters\Operators\IsNotEmpty;
 
@@ -20,9 +20,9 @@ trait HasDateFilterOperators
     public function operators(): array
     {
         return [
-            new DateEquals,
-            new DateGreaterThanOrEqual,
-            new DateLessThanOrEqual,
+            new Equals,
+            new GreaterThanOrEqual,
+            new LessThanOrEqual,
             new IsEmpty,
             new IsNotEmpty,
         ];

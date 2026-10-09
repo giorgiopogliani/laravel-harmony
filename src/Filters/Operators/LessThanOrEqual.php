@@ -10,7 +10,7 @@ final readonly class LessThanOrEqual implements FilterOperator
 {
     public function key(): string
     {
-        return 'less_than_or_equal';
+        return 'lte';
     }
 
     public function label(): string

@@ -51,7 +51,7 @@ trait HasTextFilterOperators
         }
 
         return match ($operator->key()) {
-            'equals' => $query->where($column, '=', $value),
+            'eq' => $query->where($column, '=', $value),
             'not_equals' => $query->where($column, '!=', $value),
             'contains' => $query->where($column, 'like', '%'.(string) $value.'%'),
             'not_contains' => $query->where($column, 'not like', '%'.(string) $value.'%'),

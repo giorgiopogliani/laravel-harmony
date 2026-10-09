@@ -48,7 +48,7 @@ trait HasSelectFilterOperators
             return $query;
         }
 
-        if ($key === 'equals') {
+        if ($key === 'eq') {
             return $query->where($column, '=', $value);
         }
 

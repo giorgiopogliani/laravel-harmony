@@ -10,7 +10,7 @@ final readonly class Equals implements FilterOperator
 {
     public function key(): string
     {
-        return 'equals';
+        return 'eq';
     }
 
     public function label(): string

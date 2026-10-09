@@ -8,7 +8,6 @@ use Performing\Harmony\Contracts\FilterOperator;
 use Performing\Harmony\Fields\Concerns\HasDateFilterOperators;
 use Performing\Harmony\Fields\Concerns\HasSelectFilterOperators;
 use Performing\Harmony\Fields\Concerns\HasTextFilterOperators;
-use Performing\Harmony\Filters\Operators\DateEquals;
 use Performing\Harmony\Filters\Operators\Equals;
 use Performing\Harmony\Filters\Operators\IsOneOf;
 
@@ -32,13 +31,13 @@ it('keeps operators metadata-only', function () {
 
     $operator = new Equals;
 
-    expect($operator->key())->toBe('equals')
+    expect($operator->key())->toBe('eq')
         ->and(method_exists($operator, 'apply'))->toBeFalse()
         ->and(method_exists($operator, 'options'))->toBeFalse()
         ->and(method_exists($operator, 'default'))->toBeFalse();
 });
 
-it('exposes date preset keys without reusing generic comparison keys', function () {
+it('reuses generic operators with the existing date filter keys', function () {
     $date = new class implements FilterableAdvanced
     {
         use HasDateFilterOperators;
@@ -51,7 +50,7 @@ it('exposes date preset keys without reusing generic comparison keys', function 
 
     expect(array_map(static fn (FilterOperator $operator): string => $operator->key(), $date->operators()))
         ->toBe(['eq', 'gte', 'lte', 'is_empty', 'is_not_empty'])
-        ->and($date->operators()[0])->toBeInstanceOf(DateEquals::class)
+        ->and($date->operators()[0])->toBeInstanceOf(Equals::class)
         ->and($select->operators()[0])->toBeInstanceOf(Equals::class)
         ->and($select->operators()[2])->toBeInstanceOf(IsOneOf::class);
 });
@@ -72,9 +71,6 @@ it('implements every operator directly with a final class', function () {
         new \Performing\Harmony\Filters\Operators\IsNoneOf,
         new \Performing\Harmony\Filters\Operators\IsEmpty,
         new \Performing\Harmony\Filters\Operators\IsNotEmpty,
-        new \Performing\Harmony\Filters\Operators\DateEquals,
-        new \Performing\Harmony\Filters\Operators\DateGreaterThanOrEqual,
-        new \Performing\Harmony\Filters\Operators\DateLessThanOrEqual,
     ];
 
     foreach ($operators as $operator) {

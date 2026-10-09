@@ -10,7 +10,7 @@ final readonly class GreaterThanOrEqual implements FilterOperator
 {
     public function key(): string
     {
-        return 'greater_than_or_equal';
+        return 'gte';
     }
 
     public function label(): string

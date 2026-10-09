@@ -115,7 +115,7 @@ beforeEach(function () {
 
 it('serializes advanced operators with field-owned options', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
-    $filter = makeAdvancedFieldColumnFilter('equals__Alpha', [
+    $filter = makeAdvancedFieldColumnFilter('eq__Alpha', [
         new Equals,
         new IsEmpty,
     ], $options);
@@ -125,10 +125,10 @@ it('serializes advanced operators with field-owned options', function () {
         'type' => 'text',
         'encoding' => 'operator',
         'options' => $options,
-        'value' => 'equals__Alpha',
+        'value' => 'eq__Alpha',
         'operators' => [
             [
-                'key' => 'equals',
+                'key' => 'eq',
                 'label' => __('Equals'),
             ],
             [
@@ -165,7 +165,7 @@ it('applies operators without input values', function () {
 });
 
 it('passes null for a missing value without filtering', function () {
-    $filter = makeAdvancedFieldColumnFilter('equals__', [new Equals]);
+    $filter = makeAdvancedFieldColumnFilter('eq__', [new Equals]);
 
     expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });
@@ -177,7 +177,7 @@ it('ignores operators not declared by the field', function () {
 });
 
 it('skips missing or malformed advanced values', function () {
-    $missing = makeAdvancedFieldColumnFilter('equals__', [new Equals]);
+    $missing = makeAdvancedFieldColumnFilter('eq__', [new Equals]);
     $malformed = makeAdvancedFieldColumnFilter('is_one_of__[invalid', [new IsOneOf], select: true);
     $emptySet = makeAdvancedFieldColumnFilter('is_one_of', [new IsOneOf], select: true);
     $emptyContains = makeAdvancedFieldColumnFilter('contains__', [new Contains]);
@@ -205,7 +205,7 @@ it('keeps legacy filter serialization unchanged', function () {
 });
 
 it('applies text comparisons in the field trait', function () {
-    expect(makeAdvancedFieldColumnFilter('equals__Beta', [new Equals])
+    expect(makeAdvancedFieldColumnFilter('eq__Beta', [new Equals])
         ->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(1)
         ->and(makeAdvancedFieldColumnFilter('not_equals__Beta', [new \Performing\Harmony\Filters\Operators\NotEquals])
             ->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(3)
