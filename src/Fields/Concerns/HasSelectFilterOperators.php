@@ -23,8 +23,8 @@ trait HasSelectFilterOperators
         $options = $this->getOptions();
 
         return [
-            new Equals(inputType: 'select', options: $options),
-            new NotEquals(inputType: 'select', options: $options),
+            new Equals(options: $options),
+            new NotEquals(options: $options),
             new IsOneOf($options),
             new IsNoneOf($options),
             new IsEmpty,

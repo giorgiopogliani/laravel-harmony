@@ -64,19 +64,19 @@ it('keeps the advanced filter contract independent of the old one', function () 
     }
 });
 
-it('lets operators own their input configuration and defaults', function () {
+it('lets final operators declare options, defaults and input cardinality', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
-    $operator = new Equals(inputType: 'select', options: $options, rules: ['required'], defaultValue: 'Alpha');
+    $operator = new Equals(options: $options, defaultValue: 'Alpha');
 
     expect($operator->key())->toBe('equals')
-        ->and($operator->inputType())->toBe('select')
         ->and($operator->options())->toBe($options)
-        ->and($operator->rules())->toBe(['required'])
         ->and($operator->default())->toBe('Alpha')
-        ->and((new IsEmpty)->inputType())->toBeNull()
-        ->and((new IsEmpty)->rules())->toBe([])
+        ->and($operator->requiresValue())->toBeTrue()
+        ->and($operator->multiple())->toBeFalse()
+        ->and((new IsEmpty)->requiresValue())->toBeFalse()
+        ->and((new IsEmpty)->multiple())->toBeFalse()
         ->and((new IsOneOf($options))->options())->toBe($options)
-        ->and((new IsOneOf)->rules())->toBe(['required', 'array', 'min:1']);
+        ->and((new IsOneOf)->multiple())->toBeTrue();
 });
 
 it('offers date and selection operator presets without changing concrete fields', function () {
@@ -95,10 +95,10 @@ it('offers date and selection operator presets without changing concrete fields'
         }
     };
 
-    expect($date->operators()[0]->inputType())->toBe('date')
-        ->and($date->operators()[0]->rules())->toBe(['required', 'date'])
-        ->and($select->operators()[0]->inputType())->toBe('select')
-        ->and($select->operators()[0]->options())->toBe([['label' => 'Alpha', 'value' => 'Alpha']]);
+    expect($date->operators()[0])->toBeInstanceOf(Equals::class)
+        ->and($date->operators()[0]->requiresValue())->toBeTrue()
+        ->and($select->operators()[0]->options())->toBe([['label' => 'Alpha', 'value' => 'Alpha']])
+        ->and($select->operators()[2]->multiple())->toBeTrue();
 });
 
 it('applies comparison and pattern operators directly to a query', function () {
@@ -134,3 +134,30 @@ it('applies set and empty operators with no field-side filtering', function () {
 it('rejects non-array values for set operators', function () {
     (new IsOneOf)->apply(AdvancedFilterTestRecord::query(), 'name', 'Alpha');
 })->throws(InvalidArgumentException::class);
+
+it('implements all new operators directly without abstract base classes', function () {
+    $operators = [
+        new \Performing\Harmony\Filters\Operators\Equals,
+        new \Performing\Harmony\Filters\Operators\NotEquals,
+        new \Performing\Harmony\Filters\Operators\GreaterThan,
+        new \Performing\Harmony\Filters\Operators\GreaterThanOrEqual,
+        new \Performing\Harmony\Filters\Operators\LessThan,
+        new \Performing\Harmony\Filters\Operators\LessThanOrEqual,
+        new \Performing\Harmony\Filters\Operators\Contains,
+        new \Performing\Harmony\Filters\Operators\NotContains,
+        new \Performing\Harmony\Filters\Operators\StartsWith,
+        new \Performing\Harmony\Filters\Operators\EndsWith,
+        new \Performing\Harmony\Filters\Operators\IsOneOf,
+        new \Performing\Harmony\Filters\Operators\IsNoneOf,
+        new \Performing\Harmony\Filters\Operators\IsEmpty,
+        new \Performing\Harmony\Filters\Operators\IsNotEmpty,
+    ];
+
+    foreach ($operators as $operator) {
+        $reflection = new ReflectionClass($operator);
+
+        expect($operator)->toBeInstanceOf(FilterOperator::class)
+            ->and($reflection->isFinal())->toBeTrue()
+            ->and($reflection->getParentClass())->toBeFalse();
+    }
+});

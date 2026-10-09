@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Validation\ValidationException;
 use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\FilterableAdvanced;
 use Performing\Harmony\Contracts\FilterOperator;
@@ -95,7 +94,7 @@ beforeEach(function () {
 it('serializes advanced operators and their own input configurations', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
     $filter = makeAdvancedFieldColumnFilter('equals__Alpha', [
-        new Equals(inputType: 'select', options: $options, defaultValue: 'Alpha'),
+        new Equals(options: $options, defaultValue: 'Alpha'),
         new IsEmpty,
     ]);
 
@@ -110,7 +109,7 @@ it('serializes advanced operators and their own input configurations', function 
                 'key' => 'equals',
                 'label' => __('Equals'),
                 'input' => [
-                    'type' => 'select',
+                    'multiple' => false,
                     'options' => $options,
                     'default' => 'Alpha',
                 ],
@@ -159,13 +158,13 @@ it('ignores operators not declared by the field', function () {
     expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });
 
-it('validates advanced values using the operator rules', function () {
-    $filter = makeAdvancedFieldColumnFilter('equals__invalid-date', [
-        new Equals(inputType: 'date', rules: ['required', 'date']),
-    ]);
+it('skips missing or malformed advanced values', function () {
+    $missing = makeAdvancedFieldColumnFilter('equals__', [new Equals]);
+    $malformed = makeAdvancedFieldColumnFilter('is_one_of__[invalid', [new IsOneOf]);
 
-    $filter->apply(AdvancedFieldColumnFilterRecord::query());
-})->throws(ValidationException::class);
+    expect($missing->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5)
+        ->and($malformed->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
+});
 
 it('keeps legacy filter serialization unchanged', function () {
     $identity = new FieldIdentity('name', 'Name', 'name', new TextRenderType);

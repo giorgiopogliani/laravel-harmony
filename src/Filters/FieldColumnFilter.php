@@ -7,7 +7,6 @@ namespace Performing\Harmony\Filters;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Override;
 use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\Filter;
@@ -127,29 +126,28 @@ final readonly class FieldColumnFilter implements Filter
                 continue;
             }
 
-            if ($operator->inputType() === null) {
-                $value = $operator->default();
-            } elseif ($encoded === null || $encoded === '') {
-                $value = $operator->default();
-            } elseif ($operator->inputType() === 'multiselect') {
-                $value = $this->decodeSelection($encoded);
-            } else {
-                $value = $encoded;
+            $column = 'content->'.$this->field->identity->uuid;
+
+            if (!$operator->requiresValue()) {
+                return $operator->apply($query, $column, null);
             }
 
-            if ($operator->inputType() !== null) {
-                if ($value === null || $value === '') {
-                    return $query;
-                }
+            $value = $encoded === null || $encoded === ''
+                ? $operator->default()
+                : ($operator->multiple() ? $this->decodeSelection($encoded) : $encoded);
 
-                Validator::make(['value' => $value], ['value' => $operator->rules()])->validate();
+            if ($value === null || $value === '' || $value === []) {
+                return $query;
             }
 
-            // Use Laravel's JSON selector so the database grammar handles escaping.
-            return $operator->apply($query, 'content->'.$this->field->identity->uuid, $value);
+            if ($operator->multiple() && !is_array($value)) {
+                return $query;
+            }
+
+            return $operator->apply($query, $column, $value);
         }
 
-        // A field cannot be filtered by an operator it does not advertise.
+        // Reject operators the field does not advertise.
         return $query;
     }
 
@@ -218,11 +216,11 @@ final readonly class FieldColumnFilter implements Filter
                 static fn (FilterOperator $operator): array => [
                     'key' => $operator->key(),
                     'label' => $operator->label(),
-                    'input' => $operator->inputType() === null ? null : [
-                        'type' => $operator->inputType(),
+                    'input' => $operator->requiresValue() ? [
+                        'multiple' => $operator->multiple(),
                         'options' => $operator->options(),
                         'default' => $operator->default(),
-                    ],
+                    ] : null,
                 ],
                 $this->field->operators(),
             );

@@ -19,11 +19,11 @@ trait HasDateFilterOperators
     public function operators(): array
     {
         return [
-            new Equals(inputType: 'date', rules: ['required', 'date']),
-            new GreaterThan(inputType: 'date', rules: ['required', 'date']),
-            new GreaterThanOrEqual(inputType: 'date', rules: ['required', 'date']),
-            new LessThan(inputType: 'date', rules: ['required', 'date']),
-            new LessThanOrEqual(inputType: 'date', rules: ['required', 'date']),
+            new Equals,
+            new GreaterThan,
+            new GreaterThanOrEqual,
+            new LessThan,
+            new LessThanOrEqual,
             new IsEmpty,
             new IsNotEmpty,
         ];
