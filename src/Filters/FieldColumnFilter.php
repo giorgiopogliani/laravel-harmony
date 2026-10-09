@@ -64,7 +64,7 @@ final readonly class FieldColumnFilter implements Filter
     public function apply(Builder $query): Builder
     {
         if ($this->field instanceof FilterableAdvanced) {
-            return $this->applyAdvanced($query);
+            return $this->applyAdvanced($query, $this->field);
         }
 
         $raw = $this->source->get($this->key());
@@ -111,7 +111,7 @@ final readonly class FieldColumnFilter implements Filter
         };
     }
 
-    private function applyAdvanced(Builder $query): Builder
+    private function applyAdvanced(Builder $query, FilterableAdvanced $field): Builder
     {
         $raw = $this->source->get($this->key());
 
@@ -121,16 +121,14 @@ final readonly class FieldColumnFilter implements Filter
 
         [$key, $encoded] = array_pad(explode('__', $raw, 2), 2, null);
 
-        foreach ($this->field->operators() as $operator) {
+        foreach ($field->operators() as $operator) {
             if ($operator->key() !== $key) {
                 continue;
             }
 
-            $column = 'content->'.$this->field->identity->uuid;
-
             $value = $encoded === null || $encoded === '' ? null : $encoded;
 
-            return $operator->apply($query, $column, $value);
+            return $field->apply($query, $operator, $value);
         }
 
         // Reject operators the field does not advertise.

@@ -6,15 +6,15 @@ namespace Performing\Harmony\Filters\Operators;
 
 use Performing\Harmony\Contracts\FilterOperator;
 
-final readonly class NotContains implements FilterOperator
+final readonly class DateGreaterThanOrEqual implements FilterOperator
 {
     public function key(): string
     {
-        return 'not_contains';
+        return 'gte';
     }
 
     public function label(): string
     {
-        return __('Does not contain');
+        return __('Greater than or equal');
     }
 }
