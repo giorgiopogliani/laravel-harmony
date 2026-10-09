@@ -50,7 +50,8 @@ beforeEach(function () {
 });
 
 it('keeps the advanced filter contract independent of the old one', function () {
-    expect(is_subclass_of(FilterableAdvanced::class, Filterable::class))->toBeFalse();
+    expect(is_subclass_of(FilterableAdvanced::class, Filterable::class))->toBeFalse()
+        ->and(method_exists(FilterOperator::class, 'requiresValue'))->toBeFalse();
 
     $field = new class implements FilterableAdvanced
     {
@@ -71,8 +72,6 @@ it('lets final operators declare options and defaults', function () {
     expect($operator->key())->toBe('equals')
         ->and($operator->options())->toBe($options)
         ->and($operator->default())->toBe('Alpha')
-        ->and($operator->requiresValue())->toBeTrue()
-        ->and((new IsEmpty)->requiresValue())->toBeFalse()
         ->and((new IsOneOf($options))->options())->toBe($options);
 });
 
@@ -93,7 +92,6 @@ it('offers date and selection operator presets without changing concrete fields'
     };
 
     expect($date->operators()[0])->toBeInstanceOf(Equals::class)
-        ->and($date->operators()[0]->requiresValue())->toBeTrue()
         ->and($select->operators()[0]->options())->toBe([['label' => 'Alpha', 'value' => 'Alpha']]);
 });
 

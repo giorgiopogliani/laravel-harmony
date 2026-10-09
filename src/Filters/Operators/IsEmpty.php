@@ -20,11 +20,6 @@ final class IsEmpty implements FilterOperator
         return __('Is empty');
     }
 
-    public function requiresValue(): bool
-    {
-        return false;
-    }
-
     /** @return array<array-key, mixed> */
     public function options(): array
     {

@@ -26,11 +26,6 @@ final readonly class EndsWith implements FilterOperator
         return __('Ends with');
     }
 
-    public function requiresValue(): bool
-    {
-        return true;
-    }
-
     /** @return array<array-key, mixed> */
     public function options(): array
     {
@@ -44,6 +39,10 @@ final readonly class EndsWith implements FilterOperator
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder
     {
+        if ($value === null || $value === '' || $value === []) {
+            return $query;
+        }
+
         return $query->where($column, 'like', '%'.(string) $value);
     }
 }

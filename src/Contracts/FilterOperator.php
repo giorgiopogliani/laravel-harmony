@@ -13,8 +13,6 @@ interface FilterOperator
 
     public function label(): string;
 
-    public function requiresValue(): bool;
-
     /** @return array<array-key, mixed> */
     public function options(): array;
 

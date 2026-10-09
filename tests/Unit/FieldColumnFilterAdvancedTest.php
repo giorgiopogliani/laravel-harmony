@@ -108,15 +108,14 @@ it('serializes advanced operators and their own input configurations', function 
             [
                 'key' => 'equals',
                 'label' => __('Equals'),
-                'input' => [
-                    'options' => $options,
-                    'default' => 'Alpha',
-                ],
+                'options' => $options,
+                'default' => 'Alpha',
             ],
             [
                 'key' => 'is_empty',
                 'label' => __('Is empty'),
-                'input' => null,
+                'options' => [],
+                'default' => null,
             ],
         ],
     ]);
@@ -141,8 +140,10 @@ it('supports array selections encoded as JSON or CSV', function () {
 
 it('applies operators without input values', function () {
     $filter = makeAdvancedFieldColumnFilter('is_empty', [new IsEmpty]);
+    $notEmpty = makeAdvancedFieldColumnFilter('is_not_empty', [new \Performing\Harmony\Filters\Operators\IsNotEmpty]);
 
-    expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(2);
+    expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(2)
+        ->and($notEmpty->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(3);
 });
 
 it('uses an operator default when its encoded input is missing', function () {
@@ -160,9 +161,13 @@ it('ignores operators not declared by the field', function () {
 it('skips missing or malformed advanced values', function () {
     $missing = makeAdvancedFieldColumnFilter('equals__', [new Equals]);
     $malformed = makeAdvancedFieldColumnFilter('is_one_of__[invalid', [new IsOneOf]);
+    $emptySet = makeAdvancedFieldColumnFilter('is_one_of', [new IsOneOf]);
+    $emptyContains = makeAdvancedFieldColumnFilter('contains__', [new Contains]);
 
     expect($missing->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5)
-        ->and($malformed->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
+        ->and($malformed->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5)
+        ->and($emptySet->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5)
+        ->and($emptyContains->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });
 
 it('keeps legacy filter serialization unchanged', function () {

@@ -27,11 +27,6 @@ final readonly class IsNoneOf implements FilterOperator
         return __('Is none of');
     }
 
-    public function requiresValue(): bool
-    {
-        return true;
-    }
-
     /** @return array<array-key, mixed> */
     public function options(): array
     {
@@ -45,6 +40,10 @@ final readonly class IsNoneOf implements FilterOperator
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder
     {
+        if ($value === null || $value === '' || $value === []) {
+            return $query;
+        }
+
         if (is_string($value)) {
             if (str_starts_with($value, '[')) {
                 $decoded = json_decode($value, true);
