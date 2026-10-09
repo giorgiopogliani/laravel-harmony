@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\FilterableAdvanced;
-use Performing\Harmony\Contracts\FilterOperator;
+use Performing\Harmony\Filters\FilterOperator;
 use Performing\Harmony\Contracts\HasOptions;
 use Performing\Harmony\Contracts\Identity;
 use Performing\Harmony\Contracts\Validation;
@@ -20,11 +20,6 @@ use Performing\Harmony\Fields\FieldValidation;
 use Performing\Harmony\Fields\FieldVisibility;
 use Performing\Harmony\Fields\Fields\TextField;
 use Performing\Harmony\Filters\FieldColumnFilter;
-use Performing\Harmony\Filters\Operators\Contains;
-use Performing\Harmony\Filters\Operators\Equals;
-use Performing\Harmony\Filters\Operators\IsEmpty;
-use Performing\Harmony\Filters\Operators\IsNoneOf;
-use Performing\Harmony\Filters\Operators\IsOneOf;
 use Performing\Harmony\RenderTypes\TextRenderType;
 use Performing\Harmony\Sources\SavedFilterSource;
 
@@ -116,8 +111,8 @@ beforeEach(function () {
 it('serializes advanced operators with field-owned options', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
     $filter = makeAdvancedFieldColumnFilter('eq__Alpha', [
-        new Equals,
-        new IsEmpty,
+        FilterOperator::Equals,
+        FilterOperator::IsEmpty,
     ], $options);
 
     expect($filter->jsonSerialize())->toMatchArray([
@@ -140,13 +135,13 @@ it('serializes advanced operators with field-owned options', function () {
 });
 
 it('delegates advanced comparisons to the selected operator', function () {
-    $filter = makeAdvancedFieldColumnFilter('contains__ph', [new Contains, new Equals]);
+    $filter = makeAdvancedFieldColumnFilter('contains__ph', [FilterOperator::Contains, FilterOperator::Equals]);
 
     expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(1);
 });
 
 it('supports array selections encoded as JSON or CSV', function () {
-    $operators = [new IsOneOf, new IsNoneOf];
+    $operators = [FilterOperator::IsOneOf, FilterOperator::IsNoneOf];
 
     expect(makeAdvancedFieldColumnFilter('is_one_of__["Alpha","Gamma"]', $operators, select: true)
         ->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(2)
@@ -157,30 +152,30 @@ it('supports array selections encoded as JSON or CSV', function () {
 });
 
 it('applies operators without input values', function () {
-    $filter = makeAdvancedFieldColumnFilter('is_empty', [new IsEmpty]);
-    $notEmpty = makeAdvancedFieldColumnFilter('is_not_empty', [new \Performing\Harmony\Filters\Operators\IsNotEmpty]);
+    $filter = makeAdvancedFieldColumnFilter('is_empty', [FilterOperator::IsEmpty]);
+    $notEmpty = makeAdvancedFieldColumnFilter('is_not_empty', [FilterOperator::IsNotEmpty]);
 
     expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(2)
         ->and($notEmpty->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(3);
 });
 
 it('passes null for a missing value without filtering', function () {
-    $filter = makeAdvancedFieldColumnFilter('eq__', [new Equals]);
+    $filter = makeAdvancedFieldColumnFilter('eq__', [FilterOperator::Equals]);
 
     expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });
 
 it('ignores operators not declared by the field', function () {
-    $filter = makeAdvancedFieldColumnFilter('not_supported__Alpha', [new Equals]);
+    $filter = makeAdvancedFieldColumnFilter('not_supported__Alpha', [FilterOperator::Equals]);
 
     expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });
 
 it('skips missing or malformed advanced values', function () {
-    $missing = makeAdvancedFieldColumnFilter('eq__', [new Equals]);
-    $malformed = makeAdvancedFieldColumnFilter('is_one_of__[invalid', [new IsOneOf], select: true);
-    $emptySet = makeAdvancedFieldColumnFilter('is_one_of', [new IsOneOf], select: true);
-    $emptyContains = makeAdvancedFieldColumnFilter('contains__', [new Contains]);
+    $missing = makeAdvancedFieldColumnFilter('eq__', [FilterOperator::Equals]);
+    $malformed = makeAdvancedFieldColumnFilter('is_one_of__[invalid', [FilterOperator::IsOneOf], select: true);
+    $emptySet = makeAdvancedFieldColumnFilter('is_one_of', [FilterOperator::IsOneOf], select: true);
+    $emptyContains = makeAdvancedFieldColumnFilter('contains__', [FilterOperator::Contains]);
 
     expect($missing->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5)
         ->and($malformed->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5)
@@ -205,22 +200,28 @@ it('keeps legacy filter serialization unchanged', function () {
 });
 
 it('applies text comparisons in the field trait', function () {
-    expect(makeAdvancedFieldColumnFilter('eq__Beta', [new Equals])
+    expect(makeAdvancedFieldColumnFilter('eq__Beta', [FilterOperator::Equals])
         ->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(1)
-        ->and(makeAdvancedFieldColumnFilter('not_equals__Beta', [new \Performing\Harmony\Filters\Operators\NotEquals])
+        ->and(makeAdvancedFieldColumnFilter('not_equals__Beta', [FilterOperator::NotEquals])
             ->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(3)
-        ->and(makeAdvancedFieldColumnFilter('starts_with__Ga', [new \Performing\Harmony\Filters\Operators\StartsWith])
+        ->and(makeAdvancedFieldColumnFilter('starts_with__Ga', [FilterOperator::StartsWith])
             ->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(1);
 });
 
 it('keeps selectable options on fields rather than operators', function () {
     $filter = makeAdvancedFieldColumnFilter(
         'is_one_of__Alpha',
-        [new IsOneOf],
+        [FilterOperator::IsOneOf],
         [['label' => 'Alpha', 'value' => 'Alpha']],
         select: true,
     );
 
     expect($filter->options())->toHaveCount(1)
         ->and($filter->jsonSerialize()['operators'])->toBe([['key' => 'is_one_of', 'label' => __('Is one of')]]);
+});
+
+it('ignores a known operator when the field does not support it', function () {
+    $filter = makeAdvancedFieldColumnFilter('contains__Alpha', [FilterOperator::Equals]);
+
+    expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });

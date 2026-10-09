@@ -6,13 +6,7 @@ namespace Performing\Harmony\Fields\Concerns;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use InvalidArgumentException;
-use Performing\Harmony\Contracts\FilterOperator;
-use Performing\Harmony\Filters\Operators\Equals;
-use Performing\Harmony\Filters\Operators\IsEmpty;
-use Performing\Harmony\Filters\Operators\IsNoneOf;
-use Performing\Harmony\Filters\Operators\IsNotEmpty;
-use Performing\Harmony\Filters\Operators\IsOneOf;
-use Performing\Harmony\Filters\Operators\NotEquals;
+use Performing\Harmony\Filters\FilterOperator;
 
 trait HasSelectFilterOperators
 {
@@ -20,27 +14,26 @@ trait HasSelectFilterOperators
     public function operators(): array
     {
         return [
-            new Equals,
-            new NotEquals,
-            new IsOneOf,
-            new IsNoneOf,
-            new IsEmpty,
-            new IsNotEmpty,
+            FilterOperator::Equals,
+            FilterOperator::NotEquals,
+            FilterOperator::IsOneOf,
+            FilterOperator::IsNoneOf,
+            FilterOperator::IsEmpty,
+            FilterOperator::IsNotEmpty,
         ];
     }
 
     public function apply(Builder $query, FilterOperator $operator, mixed $value): Builder
     {
         $column = 'content->'.$this->identity->uuid;
-        $key = $operator->key();
 
-        if ($key === 'is_empty') {
+        if ($operator === FilterOperator::IsEmpty) {
             return $query->where(static function (Builder $query) use ($column): void {
                 $query->whereNull($column)->orWhere($column, '');
             });
         }
 
-        if ($key === 'is_not_empty') {
+        if ($operator === FilterOperator::IsNotEmpty) {
             return $query->whereNotNull($column)->where($column, '!=', '');
         }
 
@@ -48,15 +41,15 @@ trait HasSelectFilterOperators
             return $query;
         }
 
-        if ($key === 'eq') {
+        if ($operator === FilterOperator::Equals) {
             return $query->where($column, '=', $value);
         }
 
-        if ($key === 'not_equals') {
+        if ($operator === FilterOperator::NotEquals) {
             return $query->where($column, '!=', $value);
         }
 
-        if (!in_array($key, ['is_one_of', 'is_none_of'], true)) {
+        if (!in_array($operator, [FilterOperator::IsOneOf, FilterOperator::IsNoneOf], true)) {
             return $query;
         }
 
@@ -90,12 +83,12 @@ trait HasSelectFilterOperators
             ));
             $expression = "JSON_OVERLAPS(content->>'$.\"{$uuid}\"', CAST(? AS JSON))";
 
-            return $key === 'is_one_of'
+            return $operator === FilterOperator::IsOneOf
                 ? $query->whereRaw($expression, [$jsonValues])
                 : $query->whereRaw("NOT {$expression}", [$jsonValues]);
         }
 
-        return $key === 'is_one_of'
+        return $operator === FilterOperator::IsOneOf
             ? $query->whereIn($column, $value)
             : $query->whereNotIn($column, $value);
     }

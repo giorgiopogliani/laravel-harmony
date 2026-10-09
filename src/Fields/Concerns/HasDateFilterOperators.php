@@ -7,14 +7,7 @@ namespace Performing\Harmony\Fields\Concerns;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Performing\Harmony\Contracts\FilterOperator;
-use Performing\Harmony\Filters\Operators\Equals;
-use Performing\Harmony\Filters\Operators\GreaterThan;
-use Performing\Harmony\Filters\Operators\GreaterThanOrEqual;
-use Performing\Harmony\Filters\Operators\LessThan;
-use Performing\Harmony\Filters\Operators\LessThanOrEqual;
-use Performing\Harmony\Filters\Operators\IsEmpty;
-use Performing\Harmony\Filters\Operators\IsNotEmpty;
+use Performing\Harmony\Filters\FilterOperator;
 
 trait HasDateFilterOperators
 {
@@ -22,13 +15,13 @@ trait HasDateFilterOperators
     public function operators(): array
     {
         return [
-            new Equals,
-            new GreaterThan,
-            new GreaterThanOrEqual,
-            new LessThan,
-            new LessThanOrEqual,
-            new IsEmpty,
-            new IsNotEmpty,
+            FilterOperator::Equals,
+            FilterOperator::GreaterThan,
+            FilterOperator::GreaterThanOrEqual,
+            FilterOperator::LessThan,
+            FilterOperator::LessThanOrEqual,
+            FilterOperator::IsEmpty,
+            FilterOperator::IsNotEmpty,
         ];
     }
 
@@ -36,13 +29,13 @@ trait HasDateFilterOperators
     {
         $column = 'content->'.$this->identity->uuid;
 
-        if ($operator->key() === 'is_empty') {
+        if ($operator === FilterOperator::IsEmpty) {
             return $query->where(static function (Builder $query) use ($column): void {
                 $query->whereNull($column)->orWhere($column, '');
             });
         }
 
-        if ($operator->key() === 'is_not_empty') {
+        if ($operator === FilterOperator::IsNotEmpty) {
             return $query->whereNotNull($column)->where($column, '!=', '');
         }
 
@@ -54,12 +47,12 @@ trait HasDateFilterOperators
 
         [$start, $end] = $period;
 
-        return match ($operator->key()) {
-            'eq' => $query->whereBetween($column, [$start->toDateString(), $end->toDateString()]),
-            'greater_than' => $query->where($column, '>', $end->toDateString()),
-            'gte' => $query->where($column, '>=', $start->toDateString()),
-            'less_than' => $query->where($column, '<', $start->toDateString()),
-            'lte' => $query->where($column, '<=', $end->toDateString()),
+        return match ($operator) {
+            FilterOperator::Equals => $query->whereBetween($column, [$start->toDateString(), $end->toDateString()]),
+            FilterOperator::GreaterThan => $query->where($column, '>', $end->toDateString()),
+            FilterOperator::GreaterThanOrEqual => $query->where($column, '>=', $start->toDateString()),
+            FilterOperator::LessThan => $query->where($column, '<', $start->toDateString()),
+            FilterOperator::LessThanOrEqual => $query->where($column, '<=', $end->toDateString()),
             default => $query,
         };
     }

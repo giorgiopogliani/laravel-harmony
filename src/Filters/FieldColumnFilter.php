@@ -12,7 +12,6 @@ use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\Filterable;
 use Performing\Harmony\Contracts\FilterableAdvanced;
-use Performing\Harmony\Contracts\FilterOperator;
 use Performing\Harmony\Contracts\FilterSource;
 use Performing\Harmony\Contracts\HasOptions;
 
@@ -120,19 +119,15 @@ final readonly class FieldColumnFilter implements Filter
         }
 
         [$key, $encoded] = array_pad(explode('__', $raw, 2), 2, null);
+        $operator = FilterOperator::tryFrom($key);
 
-        foreach ($field->operators() as $operator) {
-            if ($operator->key() !== $key) {
-                continue;
-            }
-
-            $value = $encoded === null || $encoded === '' ? null : $encoded;
-
-            return $field->apply($query, $operator, $value);
+        if ($operator === null || !in_array($operator, $field->operators(), true)) {
+            return $query;
         }
 
-        // Reject operators the field does not advertise.
-        return $query;
+        $value = $encoded === null || $encoded === '' ? null : $encoded;
+
+        return $field->apply($query, $operator, $value);
     }
 
     private function applyDateFilter(Builder $query, mixed $jsonPath, string $operator, string $preset): Builder
@@ -182,7 +177,7 @@ final readonly class FieldColumnFilter implements Filter
         if ($this->field instanceof FilterableAdvanced) {
             $data['operators'] = array_map(
                 static fn (FilterOperator $operator): array => [
-                    'key' => $operator->key(),
+                    'key' => $operator->value,
                     'label' => $operator->label(),
                 ],
                 $this->field->operators(),
