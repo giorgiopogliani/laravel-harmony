@@ -7,10 +7,13 @@ namespace Performing\Harmony\Filters;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Override;
 use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\Filter;
 use Performing\Harmony\Contracts\Filterable;
+use Performing\Harmony\Contracts\FilterableAdvanced;
+use Performing\Harmony\Contracts\FilterOperator;
 use Performing\Harmony\Contracts\FilterSource;
 use Performing\Harmony\Contracts\HasOptions;
 
@@ -38,6 +41,10 @@ final readonly class FieldColumnFilter implements Filter
     #[Override]
     public function type(): string
     {
+        if ($this->field instanceof FilterableAdvanced) {
+            return $this->field->identity->type->value();
+        }
+
         if ($this->field instanceof Filterable) {
             return $this->field->filterType();
         }
@@ -57,6 +64,10 @@ final readonly class FieldColumnFilter implements Filter
     #[Override]
     public function apply(Builder $query): Builder
     {
+        if ($this->field instanceof FilterableAdvanced) {
+            return $this->applyAdvanced($query);
+        }
+
         $raw = $this->source->get($this->key());
 
         if (empty($raw)) {
@@ -101,6 +112,59 @@ final readonly class FieldColumnFilter implements Filter
         };
     }
 
+    private function applyAdvanced(Builder $query): Builder
+    {
+        $raw = $this->source->get($this->key());
+
+        if ($raw === null || $raw === '') {
+            return $query;
+        }
+
+        [$key, $encoded] = array_pad(explode('__', $raw, 2), 2, null);
+
+        foreach ($this->field->operators() as $operator) {
+            if ($operator->key() !== $key) {
+                continue;
+            }
+
+            if ($operator->inputType() === null) {
+                $value = $operator->default();
+            } elseif ($encoded === null || $encoded === '') {
+                $value = $operator->default();
+            } elseif ($operator->inputType() === 'multiselect') {
+                $value = $this->decodeSelection($encoded);
+            } else {
+                $value = $encoded;
+            }
+
+            if ($operator->inputType() !== null) {
+                if ($value === null || $value === '') {
+                    return $query;
+                }
+
+                Validator::make(['value' => $value], ['value' => $operator->rules()])->validate();
+            }
+
+            // Use Laravel's JSON selector so the database grammar handles escaping.
+            return $operator->apply($query, 'content->'.$this->field->identity->uuid, $value);
+        }
+
+        // A field cannot be filtered by an operator it does not advertise.
+        return $query;
+    }
+
+    /** @return list<mixed>|null */
+    private function decodeSelection(string $encoded): ?array
+    {
+        if (str_starts_with($encoded, '[')) {
+            $decoded = json_decode($encoded, true);
+
+            return is_array($decoded) && array_is_list($decoded) ? $decoded : null;
+        }
+
+        return explode(',', $encoded);
+    }
+
     private function applyDateFilter(Builder $query, mixed $jsonPath, string $operator, string $preset): Builder
     {
         $today = CarbonImmutable::today();
@@ -125,6 +189,10 @@ final readonly class FieldColumnFilter implements Filter
 
     public function options(): array
     {
+        if ($this->field instanceof FilterableAdvanced) {
+            return [];
+        }
+
         if ($this->field instanceof HasOptions) {
             return $this->field->getOptions();
         }
@@ -135,7 +203,7 @@ final readonly class FieldColumnFilter implements Filter
     #[Override]
     public function jsonSerialize(): array
     {
-        return [
+        $data = [
             'key' => $this->key(),
             'title' => $this->label(),
             'type' => $this->type(),
@@ -144,5 +212,22 @@ final readonly class FieldColumnFilter implements Filter
             'value' => $this->source->get($this->key()),
             'encoding' => 'operator',
         ];
+
+        if ($this->field instanceof FilterableAdvanced) {
+            $data['operators'] = array_map(
+                static fn (FilterOperator $operator): array => [
+                    'key' => $operator->key(),
+                    'label' => $operator->label(),
+                    'input' => $operator->inputType() === null ? null : [
+                        'type' => $operator->inputType(),
+                        'options' => $operator->options(),
+                        'default' => $operator->default(),
+                    ],
+                ],
+                $this->field->operators(),
+            );
+        }
+
+        return $data;
     }
 }
