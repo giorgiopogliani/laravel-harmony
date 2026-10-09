@@ -64,7 +64,7 @@ it('keeps the advanced filter contract independent of the old one', function () 
     }
 });
 
-it('lets final operators declare options, defaults and input cardinality', function () {
+it('lets final operators declare options and defaults', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
     $operator = new Equals(options: $options, defaultValue: 'Alpha');
 
@@ -72,11 +72,8 @@ it('lets final operators declare options, defaults and input cardinality', funct
         ->and($operator->options())->toBe($options)
         ->and($operator->default())->toBe('Alpha')
         ->and($operator->requiresValue())->toBeTrue()
-        ->and($operator->multiple())->toBeFalse()
         ->and((new IsEmpty)->requiresValue())->toBeFalse()
-        ->and((new IsEmpty)->multiple())->toBeFalse()
-        ->and((new IsOneOf($options))->options())->toBe($options)
-        ->and((new IsOneOf)->multiple())->toBeTrue();
+        ->and((new IsOneOf($options))->options())->toBe($options);
 });
 
 it('offers date and selection operator presets without changing concrete fields', function () {
@@ -97,8 +94,7 @@ it('offers date and selection operator presets without changing concrete fields'
 
     expect($date->operators()[0])->toBeInstanceOf(Equals::class)
         ->and($date->operators()[0]->requiresValue())->toBeTrue()
-        ->and($select->operators()[0]->options())->toBe([['label' => 'Alpha', 'value' => 'Alpha']])
-        ->and($select->operators()[2]->multiple())->toBeTrue();
+        ->and($select->operators()[0]->options())->toBe([['label' => 'Alpha', 'value' => 'Alpha']]);
 });
 
 it('applies comparison and pattern operators directly to a query', function () {
@@ -131,8 +127,13 @@ it('applies set and empty operators with no field-side filtering', function () {
         ->and((new IsNotEmpty)->apply(AdvancedFilterTestRecord::query(), 'name', null)->count())->toBe(2);
 });
 
-it('rejects non-array values for set operators', function () {
-    (new IsOneOf)->apply(AdvancedFilterTestRecord::query(), 'name', 'Alpha');
+it('accepts comma-separated and JSON-encoded set values', function () {
+    expect((new IsOneOf)->apply(AdvancedFilterTestRecord::query(), 'name', 'Alpha,Beta')->count())->toBe(2)
+        ->and((new IsNoneOf)->apply(AdvancedFilterTestRecord::query(), 'name', '["Alpha"]')->count())->toBe(2);
+});
+
+it('rejects non-string, non-array set values', function () {
+    (new IsOneOf)->apply(AdvancedFilterTestRecord::query(), 'name', 123);
 })->throws(InvalidArgumentException::class);
 
 it('implements all new operators directly without abstract base classes', function () {

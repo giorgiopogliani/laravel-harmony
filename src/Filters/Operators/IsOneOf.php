@@ -32,11 +32,6 @@ final readonly class IsOneOf implements FilterOperator
         return true;
     }
 
-    public function multiple(): bool
-    {
-        return true;
-    }
-
     /** @return array<array-key, mixed> */
     public function options(): array
     {
@@ -50,8 +45,22 @@ final readonly class IsOneOf implements FilterOperator
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder
     {
+        if (is_string($value)) {
+            if (str_starts_with($value, '[')) {
+                $decoded = json_decode($value, true);
+
+                if (!is_array($decoded) || !array_is_list($decoded)) {
+                    return $query;
+                }
+
+                $value = $decoded;
+            } else {
+                $value = explode(',', $value);
+            }
+        }
+
         if (!is_array($value)) {
-            throw new InvalidArgumentException('Set operators require an array value.');
+            throw new InvalidArgumentException('Set operators require a list or comma-separated string.');
         }
 
         return $query->whereIn($column, $value);

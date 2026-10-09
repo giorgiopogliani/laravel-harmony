@@ -109,7 +109,6 @@ it('serializes advanced operators and their own input configurations', function 
                 'key' => 'equals',
                 'label' => __('Equals'),
                 'input' => [
-                    'multiple' => false,
                     'options' => $options,
                     'default' => 'Alpha',
                 ],

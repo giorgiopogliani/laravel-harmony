@@ -15,9 +15,6 @@ interface FilterOperator
 
     public function requiresValue(): bool;
 
-    /** Whether the operator accepts multiple values. */
-    public function multiple(): bool;
-
     /** @return array<array-key, mixed> */
     public function options(): array;
 

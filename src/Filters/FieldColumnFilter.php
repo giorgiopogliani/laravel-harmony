@@ -134,13 +134,9 @@ final readonly class FieldColumnFilter implements Filter
 
             $value = $encoded === null || $encoded === ''
                 ? $operator->default()
-                : ($operator->multiple() ? $this->decodeSelection($encoded) : $encoded);
+                : $encoded;
 
             if ($value === null || $value === '' || $value === []) {
-                return $query;
-            }
-
-            if ($operator->multiple() && !is_array($value)) {
                 return $query;
             }
 
@@ -149,18 +145,6 @@ final readonly class FieldColumnFilter implements Filter
 
         // Reject operators the field does not advertise.
         return $query;
-    }
-
-    /** @return list<mixed>|null */
-    private function decodeSelection(string $encoded): ?array
-    {
-        if (str_starts_with($encoded, '[')) {
-            $decoded = json_decode($encoded, true);
-
-            return is_array($decoded) && array_is_list($decoded) ? $decoded : null;
-        }
-
-        return explode(',', $encoded);
     }
 
     private function applyDateFilter(Builder $query, mixed $jsonPath, string $operator, string $preset): Builder
@@ -217,7 +201,6 @@ final readonly class FieldColumnFilter implements Filter
                     'key' => $operator->key(),
                     'label' => $operator->label(),
                     'input' => $operator->requiresValue() ? [
-                        'multiple' => $operator->multiple(),
                         'options' => $operator->options(),
                         'default' => $operator->default(),
                     ] : null,

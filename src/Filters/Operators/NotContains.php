@@ -31,11 +31,6 @@ final readonly class NotContains implements FilterOperator
         return true;
     }
 
-    public function multiple(): bool
-    {
-        return false;
-    }
-
     /** @return array<array-key, mixed> */
     public function options(): array
     {

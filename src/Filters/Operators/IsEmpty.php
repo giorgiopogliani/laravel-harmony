@@ -25,11 +25,6 @@ final class IsEmpty implements FilterOperator
         return false;
     }
 
-    public function multiple(): bool
-    {
-        return false;
-    }
-
     /** @return array<array-key, mixed> */
     public function options(): array
     {
