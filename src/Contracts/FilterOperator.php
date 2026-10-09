@@ -13,9 +13,6 @@ interface FilterOperator
 
     public function label(): string;
 
-    /** @return array<array-key, mixed> */
-    public function options(): array;
-
     public function default(): mixed;
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder;

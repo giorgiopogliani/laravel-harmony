@@ -10,9 +10,7 @@ use Performing\Harmony\Contracts\FilterOperator;
 
 final readonly class StartsWith implements FilterOperator
 {
-    /** @param array<array-key, mixed> $options */
     public function __construct(
-        private array $options = [],
         private mixed $defaultValue = null,
     ) {}
 
@@ -24,12 +22,6 @@ final readonly class StartsWith implements FilterOperator
     public function label(): string
     {
         return __('Starts with');
-    }
-
-    /** @return array<array-key, mixed> */
-    public function options(): array
-    {
-        return $this->options;
     }
 
     public function default(): mixed

@@ -65,14 +65,13 @@ it('keeps the advanced filter contract independent of the old one', function () 
     }
 });
 
-it('lets final operators declare options and defaults', function () {
-    $options = [['label' => 'Alpha', 'value' => 'Alpha']];
-    $operator = new Equals(options: $options, defaultValue: 'Alpha');
+it('lets final operators declare defaults without field options', function () {
+    $operator = new Equals(defaultValue: 'Alpha');
 
     expect($operator->key())->toBe('equals')
-        ->and($operator->options())->toBe($options)
         ->and($operator->default())->toBe('Alpha')
-        ->and((new IsOneOf($options))->options())->toBe($options);
+        ->and(method_exists(FilterOperator::class, 'options'))->toBeFalse()
+        ->and(method_exists($operator, 'options'))->toBeFalse();
 });
 
 it('offers date and selection operator presets without changing concrete fields', function () {
@@ -92,7 +91,8 @@ it('offers date and selection operator presets without changing concrete fields'
     };
 
     expect($date->operators()[0])->toBeInstanceOf(Equals::class)
-        ->and($select->operators()[0]->options())->toBe([['label' => 'Alpha', 'value' => 'Alpha']]);
+        ->and($select->operators()[0])->toBeInstanceOf(Equals::class)
+        ->and($select->operators()[2])->toBeInstanceOf(IsOneOf::class);
 });
 
 it('applies comparison and pattern operators directly to a query', function () {

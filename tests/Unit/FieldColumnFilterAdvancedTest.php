@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Performing\Harmony\Contracts\Field;
 use Performing\Harmony\Contracts\FilterableAdvanced;
 use Performing\Harmony\Contracts\FilterOperator;
+use Performing\Harmony\Contracts\HasOptions;
 use Performing\Harmony\Contracts\Identity;
 use Performing\Harmony\Contracts\Validation;
 use Performing\Harmony\Contracts\Value;
@@ -36,7 +37,7 @@ class AdvancedFieldColumnFilterRecord extends Model
     public $timestamps = false;
 }
 
-class AdvancedFieldColumnFilterField implements Field, FilterableAdvanced
+class AdvancedFieldColumnFilterField implements Field, FilterableAdvanced, HasOptions
 {
     /** @param list<FilterOperator> $availableOperators */
     public function __construct(
@@ -44,11 +45,17 @@ class AdvancedFieldColumnFilterField implements Field, FilterableAdvanced
         public readonly Validation $validation,
         public readonly Visibility $visibility,
         private readonly array $availableOperators,
+        private readonly array $availableOptions = [],
     ) {}
 
     public function operators(): array
     {
         return $this->availableOperators;
+    }
+
+    public function getOptions(): array
+    {
+        return $this->availableOptions;
     }
 
     public function getValue(): ?Value
@@ -68,10 +75,10 @@ class AdvancedFieldColumnFilterField implements Field, FilterableAdvanced
 }
 
 /** @param list<FilterOperator> $operators */
-function makeAdvancedFieldColumnFilter(string $raw, array $operators): FieldColumnFilter
+function makeAdvancedFieldColumnFilter(string $raw, array $operators, array $options = []): FieldColumnFilter
 {
     $identity = new FieldIdentity('name', 'Name', 'name', new TextRenderType);
-    $field = new AdvancedFieldColumnFilterField($identity, new FieldValidation, new FieldVisibility, $operators);
+    $field = new AdvancedFieldColumnFilterField($identity, new FieldValidation, new FieldVisibility, $operators, $options);
 
     return new FieldColumnFilter(new SavedFilterSource(['name' => $raw]), $field);
 }
@@ -91,30 +98,28 @@ beforeEach(function () {
     ]);
 });
 
-it('serializes advanced operators and their own input configurations', function () {
+it('serializes advanced operators with field-owned options', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
     $filter = makeAdvancedFieldColumnFilter('equals__Alpha', [
-        new Equals(options: $options, defaultValue: 'Alpha'),
+        new Equals(defaultValue: 'Alpha'),
         new IsEmpty,
-    ]);
+    ], $options);
 
     expect($filter->jsonSerialize())->toMatchArray([
         'key' => 'name',
         'type' => 'text',
         'encoding' => 'operator',
-        'options' => [],
+        'options' => $options,
         'value' => 'equals__Alpha',
         'operators' => [
             [
                 'key' => 'equals',
                 'label' => __('Equals'),
-                'options' => $options,
                 'default' => 'Alpha',
             ],
             [
                 'key' => 'is_empty',
                 'label' => __('Is empty'),
-                'options' => [],
                 'default' => null,
             ],
         ],

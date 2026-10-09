@@ -14,19 +14,14 @@ use Performing\Harmony\Filters\Operators\NotEquals;
 
 trait HasSelectFilterOperators
 {
-    /** @return array<array-key, mixed> */
-    abstract public function getOptions(): array;
-
     /** @return list<FilterOperator> */
     public function operators(): array
     {
-        $options = $this->getOptions();
-
         return [
-            new Equals(options: $options),
-            new NotEquals(options: $options),
-            new IsOneOf($options),
-            new IsNoneOf($options),
+            new Equals,
+            new NotEquals,
+            new IsOneOf,
+            new IsNoneOf,
             new IsEmpty,
             new IsNotEmpty,
         ];

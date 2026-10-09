@@ -163,10 +163,6 @@ final readonly class FieldColumnFilter implements Filter
 
     public function options(): array
     {
-        if ($this->field instanceof FilterableAdvanced) {
-            return [];
-        }
-
         if ($this->field instanceof HasOptions) {
             return $this->field->getOptions();
         }
@@ -192,7 +188,6 @@ final readonly class FieldColumnFilter implements Filter
                 static fn (FilterOperator $operator): array => [
                     'key' => $operator->key(),
                     'label' => $operator->label(),
-                    'options' => $operator->options(),
                     'default' => $operator->default(),
                 ],
                 $this->field->operators(),
