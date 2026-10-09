@@ -143,6 +143,17 @@ it('uses the period start for gte and the period end for lte', function () {
     ]);
 });
 
+it('supports strict comparisons outside the selected period', function () {
+    expect(filterDates('greater_than', 'this_week'))->toBe([
+        '2026-10-12', '2026-10-31', '2026-11-01',
+    ])->and(filterDates('less_than', 'this_week'))->toBe([
+        '2026-09-01', '2026-09-28', '2026-09-30',
+        '2026-10-01', '2026-10-04',
+    ])->and(filterDates('greater_than', 'today'))->toBe([
+        '2026-10-11', '2026-10-12', '2026-10-31', '2026-11-01',
+    ])->and(filterDates('less_than', 'last_month'))->toBe([]);
+});
+
 it('ignores unknown or absent presets', function () {
     expect(filterDates('eq', 'unknown'))->toHaveCount(12)
         ->and(filterDates('eq', null))->toHaveCount(12);

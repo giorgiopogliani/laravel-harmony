@@ -9,7 +9,9 @@ use Carbon\CarbonInterface;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Performing\Harmony\Contracts\FilterOperator;
 use Performing\Harmony\Filters\Operators\Equals;
+use Performing\Harmony\Filters\Operators\GreaterThan;
 use Performing\Harmony\Filters\Operators\GreaterThanOrEqual;
+use Performing\Harmony\Filters\Operators\LessThan;
 use Performing\Harmony\Filters\Operators\LessThanOrEqual;
 use Performing\Harmony\Filters\Operators\IsEmpty;
 use Performing\Harmony\Filters\Operators\IsNotEmpty;
@@ -21,7 +23,9 @@ trait HasDateFilterOperators
     {
         return [
             new Equals,
+            new GreaterThan,
             new GreaterThanOrEqual,
+            new LessThan,
             new LessThanOrEqual,
             new IsEmpty,
             new IsNotEmpty,
@@ -52,7 +56,9 @@ trait HasDateFilterOperators
 
         return match ($operator->key()) {
             'eq' => $query->whereBetween($column, [$start->toDateString(), $end->toDateString()]),
+            'greater_than' => $query->where($column, '>', $end->toDateString()),
             'gte' => $query->where($column, '>=', $start->toDateString()),
+            'less_than' => $query->where($column, '<', $start->toDateString()),
             'lte' => $query->where($column, '<=', $end->toDateString()),
             default => $query,
         };

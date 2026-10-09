@@ -49,7 +49,7 @@ it('reuses generic operators with the existing date filter keys', function () {
     };
 
     expect(array_map(static fn (FilterOperator $operator): string => $operator->key(), $date->operators()))
-        ->toBe(['eq', 'gte', 'lte', 'is_empty', 'is_not_empty'])
+        ->toBe(['eq', 'greater_than', 'gte', 'less_than', 'lte', 'is_empty', 'is_not_empty'])
         ->and($date->operators()[0])->toBeInstanceOf(Equals::class)
         ->and($select->operators()[0])->toBeInstanceOf(Equals::class)
         ->and($select->operators()[2])->toBeInstanceOf(IsOneOf::class);
