@@ -65,11 +65,12 @@ it('keeps the advanced filter contract independent of the old one', function () 
     }
 });
 
-it('lets final operators declare defaults without field options', function () {
-    $operator = new Equals(defaultValue: 'Alpha');
+it('keeps final operators free of input configuration', function () {
+    $operator = new Equals;
 
     expect($operator->key())->toBe('equals')
-        ->and($operator->default())->toBe('Alpha')
+        ->and(method_exists(FilterOperator::class, 'default'))->toBeFalse()
+        ->and(method_exists($operator, 'default'))->toBeFalse()
         ->and(method_exists(FilterOperator::class, 'options'))->toBeFalse()
         ->and(method_exists($operator, 'options'))->toBeFalse();
 });

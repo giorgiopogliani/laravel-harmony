@@ -20,11 +20,6 @@ final class IsEmpty implements FilterOperator
         return __('Is empty');
     }
 
-    public function default(): mixed
-    {
-        return null;
-    }
-
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder
     {
         return $query->where(static function (Builder $query) use ($column): void {

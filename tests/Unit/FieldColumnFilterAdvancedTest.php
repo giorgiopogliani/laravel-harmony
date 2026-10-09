@@ -101,7 +101,7 @@ beforeEach(function () {
 it('serializes advanced operators with field-owned options', function () {
     $options = [['label' => 'Alpha', 'value' => 'Alpha']];
     $filter = makeAdvancedFieldColumnFilter('equals__Alpha', [
-        new Equals(defaultValue: 'Alpha'),
+        new Equals,
         new IsEmpty,
     ], $options);
 
@@ -115,12 +115,10 @@ it('serializes advanced operators with field-owned options', function () {
             [
                 'key' => 'equals',
                 'label' => __('Equals'),
-                'default' => 'Alpha',
             ],
             [
                 'key' => 'is_empty',
                 'label' => __('Is empty'),
-                'default' => null,
             ],
         ],
     ]);
@@ -151,10 +149,10 @@ it('applies operators without input values', function () {
         ->and($notEmpty->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(3);
 });
 
-it('uses an operator default when its encoded input is missing', function () {
-    $filter = makeAdvancedFieldColumnFilter('equals__', [new Equals(defaultValue: 'Beta')]);
+it('passes null for a missing value without filtering', function () {
+    $filter = makeAdvancedFieldColumnFilter('equals__', [new Equals]);
 
-    expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(1);
+    expect($filter->apply(AdvancedFieldColumnFilterRecord::query())->count())->toBe(5);
 });
 
 it('ignores operators not declared by the field', function () {

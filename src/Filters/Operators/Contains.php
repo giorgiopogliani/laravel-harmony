@@ -10,10 +10,6 @@ use Performing\Harmony\Contracts\FilterOperator;
 
 final readonly class Contains implements FilterOperator
 {
-    public function __construct(
-        private mixed $defaultValue = null,
-    ) {}
-
     public function key(): string
     {
         return 'contains';
@@ -22,11 +18,6 @@ final readonly class Contains implements FilterOperator
     public function label(): string
     {
         return __('Contains');
-    }
-
-    public function default(): mixed
-    {
-        return $this->defaultValue;
     }
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder

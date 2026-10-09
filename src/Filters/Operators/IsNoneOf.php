@@ -11,10 +11,6 @@ use InvalidArgumentException;
 
 final readonly class IsNoneOf implements FilterOperator
 {
-    public function __construct(
-        private mixed $defaultValue = null,
-    ) {}
-
     public function key(): string
     {
         return 'is_none_of';
@@ -23,11 +19,6 @@ final readonly class IsNoneOf implements FilterOperator
     public function label(): string
     {
         return __('Is none of');
-    }
-
-    public function default(): mixed
-    {
-        return $this->defaultValue;
     }
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder

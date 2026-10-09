@@ -128,9 +128,7 @@ final readonly class FieldColumnFilter implements Filter
 
             $column = 'content->'.$this->field->identity->uuid;
 
-            $value = $encoded === null || $encoded === ''
-                ? $operator->default()
-                : $encoded;
+            $value = $encoded === null || $encoded === '' ? null : $encoded;
 
             return $operator->apply($query, $column, $value);
         }
@@ -188,7 +186,6 @@ final readonly class FieldColumnFilter implements Filter
                 static fn (FilterOperator $operator): array => [
                     'key' => $operator->key(),
                     'label' => $operator->label(),
-                    'default' => $operator->default(),
                 ],
                 $this->field->operators(),
             );

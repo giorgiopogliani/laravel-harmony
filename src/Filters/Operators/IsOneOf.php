@@ -11,10 +11,6 @@ use InvalidArgumentException;
 
 final readonly class IsOneOf implements FilterOperator
 {
-    public function __construct(
-        private mixed $defaultValue = null,
-    ) {}
-
     public function key(): string
     {
         return 'is_one_of';
@@ -23,11 +19,6 @@ final readonly class IsOneOf implements FilterOperator
     public function label(): string
     {
         return __('Is one of');
-    }
-
-    public function default(): mixed
-    {
-        return $this->defaultValue;
     }
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder

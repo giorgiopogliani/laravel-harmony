@@ -10,10 +10,6 @@ use Performing\Harmony\Contracts\FilterOperator;
 
 final readonly class GreaterThanOrEqual implements FilterOperator
 {
-    public function __construct(
-        private mixed $defaultValue = null,
-    ) {}
-
     public function key(): string
     {
         return 'greater_than_or_equal';
@@ -22,11 +18,6 @@ final readonly class GreaterThanOrEqual implements FilterOperator
     public function label(): string
     {
         return __('Greater than or equal');
-    }
-
-    public function default(): mixed
-    {
-        return $this->defaultValue;
     }
 
     public function apply(Builder $query, string|Expression $column, mixed $value): Builder
